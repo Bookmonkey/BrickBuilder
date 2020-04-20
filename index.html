@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+    <title>Brick builder</title>
+    <!--- Link to the last version of BabylonJS --->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <style>
+        html, body {
+            overflow: hidden;
+            width   : 100%;
+            height  : 100%;
+            margin  : 0;
+            padding : 0;
+
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #renderCanvas {
+            width   : 100%;
+            height  : 100%;
+            touch-action: none;
+        }
+
+        .ui {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 150px;
+          background: white;
+          border-top: 1px solid #eee;
+        }
+
+        .bricks {
+          display: flex;
+        
+        }
+
+        .ui-add{
+          width: 64px;   
+          height: 64px;
+          text-align: center;
+          padding: 4px;
+          margin: 0 12px;
+          box-shadow: 0 0 5px #444;
+          cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="ui">
+      <div class="selected-brick">
+        <div id="brick-name">as</div>
+      </div>
+
+      <div class="bricks">
+        <div class="ui-add" id="ui-add" data-x="1" data-y="1" data-h="10.0">Add 1x1</div>
+        <div class="ui-add" id="ui-add" data-x="1" data-y="4" data-h="10.0">Add 1x4</div>
+      </div>
+
+      <div class="config">
+        <select name="ui-colour" id="ui-colour">
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+          <option value="yellow">Yellow</option>
+          <option value="black">Black</option>
+          <option value="purple">Purple</option>
+          <option value="white">White</option>
+        </select>
+      </div>
+
+      <div class="misc">
+        <div class="ui-chat-tab"></div>
+        <div class="ui-status">Connected</div>
+        <div class="ui-head-count">1 person</div>
+      </div>
+    </div>
+    <canvas id="renderCanvas"></canvas>
+    <script src="./scripts/app.js"></script>
+</body>
+</html>
