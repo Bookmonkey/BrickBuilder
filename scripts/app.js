@@ -5,8 +5,20 @@ var UIControl = {
     uiColour: document.querySelector("#ui-colour"),
     brickName: document.querySelector('#brick-name')
   },
+};
+
+const API = "http://localhost:3000";
+
+let helloWorldFunction = () => {
+  fetch(`${API}/api/rooms`)
+  .then(res => res.json())
+  .then(rooms => {
+    console.log(rooms);
+    
+  })
 }
 
+helloWorldFunction();
 // get the canvasDOM element
 var canvasElement = document.getElementById('renderCanvas');
 
@@ -29,12 +41,27 @@ var currentMesh;
 var gizmoManager = new BABYLON.GizmoManager(scene);
 gizmoManager.positionGizmoEnabled = true;
 
+gizmoManager.gizmos.positionGizmo.onDragEndObservable.add((evt) => {
+  let selectedBrick = gizmoManager.gizmos.positionGizmo.attachedMesh;
+  console.log("brick moved - send socketio packet here")
+  let data = {
+    name: selectedBrick.name,
+    position: selectedBrick.position,
+    rotation: selectedBrick.rotation,
+    scaling: selectedBrick.scaling,
+  }
+  
+  // fetch(`${API}/room/ID/update`, data)
+})
+
 var bricks = [];
 
 UIControl.elements['uiAdd'].forEach(element => {
   element.addEventListener('click', function (brickElement) {
     var dims = brickElement.target.dataset;
-    var box = BABYLON.MeshBuilder.CreateBox("box", {
+    let brickIndex = bricks.length;
+    let brickName = "brick" + brickIndex++;
+    var box = BABYLON.MeshBuilder.CreateBox(brickName, {
       height: 5.0,
       width: dims.x * 5,
       depth: dims.y * 5
@@ -43,6 +70,8 @@ UIControl.elements['uiAdd'].forEach(element => {
     box.material = getColor();
 
     bricks.push(box);
+
+    getBrickList();
 
     gizmoManager.attachableMeshes.push(box);
   });
@@ -92,64 +121,64 @@ var getGroundPosition = function () {
   return null;
 }
 
-var onPointerDown = function (evt) {
-  if (evt.button !== 0) {
-    return;
-  }
+// var onPointerDown = function (evt) {
+//   if (evt.button !== 0) {
+//     return;
+//   }
 
-  // check if we are under a mesh
-  var pickInfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) {
-    return mesh !== ground;
-  });
-  if (pickInfo.hit) {
-    currentMesh = pickInfo.pickedMesh;
-    startingPoint = getGroundPosition(evt);
+//   // check if we are under a mesh
+//   var pickInfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) {
+//     return mesh !== ground;
+//   });
+//   if (pickInfo.hit) {
+//     currentMesh = pickInfo.pickedMesh;
+//     startingPoint = getGroundPosition(evt);
 
-    if (startingPoint) { // we need to disconnect camera from canvas
-      setTimeout(function () {
-        camera.detachControl(canvas);
-      }, 0);
-    }
-  }
-}
+//     if (startingPoint) { // we need to disconnect camera from canvas
+//       setTimeout(function () {
+//         camera.detachControl(canvas);
+//       }, 0);
+//     }
+//   }
+// }
 
-var onPointerUp = function () {
-  if (startingPoint) {
-    camera.attachControl(canvas, true);
-    startingPoint = null;
-    return;
-  }
-}
+// var onPointerUp = function () {
+//   if (startingPoint) {
+//     camera.attachControl(canvas, true);
+//     startingPoint = null;
+//     return;
+//   }
+// }
 
-var onPointerMove = function (evt) {
-  if (!startingPoint) {
-    return;
-  }
+// var onPointerMove = function (evt) {
+//   if (!startingPoint) {
+//     return;
+//   }
 
-  var current = getGroundPosition(evt);
+//   var current = getGroundPosition(evt);
 
-  if (!current) {
-    return;
-  }
+//   if (!current) {
+//     return;
+//   }
 
-  var diff = current.subtract(startingPoint);
-  currentMesh.position.addInPlace(diff);
+//   var diff = current.subtract(startingPoint);
+//   currentMesh.position.addInPlace(diff);
 
-  startingPoint = current;
+//   startingPoint = current;
 
-  console.log(evt);
+//   console.log(evt);
   
-}
+// }
 
-canvas.addEventListener("pointerdown", onPointerDown, false);
-canvas.addEventListener("pointerup", onPointerUp, false);
-canvas.addEventListener("pointermove", onPointerMove, false);
+// canvas.addEventListener("pointerdown", onPointerDown, false);
+// canvas.addEventListener("pointerup", onPointerUp, false);
+// canvas.addEventListener("pointermove", onPointerMove, false);
 
-scene.onDispose = function () {
-  canvas.removeEventListener("pointerdown", onPointerDown);
-  canvas.removeEventListener("pointerup", onPointerUp);
-  canvas.removeEventListener("pointermove", onPointerMove);
-}
+// scene.onDispose = function () {
+//   canvas.removeEventListener("pointerdown", onPointerDown);
+//   canvas.removeEventListener("pointerup", onPointerUp);
+//   canvas.removeEventListener("pointermove", onPointerMove);
+// }
 
 function getColor() {
   var selectedColour = UIControl.elements.uiColour.selectedOptions[0].value;
@@ -185,4 +214,12 @@ function getColor() {
   }
   material.emissiveColor = babylonColour;
   return material;
+}
+
+
+// use with Vue UI controls
+function getBrickList() {
+  bricks.forEach(brick => {
+    console.log(brick.name, brick.material, brick.position);
+  })
 }
