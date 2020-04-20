@@ -1,0 +1,30 @@
+{
+  "name": "bricks",
+  "version": "1.0.0",
+  "description": "todo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "parcel index.html",
+    "server": "node server/app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bookmonkey/BrickBuilder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bookmonkey/BrickBuilder/issues"
+  },
+  "homepage": "https://github.com/Bookmonkey/BrickBuilder#readme",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
