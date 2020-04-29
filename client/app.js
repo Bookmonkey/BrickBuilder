@@ -9,16 +9,6 @@ var UIControl = {
 
 const API = "http://localhost:3000";
 
-let helloWorldFunction = () => {
-  fetch(`${API}/api/rooms`)
-  .then(res => res.json())
-  .then(rooms => {
-    console.log(rooms);
-    
-  })
-}
-
-helloWorldFunction();
 // get the canvasDOM element
 var canvasElement = document.getElementById('renderCanvas');
 
