@@ -1,5 +1,6 @@
 <template>
     <div class="ui">
+      <canvas id="renderCanvas"></canvas>
         <div class="settings">
           <img src="images/settings.svg"/>
         </div>
@@ -43,9 +44,8 @@ import Vue from "vue";
 
 import BrickController from "./BrickController";
 import { BrickColours, BrickList } from "./utils/config";
+let brickController;
 
-
-const brickController = new BrickController();
 export default Vue.extend({
   data() {
     return {
@@ -54,6 +54,9 @@ export default Vue.extend({
       colourDropdown: false,
       bricks: BrickList,
     }    
+  },
+  mounted() {
+    brickController = new BrickController();
   },
   methods: {
     addBrick(brickId) {      
@@ -69,7 +72,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.button,
 .select > .selected-item {
   border-radius: 6px;
   box-shadow: inset 0 0 0 1px #d1d5da;

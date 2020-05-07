@@ -5,67 +5,14 @@
     <title>Brick builder</title>
     <!--- Link to the last version of BabylonJS --->
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <style>
-        html, body {
-            overflow: hidden;
-            width   : 100%;
-            height  : 100%;
-            margin  : 0;
-            padding : 0;
-
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        #renderCanvas {
-            width   : 100%;
-            height  : 100%;
-            touch-action: none;
-        }
-
-        .brick-picker {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 150px;
-          background: white;
-          border-top: 1px solid #eee;
-        }
-
-        .settings {
-          position:absolute;
-          top: 12px;
-          right: 12px;
-
-          background: white;
-          width: 24px;
-          height: 24px;
-          padding: 12px;
-          border-radius: 50%;
-        }
-
-
-        .bricks {
-          display: flex;
-        
-        }
-
-        .ui-add{
-          width: 64px;   
-          height: 64px;
-          text-align: center;
-          padding: 4px;
-          margin: 0 12px;
-          box-shadow: 0 0 5px #444;
-          cursor: pointer;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300&family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/pattern.css" rel="stylesheet">
+    <link rel="stylesheet" href="./global.scss">
 </head>
 <body>
-
-    <div id="ui"></div>
-    <canvas id="renderCanvas"></canvas>
-    
-    <script src="ui.js"></script>
+    <div id="app">
+        <router-view></router-view>
+    </div>
+    <script src="app.js"></script>
 </body>
 </html>
