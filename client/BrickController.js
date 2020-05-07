@@ -10,6 +10,8 @@ class BrickController {
 
     constructor() {
         const canvasElement = document.getElementById('renderCanvas');
+        console.log(canvasElement);
+        
         this.bricks = [];
 
         this.brickColour = "red";

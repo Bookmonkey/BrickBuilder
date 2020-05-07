@@ -1,0 +1,116 @@
+html,
+body {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#renderCanvas {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.brick-picker {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: white;
+  border-top: 1px solid #eee;
+}
+
+.settings {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  background: white;
+  width: 24px;
+  height: 24px;
+  padding: 12px;
+  border-radius: 50%;
+}
+
+
+.bricks {
+  display: flex;
+
+}
+
+.ui-add {
+  width: 64px;
+  height: 64px;
+  text-align: center;
+  padding: 4px;
+  margin: 0 12px;
+  box-shadow: 0 0 5px #444;
+  cursor: pointer;
+}
+
+.h2,
+h2 {
+  font-family: 'Jost', sans-serif;
+  font-size: 2rem;
+}
+
+.p {
+  font-family: 'Roboto', sans-serif;
+}
+
+.card {
+  color: black;
+  position: relative;
+  margin: 0 auto;
+  width: 70%;
+  background: white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  padding: 24px;
+}
+
+.studio-list{
+  position: relative;
+  margin: 0 auto;
+  width: 70%;
+  padding: 24px;
+
+
+  .studio {
+    display: inline-block;
+    background: #003A54;
+    width: calc(25%);
+    margin: 15px;
+    padding: 24px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s cubic-bezier(0.45, 0, 0.55, 1);
+    cursor: pointer;
+
+    .link {
+      color: white;
+    }
+
+    &:hover {
+      transform: scale(1.1111);
+    }
+  }
+}
+
+.button {
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px #d1d5da;
+  padding: 12px 24px;
+  font-size: 16px;
+
+  display: inline-block;
+  cursor: pointer;
+
+  &.blue {
+    background: #00B0FF;
+    color: white;
+  }
+}
