@@ -2,7 +2,7 @@
     <div class="ui">
       <canvas id="renderCanvas"></canvas>
         <div class="settings">
-          <img src="images/settings.svg"/>
+          <img src="../images/settings.svg">
         </div>
       <div class="brick-picker">
         <div class="selected-brick">
@@ -42,8 +42,8 @@
 <script>
 import Vue from "vue";
 
-import BrickController from "./BrickController";
-import { BrickColours, BrickList } from "./utils/config";
+import BrickController from "../BrickController";
+import { BrickColours, BrickList } from "../utils/config";
 let brickController;
 
 export default Vue.extend({
@@ -56,7 +56,12 @@ export default Vue.extend({
     }    
   },
   mounted() {
+    let id = this.$route.params.id;
+    fetch("http://localhost:3000/api/studio/" + id)
+    .then(res => res.json())
+    .then(res => console.log(res));
     brickController = new BrickController();
+    
   },
   methods: {
     addBrick(brickId) {      

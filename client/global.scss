@@ -1,3 +1,8 @@
+// variables
+$color-dark-blue: #003A54;
+$color-light-blue: #00B0FF;
+
+
 html,
 body {
   overflow: hidden;
@@ -82,7 +87,7 @@ h2 {
 
   .studio {
     display: inline-block;
-    background: #003A54;
+    background: $color-dark-blue;
     width: calc(25%);
     margin: 15px;
     padding: 24px;
@@ -110,7 +115,7 @@ h2 {
   cursor: pointer;
 
   &.blue {
-    background: #00B0FF;
+    background: $color-light-blue;
     color: white;
   }
 }

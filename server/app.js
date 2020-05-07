@@ -1,25 +1,58 @@
 const express = require('express');
 const app = express();
 
+const bodyParser = require('body-parser');
 const cors = require("cors");
+
+const crypto = require('crypto');
+
 app.use(cors())
+app.use(bodyParser.json())
  
 const port = 3000;
 
-const rooms = [
-  {
-    "id": "1a876a",
-    "public": true,
-    "builders": 2,
-  }
-];
+let studios = [];
 
-app.get("/api/rooms", function(req, res) { 
-  let getPublicRooms = rooms;
-  res.status(200).send(rooms);  
+app.post("/api/studio/create", async function(req, res) {
+  let body = req.body;
+
+  function generateToken() {
+    return new Promise(function(resolve, reject) {
+      crypto.randomBytes(12, (err, buffer) => {
+        if (err) {
+          reject("error generating token");
+        }
+        const token = buffer.toString('hex');
+        resolve(token);
+      });
+    });
+  }
+
+  let token = await generateToken();
+
+  // make this async
+
+  let newStudio = {
+    "id": token,
+    "public": body.public,
+    "builders": 0,
+    "title": body.title
+  };
+
+  studios.push(newStudio);
+
+  res.status(200).send(newStudio.id);
 });
 
-app.get("/api/rooms/:id", function() {});
-app.post("/api/rooms/create", function() {});
+app.get("/api/studios/:isPublic", function(req, res) { 
+  console.log(studios);
+  res.send(JSON.stringify(studios)); 
+});
+
+app.get("/api/studio/:id", function(req, res) {
+  let studio = studios.filter(ele=> ele.id = req.params.id);
+
+  res.status(200).send(studio);
+})
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
