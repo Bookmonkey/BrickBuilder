@@ -36,6 +36,8 @@
           </router-link>
 
           created by: name
+
+          Builders: {{ studio.builders }}
         </div>
       </div>
     </div>
@@ -66,12 +68,12 @@ export default {
         },
         body: JSON.stringify(this.newStudio),
       })
-      .then(res => {
-        // handle redirect to studio
+      .then(res => res.text())
+      .then(studioId => {
         this.showCreateUI = false;
-        console.log(res);
         
         this.studios.push({
+          id: studioId,
           ...this.newStudio
         })
       })
@@ -79,6 +81,7 @@ export default {
     }
   },
   mounted(){
+    
    fetch("http://localhost:3000/api/studios/true")
    .then(res => res.json())
    .then(studios => {

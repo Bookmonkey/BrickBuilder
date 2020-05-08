@@ -106,16 +106,17 @@ h2 {
 }
 
 .button {
-  border-radius: 6px;
-  box-shadow: inset 0 0 0 1px #d1d5da;
+  
   padding: 12px 24px;
   font-size: 16px;
-
+  text-decoration: none;
   display: inline-block;
   cursor: pointer;
 
   &.blue {
-    background: $color-light-blue;
-    color: white;
+    box-shadow: 5px 5px 0 $color-light-blue;
+    border: 1px solid $color-light-blue;
+    color: #262626;
+    transition: all 0.3s ease-in-out;
   }
 }
