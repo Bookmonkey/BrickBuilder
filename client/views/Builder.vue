@@ -11,7 +11,7 @@
         </div>
 
         <div class="bricks">
-          <div class="ui-add" v-for="item in bricks" @click="addBrick(item)">
+          <div class="ui-add" v-for="item in bricks" @click="addBrick(item)" :key="item.id">
             {{ item.title }}
           </div>
         </div>
@@ -23,7 +23,7 @@
             </div>
 
             <div class="items" v-if="colourDropdown">
-              <div class="item" v-for="colour in brickColours" @click="setColour(colour)">
+              <div class="item" v-for="colour in brickColours" @click="setColour(colour)" :key="colour">
                 <span class="colour" :class="colour.class"></span> {{ colour.name }}
               </div>
             </div>
@@ -42,9 +42,13 @@
 <script>
 import Vue from "vue";
 
+import io from 'socket.io-client';
+
 import BrickController from "../BrickController";
 import { BrickColours, BrickList } from "../utils/config";
 let brickController;
+
+let socket;
 
 export default Vue.extend({
   data() {
@@ -61,11 +65,25 @@ export default Vue.extend({
     .then(res => res.json())
     .then(res => console.log(res));
     brickController = new BrickController();
+
+    socket = io("http://localhost:3000", {
+      query: "studioId=" +id 
+    });
+    
+    socket.emit('join', {
+      "studioId": id
+    });
     
   },
   methods: {
     addBrick(brickId) {      
         brickController.addBrick(brickId);
+
+        socket.emit('newBrick', {
+          "studioId": this.$route.params.id,
+          "brickId": brickId,
+          "brickColour": brickController.colour
+        });
     },
     setColour(colour) {
       this.brickColour = colour;
