@@ -3,14 +3,19 @@
 
     <div class="modal" v-if="showCreateUI">
       <div class="content">
-        <h3>Create Studio</h3>
+        <h2>Create Studio</h2>
 
         <div>
-          <label for="title">Studio title</label>
-          <input type="text" v-model="newStudio.title">
 
-          <label for="public">Public <small>rooms are public by default</small></label>
-          <input type="checkbox" v-model="newStudio.public" />
+          <div class="form-field">
+            <label for="title">Studio title</label>
+            <input type="text" v-model="newStudio.title">
+          </div>
+
+          <div class="form-field">
+            <label for="public">Public <small>rooms are public by default</small></label>
+            <input type="checkbox" v-model="newStudio.public" />
+          </div>
 
           <button class="button green" @click="createNewStudio()">Lets go</button>
         </div>
@@ -21,23 +26,37 @@
     <div class="landing pattern-cross-dots-lg bg-dark-blue">
       <div class="card">
         <div><router-link to="/">Home</router-link> ></div>
-        <h2>Studios</h2>
 
+        <div class="card-title">
+          <h2>Studios</h2>
+          <button class="button blue" @click="showCreateUI = true">New Studio</button>
+        </div>
+
+
+        <div class="form-field search">
+          <label for="search">Search for studio</label>
+          <input type="text" v-model="search"/>
+        </div>
       
 
-        <button class="button blue" @click="showCreateUI = true">New Studio</button>
       </div>
 
       <div class="studio-list">
 
-        <div class="studio" v-for="studio in studios" :key="studio.id">
+        <div class="studio" v-for="studio in filteredStudios" :key="studio.id">
           <router-link class="link" :to="'/studio/' + studio.id">
             <div class="title">{{ studio.title }}</div>
           </router-link>
 
-          created by: name
+          <div>
+            created by: name
+          </div>
 
-          Builders: {{ studio.builders }}
+          <div>
+            Builders: {{ studio.builders }}
+          </div>
+
+
         </div>
       </div>
     </div>
@@ -54,10 +73,26 @@ export default {
       newStudio: {
         title: "",
         public: true,
-
       },
+      search: '',
+      filteredStudios: [],
       studios: [],
     }
+  },
+  watch: {
+    'search': function(val) {
+      this.filteredStudios = this.studios.filter(ele => {
+        if(ele.title.toLowerCase().indexOf(val.toLowerCase()) > -1) return ele;
+      }); 
+    }
+  },
+  mounted(){    
+   fetch("http://localhost:3000/api/studios/true")
+   .then(res => res.json())
+   .then(studios => {
+     this.filteredStudios = studios;
+     this.studios = studios;   
+   });
   },
   methods: {
     createNewStudio(){
@@ -76,18 +111,16 @@ export default {
           id: studioId,
           ...this.newStudio
         })
+
+        this.newStudio = {
+          id: '',
+          title: '',
+          public: true,
+        }
       })
       .catch(error => console.error(error));
-    }
+    },
   },
-  mounted(){
-    
-   fetch("http://localhost:3000/api/studios/true")
-   .then(res => res.json())
-   .then(studios => {
-     this.studios = studios;          
-   });
-  }
 }
 </script>
 
@@ -117,6 +150,7 @@ export default {
     background: white;
     margin: 0 auto;
     position: relative;
+    padding: 18px;
   }
 
 }
