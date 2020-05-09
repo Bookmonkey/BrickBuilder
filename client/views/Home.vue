@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="landing pattern-cross-dots-lg bg-dark-blue">
+    <div class="landing">
 
       <div class="card">
         <h2>Brick builder</h2>
@@ -13,11 +13,29 @@
 
     <div class="features">
       <h3>Features</h3>
-      
-      Build together.
-      Create either a private or public studio to create your lego set.
 
-      Opensource
+      <div class="features-list">
+        <div class="feature-item blue">
+          <img class="feature-image" src="../images/users.svg" alt="Build together with your friends">
+          <div class="title">Build together!</div>
+        </div>
+
+        <div class="feature-item green">
+          <img  class="feature-image" src="../images/lock.svg" alt="Locked padlock">
+          <div class="title">Public and Private studio!</div>
+          Create with friends or family!
+        </div>
+
+        <div class="feature-item yellow">
+          
+          <img class="feature-image" src="../images/book-open.svg" alt="Open book">
+          <div class="title">Open source</div>
+          This project is open source!
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
 
     </div>
   </div>
@@ -31,13 +49,8 @@ export default {
 </script>
 
 <style lang="scss">
-
-.pattern-cross-dots-lg.bg-dark-blue {
-  color: #006D9F;
-}
-
 .landing {
-  height: 400px;
+  height: 240px;
   padding: 48px;
 }
 

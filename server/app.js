@@ -63,6 +63,7 @@ app.post("/api/studio/create", async function(req, res) {
   }
 
   let token = await generateToken();
+  console.log(token);
 
   let newStudio = {
     "id": token,

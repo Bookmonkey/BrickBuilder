@@ -3,9 +3,13 @@ $color-dark-blue: #003A54;
 $color-light-blue: #00B0FF;
 
 
+$font-bitter: 'Bitter', serif;
+$font-jost: 'Jost', sans-serif;
+
+
 html,
 body {
-  overflow: hidden;
+  // overflow: hidden;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -60,12 +64,18 @@ body {
 
 .h2,
 h2 {
-  font-family: 'Jost', sans-serif;
+  font-family: $font-jost;
+  font-size: 2rem;
+}
+
+.h3,
+h3 {
+  font-family: $font-bitter;
   font-size: 2rem;
 }
 
 .p {
-  font-family: 'Roboto', sans-serif;
+  font-family: $font-bitter;
 }
 
 .card {
@@ -76,6 +86,13 @@ h2 {
   background: white;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
   padding: 24px;
+
+
+  .card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .studio-list{
@@ -97,6 +114,8 @@ h2 {
 
     .link {
       color: white;
+      font-family: $font-bitter;
+      text-decoration: none;
     }
 
     &:hover {
@@ -105,7 +124,63 @@ h2 {
   }
 }
 
+.features {
+  text-align: center;
+  padding: 28px;
+  background: #262626;
+  color: white;
+
+
+  .features-list {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    .feature-item {
+      width: 300px;
+      height: 80px;
+      padding: 48px;
+      box-shadow: 0 0 10px rgba(255,255,255, 0.1);
+      border-radius: 4px;
+
+      font-size: 1.2rem;
+      font-family: $font-jost;
+      
+      .title{
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
+
+      display: flex;
+      flex-direction: column;
+
+      .feature-image {
+        margin-bottom: 12px;
+      }
+
+      &.green {
+        background: #26BF00;
+      }
+
+      &.blue {
+        background: #536DFE;
+      }
+
+      &.yellow {
+        background: #F9A826;
+      }
+    }
+  }
+
+}
+
+.footer{
+  background: white;
+}
+
+
 .button {
+  background: white;
   
   padding: 12px 24px;
   font-size: 16px;
@@ -114,9 +189,41 @@ h2 {
   cursor: pointer;
 
   &.blue {
-    box-shadow: 5px 5px 0 $color-light-blue;
+
+    &:hover { 
+      box-shadow: 5px 5px 0 $color-light-blue;
+    }
     border: 1px solid $color-light-blue;
     color: #262626;
     transition: all 0.3s ease-in-out;
+  }
+}
+
+
+.form-field {
+  margin-bottom: 8px;
+  label {
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+
+    font-family: $font-bitter;
+  }
+  input {
+    border:none;
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border:1px solid #edf2f7;
+    background: #edf2f7;
+    outline: none;
+
+    transition: all 0.3s ease-in-out;
+
+    &:focus, &:active {
+      background: white;
+      border: 1px solid #cfd6df;
+      outline-color: #cfd6df;
+    }
   }
 }
