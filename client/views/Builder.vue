@@ -1,5 +1,16 @@
 <template>
     <div class="ui">
+
+      <div class="modal" v-show="modalShow">
+        <div class="content">
+          <h2>Pick a name</h2>
+          <div class="form-field">
+            <input type="text" v-model="name" />
+          </div>
+
+          <button class="button" @click="enterStudio(name)">Enter studio</button>
+        </div>
+      </div>
       <canvas id="renderCanvas"></canvas>
         <div class="settings">
           <img src="../images/settings.svg">
@@ -53,34 +64,32 @@ let socket;
 export default Vue.extend({
   data() {
     return {
+      studioId: null,
       brickColours: BrickColours,
       brickColour: BrickColours[0],
       colourDropdown: false,
       bricks: BrickList,
+      name: '',
+      modalShow: true
     }    
   },
   mounted() {
-    let id = this.$route.params.id;
-    fetch("http://localhost:3000/api/studio/" + id)
+    this.studioId = this.$route.params.id;
+    fetch("http://localhost:3000/api/studio/" + this.studioId)
     .then(res => res.json())
-    .then(res => console.log(res));
+    .then(res => console.log(res)); 
     brickController = new BrickController();
 
     socket = io("http://localhost:3000", {
-      query: "studioId=" +id 
-    });
-    
-    socket.emit('join', {
-      "studioId": id
-    });
-    
+      query: "studioId=" +this.studioId 
+    });    
   },
   methods: {
     addBrick(brickId) {      
         brickController.addBrick(brickId);
 
         socket.emit('newBrick', {
-          "studioId": this.$route.params.id,
+          "studioId": this.studioId,
           "brickId": brickId,
           "brickColour": brickController.colour
         });
@@ -89,6 +98,14 @@ export default Vue.extend({
       this.brickColour = colour;
 
       brickController.colour = colour.class;
+    },
+    enterStudio(name) {
+      socket.emit('join', {
+        "studioId": this.studioId,
+        "name": name
+      });
+
+      this.modalShow = false;
     }
   },
 });
