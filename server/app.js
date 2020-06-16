@@ -6,6 +6,8 @@ const cors = require("cors");
 
 const crypto = require('crypto');
 
+const studioController = require("./StudioController");
+
 app.use(cors())
 app.use(bodyParser.json())
 
@@ -20,26 +22,26 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user disconnected');
     let studioId = socket.handshake.query.studioId;
-    let currentStudio = getCurrentStudio(studioId);
-
-    if(currentStudio){
-      currentStudio.builders--;
-    }
-    
+    let currentStudio = studioController.getStudioById(studioId);    
   });
 
   socket.on('join', (data) => {
-    let currentStudio = getCurrentStudio(data.studioId);
-    currentStudio.builders++;
+    let currentStudio = studioController.getStudioById(data.studioId);
+    
+    let builderInfo =   {
+      name: data.name,
+      address: socket.handshake.address
+    }
+    currentStudio.addBuilder(builderInfo);
   });
 
   socket.on("newBrick", data => {
-    let currentStudio = getCurrentStudio(data.studioId);
+    // let currentStudio = getCurrentStudio(data.studioId);
     
-    currentStudio.brickState.push({
-      brickId: data.brickId,
-      brickColour: data.brickColour
-    });
+    // currentStudio.brickState.push({
+    //   brickId: data.brickId,
+    //   brickColour: data.brickColour
+    // });
   });
 
   socket.on("updateBrick", data => {
@@ -50,45 +52,24 @@ io.on('connection', (socket) => {
 app.post("/api/studio/create", async function(req, res) {
   let body = req.body;
 
-  function generateToken() {
-    return new Promise(function(resolve, reject) {
-      crypto.randomBytes(12, (err, buffer) => {
-        if (err) {
-          reject("error generating token");
-        }
-        const token = buffer.toString('hex');
-        resolve(token);
-      });
-    });
-  }
-
-  let token = await generateToken();
-  console.log(token);
-
   let newStudio = {
-    "id": token,
     "public": body.public,
     "builders": 0,
     "title": body.title,
     "brickState": [],
   };
 
-  studios.push(newStudio);
+  newStudio.id = studioController.newStudio(newStudio);
+
   res.status(200).send(newStudio.id);
 });
 
 app.get("/api/studios/:isPublic", function(req, res) { 
-  console.log(studios);
+  let studios = studioController.getStudios();
   res.send(JSON.stringify(studios)); 
 });
 
 app.get("/api/studio/:id", function(req, res) {
-  let studio = studios.filter(ele=> ele.id = req.params.id);
-  res.status(200).send(studio);
+  let studio = studioController.getStudioById(req.params.id);
+  res.status(200).send(JSON.stringify(studio));
 });
-
-
-function getCurrentStudio(studioId){
-  let currentStudio = studios.filter(ele => ele.id === studioId);
-  return currentStudio[0];
-}
