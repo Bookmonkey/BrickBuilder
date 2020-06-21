@@ -1,0 +1,34 @@
+.ui {
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: calc(100% - 24px);
+  padding: 12px;
+  background: #EDF2F7;
+  // border-top: 1px solid #eee;
+  border-top: 1px solid #CBD5E0;
+}
+
+
+.ui-navigation {
+  width: 100%;
+  display: flex;
+  margin-bottom: 12px;
+
+  .item {
+    cursor: pointer;
+    margin-right: 12px;
+    padding-bottom: 4px;
+    font-size: 1.3rem;
+    font-weight: 500;
+
+
+    &.active {
+      border-bottom: 1px solid $color-dark-blue;
+      font-weight: 600;
+    }
+  }
+}
+

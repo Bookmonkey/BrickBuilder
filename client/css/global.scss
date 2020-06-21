@@ -1,10 +1,6 @@
-// variables
-$color-dark-blue: #003A54;
-$color-light-blue: #00B0FF;
-
-
-$font-bitter: 'Bitter', serif;
-$font-jost: 'Jost', sans-serif;
+@import "./variables.scss";
+@import "./buttons.scss";
+@import "./components/components.scss";
 
 
 html,
@@ -15,7 +11,10 @@ body {
   margin: 0;
   padding: 0;
 
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: $font-family;
+ 	-webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  
 }
 
 #renderCanvas {
@@ -24,59 +23,6 @@ body {
   touch-action: none;
 }
 
-.brick-picker {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 150px;
-  background: white;
-  border-top: 1px solid #eee;
-}
-
-.settings {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-
-  background: white;
-  width: 24px;
-  height: 24px;
-  padding: 12px;
-  border-radius: 50%;
-}
-
-
-.bricks {
-  display: flex;
-
-}
-
-.ui-add {
-  width: 64px;
-  height: 64px;
-  text-align: center;
-  padding: 4px;
-  margin: 0 12px;
-  box-shadow: 0 0 5px #444;
-  cursor: pointer;
-}
-
-.h2,
-h2 {
-  font-family: $font-jost;
-  font-size: 2rem;
-}
-
-.h3,
-h3 {
-  font-family: $font-bitter;
-  font-size: 2rem;
-}
-
-.p {
-  font-family: $font-bitter;
-}
 
 .card {
   color: black;
@@ -104,22 +50,37 @@ h3 {
 
   .studio {
     display: inline-block;
-    background: $color-dark-blue;
-    width: calc(25%);
-    margin: 15px;
+    border-top: 6px solid $color-dark-blue;
+    background: white;
+    width: calc(100% - 48px);
+    margin-bottom: 16px;
     padding: 24px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s cubic-bezier(0.45, 0, 0.55, 1);
+    box-shadow: $box-shadow-lg;
+    transition: transform 0.2s cubic-bezier(0.45, 0, 0.55, 1);
     cursor: pointer;
 
     .link {
-      color: white;
-      font-family: $font-bitter;
+      color: $color-dark-blue;
       text-decoration: none;
     }
 
-    &:hover {
-      transform: scale(1.1111);
+    .title {
+      font-family: $font-family;
+      font-weight: 600;
+      font-size: 1.2rem;
+  
+    }
+
+    &:nth-child(odd):hover {
+      transform: scale(1.1111) rotate(2deg);
+    }
+    &:nth-child(even):hover {
+      transform: scale(1.1111) rotate(-2deg);
+    }
+
+    @media screen and (min-width: $breakpoint-large) {
+      width: calc(33.33% - 78px);
+      margin: 15px;
     }
   }
 }
@@ -144,7 +105,7 @@ h3 {
       border-radius: 4px;
 
       font-size: 1.2rem;
-      font-family: $font-jost;
+      font-family: $font-family;
       
       .title{
         font-weight: 700;
@@ -159,15 +120,15 @@ h3 {
       }
 
       &.green {
-        background: #26BF00;
+        background: $color-light-green;
       }
 
       &.blue {
-        background: #536DFE;
+        background: $color-light-blue;
       }
 
       &.yellow {
-        background: #F9A826;
+        background: $color-light-orange ;
       }
     }
   }
@@ -179,27 +140,6 @@ h3 {
 }
 
 
-.button {
-  background: white;
-  
-  padding: 12px 24px;
-  font-size: 16px;
-  text-decoration: none;
-  display: inline-block;
-  cursor: pointer;
-
-  &.blue {
-
-    &:hover { 
-      box-shadow: 5px 5px 0 $color-light-blue;
-    }
-    border: 1px solid $color-light-blue;
-    color: #262626;
-    transition: all 0.3s ease-in-out;
-  }
-}
-
-
 .form-field {
   margin-bottom: 8px;
   label {
@@ -207,7 +147,7 @@ h3 {
     margin-bottom: 8px;
     display: block;
 
-    font-family: $font-bitter;
+    font-family: $font-family;
   }
   input {
     border:none;
@@ -226,4 +166,38 @@ h3 {
       outline-color: #cfd6df;
     }
   }
+}
+
+
+// Text
+.h2,
+h2 {
+  font-family: $font-family;
+  font-size: 2rem;
+  padding: 16px 0;
+  margin: 0;
+  letter-spacing: 1px;
+
+}
+
+.h3,
+h3 {
+  font-family: $font-family;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+.h5, h5{
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.p {
+  font-family: $font-family;
+  letter-spacing: 0.3px;
+}
+
+.breadcrumb {
+  margin: 0;
+  padding: 0;
 }

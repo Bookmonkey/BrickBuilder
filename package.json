@@ -32,6 +32,7 @@
     "express": "^4.17.1",
     "feather-icons": "^4.28.0",
     "parcel": "^1.12.4",
+    "pg": "^8.2.1",
     "socket.io": "^2.3.0",
     "vue": "^2.6.11",
     "vue-hot-reload-api": "^2.3.4",
