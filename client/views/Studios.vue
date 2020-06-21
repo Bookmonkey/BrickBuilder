@@ -25,7 +25,7 @@
     
     <div class="landing pattern-cross-dots-lg bg-dark-blue">
       <div class="card">
-        <div><router-link to="/">Home</router-link> ></div>
+        <div class="breadcrumb"><router-link to="/">Home</router-link> ></div>
 
         <div class="card-title">
           <h2>Studios</h2>
@@ -44,17 +44,17 @@
       <div class="studio-list">
 
         <div class="studio" v-for="studio in filteredStudios" :key="studio.id">
-          <router-link class="link" :to="'/studio/' + studio.id">
+          <router-link class="link" :to="'/studio/' + studio.studio_id">
             <div class="title">{{ studio.title }}</div>
+            <div>
+              created by: name
+            </div>
+
+            <div>
+              Builders: {{ studio.builders }}
+            </div>
           </router-link>
 
-          <div>
-            created by: name
-          </div>
-
-          <div>
-            Builders: {{ studio.builders }}
-          </div>
 
 
         </div>

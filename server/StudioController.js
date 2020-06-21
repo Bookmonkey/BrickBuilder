@@ -1,19 +1,33 @@
 const crypto = require('crypto');
 const Studio = require("./Studio");
+const db = require("./db");
 const StudioController = {
   studios: [],
   async newStudio(info) {
     info.id = await this.generateToken();
 
     let studio = new Studio(info);
-    this.studios.push(studio);
+
+    try {      
+      const query = await db.query("INSERT INTO studio(studio_id, is_public, title) values($1, $2, $3);", [
+        studio.id,
+        studio.public,
+        studio.title
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
+
+    // this.studios.push(studio);
     return info.id;
   },
-  getStudios(){
-    return this.studios;
+  async getStudios(){
+    const { rows } = await db.query(`SELECT * FROM studio;`);
+    return rows;    
   },
-  getStudioById(tokenId){
-    return this.studios.filter(ele=> ele.id = tokenId)[0];
+  async getStudioById(tokenId){
+    const { rows } = await db.query(`SELECT * FROM studio where studio_id = $1`, [tokenId]);
+    return rows[0];
   },
   getSocketInstanceById(tokenId){
 
@@ -24,6 +38,7 @@ const StudioController = {
   },
 
   deleteInactiveStudios(){},
+
   
   generateToken() {
     return new Promise(function(resolve, reject) {

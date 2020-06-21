@@ -1,0 +1,22 @@
+.bricks {
+  display: flex;
+  margin: 0 -6px;
+
+  .brick {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+    padding: 4px;
+    margin: 0 6px 24px 6px;
+    background: #fff;
+    box-shadow: $box-shadow;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      box-shadow: $box-shadow-lg;
+    }
+  }
+}

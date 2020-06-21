@@ -9,10 +9,15 @@ class Studio {
 
 
     addBuilder(info){
+        console.log(info);
         this.members.push({
             name: info.name,
             address: info.address
         });
+    }
+    
+    removeBuilderByIp(ip) {
+        this.members = this.members.filter(member => member.address !== ip);
     }
 }
 

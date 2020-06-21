@@ -3,7 +3,6 @@ const app = express();
 
 const bodyParser = require('body-parser');
 const cors = require("cors");
-
 const crypto = require('crypto');
 
 const studioController = require("./StudioController");
@@ -19,10 +18,21 @@ const server = app.listen(port, () => console.log(`Example app listening at http
 var io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
+
+  let exists = checkIfStudioExists(socket.handshake.query.studioId);
+  if(!exists){
+    io.emit("isDead");
+  }
+  
+  socket.on('disconnect', async () => {
+    console.log('user disconnected', socket.handshake.address);
     let studioId = socket.handshake.query.studioId;
-    let currentStudio = studioController.getStudioById(studioId);    
+    let currentStudio = await studioController.getStudioById(studioId)[0];
+
+    if(currentStudio){
+      currentStudio.removeBuilderByIp(socket.handshake.address); 
+      console.log(currentStudio);
+    }
   });
 
   socket.on('join', (data) => {
@@ -59,13 +69,14 @@ app.post("/api/studio/create", async function(req, res) {
     "brickState": [],
   };
 
-  newStudio.id = studioController.newStudio(newStudio);
+  newStudio.id = await studioController.newStudio(newStudio);
 
   res.status(200).send(newStudio.id);
 });
 
-app.get("/api/studios/:isPublic", function(req, res) { 
-  let studios = studioController.getStudios();
+app.get("/api/studios/:isPublic", async function(req, res) { 
+  let studios = await studioController.getStudios();
+  console.log(studios);
   res.send(JSON.stringify(studios)); 
 });
 
@@ -73,3 +84,8 @@ app.get("/api/studio/:id", function(req, res) {
   let studio = studioController.getStudioById(req.params.id);
   res.status(200).send(JSON.stringify(studio));
 });
+
+
+function checkIfStudioExists(studioId){
+  return (studioController.getStudioById(studioId)) ? true : false;
+}
