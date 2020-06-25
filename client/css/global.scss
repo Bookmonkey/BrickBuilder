@@ -1,5 +1,6 @@
 @import "./variables.scss";
 @import "./buttons.scss";
+@import "./form.scss";
 @import "./components/components.scss";
 
 
@@ -58,6 +59,21 @@ body {
     box-shadow: $box-shadow-lg;
     transition: transform 0.2s cubic-bezier(0.45, 0, 0.55, 1);
     cursor: pointer;
+
+    &.orange {
+      border-top-color: $color-light-orange;
+    }
+
+    &.red {
+      border-top-color: $color-red;
+    }
+    &.blue {
+      border-top-color: $color-light-blue;
+    }
+    &.green {
+      border-top-color: $color-light-green;
+    }
+
 
     .link {
       color: $color-dark-blue;

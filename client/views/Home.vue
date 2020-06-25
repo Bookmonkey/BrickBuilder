@@ -7,7 +7,9 @@
 
         <p class="p">Build and create Lego sets all online. By yourself or with others. </p>
 
-        <router-link to="/studios" class="button blue">Create a Studio</router-link>
+        <div class="cta">
+          <router-link to="/studios" class="button blue">Create a Studio</router-link>
+        </div>
       </div>
     </div>
 
@@ -52,6 +54,13 @@ export default {
 .landing {
   height: 240px;
   padding: 48px;
+}
+
+.cta {
+  display: flex;
+  justify-self: space-around;
+  width: 180px;
+  text-align: center;
 }
 
 </style>
