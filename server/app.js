@@ -75,6 +75,14 @@ app.post("/api/studio/create", async function(req, res) {
   res.status(200).send(newStudio.id);
 });
 
+app.post("/api/studio/delete", async function(req, res) {
+  let body = req.body;
+
+  let deleted = await studioController.deleteStudioById(body.id);
+
+  res.status(200).send();
+})
+
 app.get("/api/studios/:isPublic", async function(req, res) { 
   let studios = await studioController.getStudios();
   console.log(studios);

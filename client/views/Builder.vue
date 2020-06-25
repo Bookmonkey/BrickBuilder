@@ -22,38 +22,6 @@
         <Bricks v-if="uiState === 'bricks'"></Bricks>
         <Settings v-if="uiState === 'settings'"></Settings>
       </div>
-
-      <!-- <div class="brick-picker">
-        <div class="selected-brick">
-          <div id="brick-name">Bricks</div>
-        </div>
-
-        <div class="bricks">
-          <div class="ui-add" v-for="item in bricks" @click="addBrick(item)" :key="item.id">
-            {{ item.title }}
-          </div>
-        </div>
-
-        <div class="config">
-          <div class="select" @click="colourDropdown = !colourDropdown">
-            <div class="selected-item">
-              <span class="colour" :class="brickColour.class"></span> {{ brickColour.name }}
-            </div>
-
-            <div class="items" v-if="colourDropdown">
-              <div class="item" v-for="colour in brickColours" @click="setColour(colour)" :key="colour">
-                <span class="colour" :class="colour.class"></span> {{ colour.name }}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="misc">
-          <div class="ui-chat-tab"></div>
-          <div class="ui-status">Connected</div>
-          <div class="ui-head-count">{{ peopleConnected }} person</div>
-        </div>
-      </div> -->
     </div>
 </template>
 
