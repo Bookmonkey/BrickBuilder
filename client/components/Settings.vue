@@ -52,7 +52,7 @@ export default {
       this.settingsDropdown = !this.settingsDropdown;
     },
     deleteStudioPrompt(){
-      console.log("delete studio prompt");
+      
     },
     portModal(){
       console.log("show import/export modal");
