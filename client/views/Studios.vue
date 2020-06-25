@@ -17,6 +17,23 @@
             <input type="checkbox" v-model="newStudio.public" />
           </div>
 
+          <h4>Additional settings</h4>
+
+          <div class="form-field">
+            <label for="password">Password (optional)</label>
+            <input type="text" />
+          </div>
+
+          <div class="form-field">
+            <label for="colour">Studio colour</label>
+            <select id="colour" name="colour" v-model="newStudio.colour">
+              <option value="black">Black</option>
+              <option value="orange">Orange</option>
+              <option value="yellow">Yellow</option>
+              <option value="red">Red</option>
+            </select>
+          </div>
+
           <button class="button green" @click="createNewStudio()">Lets go</button>
         </div>
       </div>
@@ -26,7 +43,6 @@
     <div class="landing pattern-cross-dots-lg bg-dark-blue">
       <div class="card">
         <div class="breadcrumb"><router-link to="/">Home</router-link> ></div>
-
         <div class="card-title">
           <h2>Studios</h2>
           <button class="button blue" @click="showCreateUI = true">New Studio</button>
@@ -43,7 +59,7 @@
 
       <div class="studio-list">
 
-        <div class="studio" v-for="studio in filteredStudios" :key="studio.id">
+        <div class="studio" v-for="studio in filteredStudios" :key="studio.id" :class="studio.colour">
           <router-link class="link" :to="'/studio/' + studio.studio_id">
             <div class="title">{{ studio.title }}</div>
             <div>
@@ -65,14 +81,22 @@
 </template>
 
 <script>
+import { BrickColours } from "../utils/config";
+
 export default {
   name: "Studios",
   data() {
     return {
+      
+      brickColours: BrickColours,
+      brickColour: BrickColours[0],
+      colourDropdown: false, 
+
       showCreateUI: false,
       newStudio: {
         title: "",
         public: true,
+        colour: "black"
       },
       search: '',
       filteredStudios: [],
@@ -146,7 +170,7 @@ export default {
 
   .content {
     width: 50%;
-    height: 400px;
+    min-height: 400px;
     background: white;
     margin: 0 auto;
     position: relative;

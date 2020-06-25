@@ -9,16 +9,16 @@ const StudioController = {
     let studio = new Studio(info);
 
     try {      
-      const query = await db.query("INSERT INTO studio(studio_id, is_public, title) values($1, $2, $3);", [
+      const query = await db.query("INSERT INTO studio(studio_id, is_public, title, colour) values($1, $2, $3, $4);", [
         studio.id,
         studio.public,
-        studio.title
+        studio.title,
+        studio.colour
       ]);
     } catch (error) {
       console.error(error);
     }
 
-    // this.studios.push(studio);
     return info.id;
   },
   async getStudios(){

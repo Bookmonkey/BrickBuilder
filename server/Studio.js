@@ -4,6 +4,7 @@ class Studio {
         this.public = info.public;
         this.members = new Array();
         this.title = info.title;
+        this.colour = info.colour;
         this.brickState = [];
     }
 

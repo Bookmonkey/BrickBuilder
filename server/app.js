@@ -66,6 +66,7 @@ app.post("/api/studio/create", async function(req, res) {
     "public": body.public,
     "builders": 0,
     "title": body.title,
+    "colour": body.colour,
     "brickState": [],
   };
 
