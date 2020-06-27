@@ -26,7 +26,15 @@ export default {
   },
   methods: {
     addBrick(brick){
-      this.state.brickController.addBrick(brick);      
+      let newBrick = this.state.brickController.addBrick(brick);
+      console.log(newBrick);
+      this.state.socket.emit('newBrick', {
+          "studioId": this.state.studioId,
+          "brickId": 0,
+          "name": newBrick.name,
+          "position": newBrick.position,
+          "colour": newBrick.colour
+        });
     }
   }
 }

@@ -52,8 +52,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      studioId: null,
-      brickController: null,
       brickColours: BrickColours,
       brickColour: BrickColours[0],
       colourDropdown: false,
@@ -69,27 +67,17 @@ export default Vue.extend({
   },
   mounted() {
     feather.replace();
-    this.studioId = this.$route.params.id;
+    this.state.studioId = this.$route.params.id;
     this.state.brickController = new BrickController();
-    socket = io("http://localhost:3000", {
-      query: "studioId=" + this.studioId
+    this.state.socket = io("http://localhost:3000", {
+      query: "studioId=" + this.state.studioId
     });
 
-    socket.on("isDead", () => {
+    this.state.socket.on("isDead", () => {
       this.$router.push("/studios");
     });
   },
   methods: {
-    addBrick(brickId) {      
-        this.brickController.addBrick(brickId);
-
-        socket.emit('newBrick', {
-          "studioId": this.studioId,
-          "brickId": brickId,
-          "brickColour": this.brickController.colour
-        });
-    },
-
     changeUIState(state) {
       this.state.ui.navigation = state;
     },
@@ -105,13 +93,11 @@ export default Vue.extend({
     },
     enterStudio(name) {
       this.modalShow = false;
-      fetch("http://localhost:3000/api/studio/" + this.studioId)
+      fetch("http://localhost:3000/api/studio/" + this.state.studioId)
       .then(res => res.json())
       .then(body => {
-        // this.peopleConnected = body.members.length;
-
-        socket.emit('join', {
-          "studioId": this.studioId,
+        this.state.socket.emit('join', {
+          "studioId": this.state.studioId,
           "name": name
         });
 
