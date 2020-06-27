@@ -22,16 +22,22 @@ const StudioController = {
     return info.studio_id;
   },
   async getStudios(){
-    const { rows } = await db.query(`SELECT * FROM studio;`);
     let studios = [];
+    const { rows } = await db.query(`SELECT * FROM studio;`);
     rows.forEach(element => {
       studios.push(new Studio(element));
     });
-    return studios;    
+    return studios;
   },
+
   async getStudioById(tokenId){
-    const { rows } = await db.query(`SELECT * FROM studio where studio_id = $1;`, [tokenId]);
-    let studio = new Studio(rows[0]);
+    let studio = this.studios.filter(ele => ele.studio_id === tokenId)[0];
+
+    if(studio === undefined) {
+      const { rows } = await db.query(`SELECT * FROM studio where studio_id = $1;`, [tokenId]);
+      studio = new Studio(rows[0]);
+      this.studios.push(studio);
+    }
     return studio;
   },
   getSocketInstanceById(tokenId){

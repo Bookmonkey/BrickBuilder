@@ -1,4 +1,8 @@
 class Studio {
+    get getMembers(){
+        return this.members;
+    }
+
     constructor(info) {
         this.studio_id = info.studio_id;
         this.public = info.is_public;
@@ -20,6 +24,23 @@ class Studio {
     
     removeBuilderByIp(ip) {
         this.members = this.members.filter(member => member.address !== ip);
+    }
+
+    addBrick(brickInfo) {
+        let brick = {
+            'name': brickInfo.name,
+            'position': brickInfo.position,
+            'colour': brickInfo.colour
+        }
+        this.brickState.push(brick)
+    }
+
+    updateBrick(data) {
+        this.brickState.map(ele => {
+            if(ele.name === data.name) {
+                ele[data.type] = data.value
+            }
+        });
     }
 }
 

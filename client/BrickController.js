@@ -1,3 +1,5 @@
+import state from "./state";
+
 class BrickController {
     
     set colour(colour) {
@@ -39,13 +41,13 @@ class BrickController {
 
         this.gizmoManager.gizmos.positionGizmo.onDragEndObservable.add((evt) => {
           let selectedBrick = this.gizmoManager.gizmos.positionGizmo.attachedMesh;
-          console.log("brick moved - send socketio packet here")
-          let data = {
-            name: selectedBrick.name,
-            position: selectedBrick.position,
-            rotation: selectedBrick.rotation,
-            scaling: selectedBrick.scaling,
-          }
+
+          state.socket.emit('updateBrick', {
+            "studioId": state.studioId,
+            "type": "position",
+            "name": selectedBrick.name,
+            "value": selectedBrick.position
+          });
         });
 
 
@@ -83,6 +85,12 @@ class BrickController {
         name: brickName,
         mesh: box
       });
+
+      return {
+        name: brickName,
+        position: box.position,
+        colour: this.brickColour
+      }
     }
 
     getBabylonColour(colour) {

@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     console.log('user disconnected', socket.handshake.address);
     let studioId = socket.handshake.query.studioId;
-    let currentStudio = await studioController.getStudioById(studioId)[0];
+    let currentStudio = await studioController.getStudioById(studioId);
 
     if(currentStudio){
       currentStudio.removeBuilderByIp(socket.handshake.address); 
@@ -40,14 +40,14 @@ io.on('connection', (socket) => {
     let builderInfo =   {
       name: data.name,
       address: socket.handshake.address
-    };
-
+    }; 
 
     currentStudio.addBuilder(builderInfo);
   });
 
-  socket.on("newBrick", data => {
-    // let currentStudio = getCurrentStudio(data.studioId);
+  socket.on("newBrick", async (data) => {
+    let currentStudio = await studioController.getStudioById(data.studioId);
+    currentStudio.addBrick(data);
     
     // currentStudio.brickState.push({
     //   brickId: data.brickId,
@@ -55,8 +55,9 @@ io.on('connection', (socket) => {
     // });
   });
 
-  socket.on("updateBrick", data => {
-    
+  socket.on("updateBrick", async (data) => {
+    let currentStudio = await studioController.getStudioById(data.studioId);
+    currentStudio.updateBrick(data);
   })
 });
 
@@ -89,8 +90,8 @@ app.get("/api/studios/:isPublic", async function(req, res) {
   res.send(JSON.stringify(studios)); 
 });
 
-app.get("/api/studio/:id", function(req, res) {
-  let studio = studioController.getStudioById(req.params.id);
+app.get("/api/studio/:id", async function(req, res) {
+  let studio = await studioController.getStudioById(req.params.id);
   res.status(200).send(JSON.stringify(studio));
 });
 
