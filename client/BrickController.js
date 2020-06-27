@@ -8,9 +8,16 @@ class BrickController {
       return this.brickColour;
     }
 
+    // Only return what is required for the BlockList component.
+    get getBricksList() {
+      return this.bricks;
+      // return this.bricks.map(brick => {
+
+      // });
+    }
+
     constructor() {
         const canvasElement = document.getElementById('renderCanvas');
-        console.log(canvasElement);
         
         this.bricks = [];
 
@@ -64,23 +71,23 @@ class BrickController {
     addBrick(brickElement) {
       let brickIndex = this.bricks.length;
       let brickName = "brick" + brickIndex++;
-      var box = BABYLON.MeshBuilder.CreateBox(brickName, {
+      let box = BABYLON.MeshBuilder.CreateBox(brickName, {
         height: 5.0,
         width: brickElement.dims.x * 5,
         depth: brickElement.dims.y * 5
       }, this.scene);
       box.material = this.getMaterialColour();
       box.isPickable = true;
+
+      this.bricks.push({
+        name: brickName,
+        mesh: box
+      });
     }
 
-    getMaterialColour() {
-      var material = new BABYLON.StandardMaterial("ground", this.scene);
+    getBabylonColour(colour) {
       let babylonColour;
-    
-      material.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-      material.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-
-      switch (this.brickColour) {
+      switch (colour) {
         case "red":
           babylonColour = BABYLON.Color3.Red();
           break;
@@ -103,18 +110,30 @@ class BrickController {
           babylonColour = BABYLON.Color3.White();
           break;
       }
+      return babylonColour;
+    }
+
+
+    getMaterialColour() {
+      var material = new BABYLON.StandardMaterial("ground", this.scene);
+    
+      material.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+      material.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+
+      let babylonColour = this.getBabylonColour(this.brickColour);
       material.emissiveColor = babylonColour;
-      console.log(material);
       
       return material;
+    }
+
+    setMaterialColour(existingMaterial, newColour){
+      console.log(newColour)
+      existingMaterial.material.emissiveColor = this.getBabylonColour(newColour);
     }
 
     updateBrick(brickInfo) {
         console.log(brickInfo);
     }
-
-
-
 
     // getters
 

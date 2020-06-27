@@ -31,17 +31,18 @@ io.on('connection', (socket) => {
 
     if(currentStudio){
       currentStudio.removeBuilderByIp(socket.handshake.address); 
-      console.log(currentStudio);
+      
     }
   });
 
-  socket.on('join', (data) => {
-    let currentStudio = studioController.getStudioById(data.studioId);
-    
+  socket.on('join', async (data) => {
+    let currentStudio = await studioController.getStudioById(data.studioId);
     let builderInfo =   {
       name: data.name,
       address: socket.handshake.address
-    }
+    };
+
+
     currentStudio.addBuilder(builderInfo);
   });
 
@@ -63,7 +64,7 @@ app.post("/api/studio/create", async function(req, res) {
   let body = req.body;
 
   let newStudio = {
-    "public": body.public,
+    "is_public": body.public,
     "builders": 0,
     "title": body.title,
     "colour": body.colour,
@@ -85,7 +86,6 @@ app.post("/api/studio/delete", async function(req, res) {
 
 app.get("/api/studios/:isPublic", async function(req, res) { 
   let studios = await studioController.getStudios();
-  console.log(studios);
   res.send(JSON.stringify(studios)); 
 });
 

@@ -1,0 +1,17 @@
+.block-list {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  margin-top: 6px;
+  margin-right: 6px;
+  background: white;
+  box-shadow: $box-shadow;
+
+
+  .brick-list {
+    .brick {
+      border-bottom: 1px solid black;
+    }
+  }
+}

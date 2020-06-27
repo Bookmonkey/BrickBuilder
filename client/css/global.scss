@@ -57,6 +57,7 @@ body {
     margin-bottom: 16px;
     padding: 24px;
     box-shadow: $box-shadow-lg;
+    border-radius: 3px;
     transition: transform 0.2s cubic-bezier(0.45, 0, 0.55, 1);
     cursor: pointer;
 
@@ -155,7 +156,7 @@ body {
   background: white;
 }
 
-
+// Forms
 .form-field {
   margin-bottom: 8px;
   label {
@@ -181,6 +182,38 @@ body {
       border: 1px solid #cfd6df;
       outline-color: #cfd6df;
     }
+  }
+}
+
+// Modal
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+
+  &::before{
+    content: '';
+    position: absolute;
+
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+    background: #003A54;
+  } 
+  
+
+  .content {
+    width: 50%;
+    min-height: auto;
+    background: white;
+    margin: 48px auto;
+    position: relative;
+    padding: 18px;
+
+    box-shadow: $box-shadow-lg;
   }
 }
 
