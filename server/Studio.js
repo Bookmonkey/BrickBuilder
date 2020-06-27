@@ -1,7 +1,7 @@
 class Studio {
     constructor(info) {
-        this.id = info.id;
-        this.public = info.public;
+        this.studio_id = info.studio_id;
+        this.public = info.is_public;
         this.members = new Array();
         this.title = info.title;
         this.colour = info.colour;
@@ -10,11 +10,12 @@ class Studio {
 
 
     addBuilder(info){
-        console.log(info);
         this.members.push({
             name: info.name,
             address: info.address
         });
+
+        console.log(this.members);
     }
     
     removeBuilderByIp(ip) {

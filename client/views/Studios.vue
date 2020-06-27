@@ -13,8 +13,11 @@
           </div>
 
           <div class="form-field">
-            <label for="public">Public <small>rooms are public by default</small></label>
-            <input type="checkbox" v-model="newStudio.public" />
+            <label for="visibility">Visibility</label>
+            <select class="select" v-model="newStudio.public">
+              <option value="true">Public</option>
+              <option value="false">Private</option>
+            </select>
           </div>
 
           <h4>Additional settings</h4>
@@ -59,7 +62,7 @@
 
       <div class="studio-list">
 
-        <div class="studio" v-for="studio in filteredStudios" :key="studio.id" :class="studio.colour">
+        <div class="studio" v-for="studio in filteredStudios" :key="studio.studio_id" :class="studio.colour">
           <router-link class="link" :to="'/studio/' + studio.studio_id">
             <div class="title">{{ studio.title }}</div>
             <div>
@@ -149,34 +152,5 @@ export default {
 </script>
 
 <style lang="scss">
-.modal {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 999;
-
-  &::before{
-    content: '';
-    position: absolute;
-
-    opacity: 0.5;
-    width: 100%;
-    height: 100%;
-    background: #003A54;
-  }
-  
-
-  .content {
-    width: 50%;
-    min-height: 400px;
-    background: white;
-    margin: 0 auto;
-    position: relative;
-    padding: 18px;
-  }
-
-}
 
 </style>

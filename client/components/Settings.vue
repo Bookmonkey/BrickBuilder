@@ -2,7 +2,7 @@
 
   <div class="settings">
     <div class="group">
-      <div class="button" @click="portModal()">
+      <div class="button" @click="toggleBlockList()">
         <i data-feather="file-text"></i>    
         Show Block list
       </div>
@@ -37,19 +37,20 @@
 
 <script>
 import feather from "feather-icons";
+import state from "../state";
 export default {
   name: "Settings",
   data(){
-    return {
-      settingsDropdown: false,
+    return { 
+      state: state
     }
   },
   mounted(){
     feather.replace();
   },
   methods: {
-    toggleSettingsDropdown() {
-      this.settingsDropdown = !this.settingsDropdown;
+    toggleBlockList() {
+      this.state.ui.blockList = !this.state.ui.blockList;
     },
     deleteStudioPrompt(){
       

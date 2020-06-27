@@ -13,14 +13,18 @@
       </div>
       <canvas id="renderCanvas"></canvas>
 
+      <BlockList v-show="state.ui.blockList"></BlockList>
+
       <div class="ui">
         <div class="ui-navigation">
-          <div class="item" @click="changeUIState('bricks')" :class="isActiveUI('bricks')">Bricks</div>
+          <div class="item" @click="changeUIState('bricks')" :class="isActiveUI('bricks')">My bricks</div>
+          <div class="item" @click="changeUIState('catalogue')" :class="isActiveUI('catalogue')">Brick catalogue</div>
           <div class="item" @click="changeUIState('settings')" :class="isActiveUI('settings')">Settings</div>
         </div>
         
-        <Bricks v-if="uiState === 'bricks'"></Bricks>
-        <Settings v-if="uiState === 'settings'"></Settings>
+        <MyBricks v-if="state.ui.navigation === 'bricks'"></MyBricks>
+        <Catalogue v-if="state.ui.navigation === 'catalogue'"></Catalogue>
+        <Settings v-if="state.ui.navigation === 'settings'"></Settings>
       </div>
     </div>
 </template>
@@ -30,29 +34,32 @@ import Vue from "vue";
 import io from 'socket.io-client';
 
 import BrickController from "../BrickController";
-import Settings from "../components/Settings";
-import Bricks from "../components/BrickUI";
+import { Settings, MyBricks, BlockList, Catalogue } from "../components";
+
+import feather from "feather-icons";
+
+import state from "../state";
 
 import { BrickColours, BrickList } from "../utils/config";
-let brickController;
-
 let socket;
 
 export default Vue.extend({
   components: {
     Settings,
-    Bricks
+    MyBricks,
+    BlockList,
+    Catalogue
   },
   data() {
     return {
       studioId: null,
+      brickController: null,
       brickColours: BrickColours,
       brickColour: BrickColours[0],
       colourDropdown: false,
       bricks: BrickList,
 
-
-      uiState: 'bricks',
+      state: state,
 
       name: '',
       modalShow: true,
@@ -61,8 +68,9 @@ export default Vue.extend({
     }    
   },
   mounted() {
+    feather.replace();
     this.studioId = this.$route.params.id;
-    brickController = new BrickController();
+    this.state.brickController = new BrickController();
     socket = io("http://localhost:3000", {
       query: "studioId=" + this.studioId
     });
@@ -73,27 +81,27 @@ export default Vue.extend({
   },
   methods: {
     addBrick(brickId) {      
-        brickController.addBrick(brickId);
+        this.brickController.addBrick(brickId);
 
         socket.emit('newBrick', {
           "studioId": this.studioId,
           "brickId": brickId,
-          "brickColour": brickController.colour
+          "brickColour": this.brickController.colour
         });
     },
 
     changeUIState(state) {
-      this.uiState = state;
+      this.state.ui.navigation = state;
     },
 
     isActiveUI(state) {
-      return (this.uiState === state) ? 'active' : '';
+      return (this.state.ui.navigation === state) ? 'active' : '';
     },
   
     setColour(colour) {
       this.brickColour = colour;
 
-      brickController.colour = colour.class;
+      this.brickController.colour = colour.class;
     },
     enterStudio(name) {
       this.modalShow = false;

@@ -1,0 +1,72 @@
+<template>
+  <div class="catalogue">
+    <div class="header">
+      <div class="form">
+        <input type="text" />
+      </div>
+    </div>
+
+    <div class="bricks-picker">
+      <div class="brick" v-for="brick in bricks" @click="toggleToMyBricks(brick, $event)" :key="brick.id">
+        <i data-feather="bookmark" v-bind:class="isSelected(brick.id)"></i>
+        {{ brick.title }}
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import { BrickList } from "../utils/config";
+
+import state from "../state";
+import feather from "feather-icons";
+
+export default {
+  name: "Catalogue",
+  data() {
+    return {
+      bricks: BrickList,
+      state: state
+    }
+  },
+  mounted(){
+    feather.replace();
+
+    this.state
+  },
+
+  methods: {
+    isSelected(brickId) {
+      let found = false;
+      this.state.myBricks.filter(ele => {
+        if(!found && ele.id === brickId) found = true;
+      });
+    
+      return (found) ? 'selected' : '';
+    },
+    toggleToMyBricks(brickItem, event) {     
+      let foundIndex = -1;
+  
+      this.state.myBricks.filter((ele, index) => {
+        if(ele.id === brickItem.id) foundIndex = index;
+      });
+
+      if(foundIndex === -1) this.state.myBricks.push(brickItem);
+      else this.state.myBricks.splice(foundIndex, 1);       
+
+      let bookmarkSVG = event.target.querySelector('.feather-bookmark').classList.toggle('selected');
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+  .feather-bookmark {
+    pointer-events: none;
+
+    &.selected {
+      fill: black;
+    }
+  }
+</style>

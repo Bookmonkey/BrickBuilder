@@ -3,9 +3,10 @@ import Home from "./views/Home";
 import Studios from "./views/Studios";
 import Builder from "./views/Builder";
 
-import VueRouter from 'vue-router'
+// import store from "./store";
 
-Vue.use(VueRouter)
+import VueRouter from 'vue-router'
+Vue.use(VueRouter);
 
 const routes = [
   { path: '/', component: Home },
@@ -18,5 +19,8 @@ const router = new VueRouter({
   routes
 })
 
-const app = new Vue({router}).$mount('#app');
+const app = new Vue({
+  router,
+  // store
+}).$mount('#app')
 
