@@ -27,32 +27,37 @@ io.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     console.log('user disconnected', socket.handshake.address);
     let studioId = socket.handshake.query.studioId;
-    let currentStudio = await studioController.getStudioById(studioId);
+    // let currentStudio = await studioController.getStudioById(studioId);
 
-    if(currentStudio){
-      currentStudio.removeBuilderByIp(socket.handshake.address); 
+    // if(currentStudio){
+      // currentStudio.removeBuilderByIp(socket.handshake.address); 
       
-    }
+    // }
   });
 
   socket.on('join', async (data) => {
     let currentStudio = await studioController.getStudioById(data.studioId);
     let userId;
+    let alreadyExists = false;
+
     if(data.id) {
       userId = data.id;
+      alreadyExists = true;
     }
     else {
       userId = await studioController.generateToken();
     }
 
-    let builderInfo =   {
-      name: data.name,
+    let builderInfo = {
       address: socket.handshake.address,
       userId: userId,
     }; 
 
     socket.emit('userJoined', userId);
-    currentStudio.addBuilder(builderInfo);
+
+    if(!alreadyExists){
+      currentStudio.addBuilder(builderInfo);
+    }
   });
 
   socket.on("newBrick", async (data) => {
@@ -108,12 +113,12 @@ app.get("/api/studio/:id", async function(req, res) {
 app.get("/api/studio/:id/member/:userId", async function(req, res) {
   let studio = await studioController.getStudioById(req.params.id);
   let userExists = await studio.findBuilderById(req.params.userId);
-
+  console.log(userExists);
   if(userExists) {
-    res.status(200).send("OK");
+    return res.status(200).send("OK");
   } 
   else {
-    res.status(500).send("User doesnt exist");
+    return res.status(400).send("User doesnt exist");
   }
 });
 

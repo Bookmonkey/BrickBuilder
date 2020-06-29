@@ -5,7 +5,7 @@
         <div class="content">
           <h2>Pick a name</h2>
           <div class="form-field">
-            <input type="text" v-model="name" />
+            <input type="text" v-model="name" autofocus />
           </div>
 
           <button class="button" @click="enterStudio(name)">Enter studio</button>
@@ -80,10 +80,11 @@ export default Vue.extend({
 
     if(this.state.user.id !== 'null') { 
       fetch(`http://localhost:3000/api/studio/${this.state.studioId}/member/` + this.state.user.id)
-      .then(res => res.text())
       .then(res => {
-        this.enterStudio(this.state.user.name, this.state.user.id);
-        this.welcomeBackMessage()
+        if(res.status === 200) {
+          this.enterStudio(this.state.user.name, this.state.user.id);
+          this.welcomeBackMessage()
+        }
       });
     }
 
@@ -112,7 +113,6 @@ export default Vue.extend({
 
         this.state.socket.emit('join', {
           "studioId": this.state.studioId,
-          "name": name,
           "id": id
         });
 

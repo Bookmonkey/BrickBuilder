@@ -19,10 +19,10 @@ class Studio {
         let member = new Member(info);
         this.members.push(member);
     }
-    findBuilderById(id) {
+    findBuilderById(userId) {
         let found = false;
         this.members.map(ele => {
-            if(!found && ele.id === id) found = true;
+            if(!found && ele.userId === userId) found = true;
         });
 
         return found;
