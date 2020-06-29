@@ -1,3 +1,5 @@
+const Member = require("./db/Member");
+
 class Studio {
     get getMembers(){
         return this.members;
@@ -14,12 +16,16 @@ class Studio {
 
 
     addBuilder(info){
-        this.members.push({
-            name: info.name,
-            address: info.address
+        let member = new Member(info);
+        this.members.push(member);
+    }
+    findBuilderById(id) {
+        let found = false;
+        this.members.map(ele => {
+            if(!found && ele.id === id) found = true;
         });
 
-        console.log(this.members);
+        return found;
     }
     
     removeBuilderByIp(ip) {
