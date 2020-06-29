@@ -15,6 +15,11 @@
 
       <BlockList v-show="state.ui.blockList"></BlockList>
 
+      <div class="alert" v-if="alertShow">
+        <i data-feather="check-circle"></i> 
+        Weclome back <strong>{{ state.user.name }}</strong>
+      </div>
+
       <div class="ui">
         <div class="ui-navigation">
           <div class="item" @click="changeUIState('bricks')" :class="isActiveUI('bricks')">My bricks</div>
@@ -52,26 +57,35 @@ export default Vue.extend({
   },
   data() {
     return {
-      brickColours: BrickColours,
-      brickColour: BrickColours[0],
-      colourDropdown: false,
-      bricks: BrickList,
-
       state: state,
 
       name: '',
       modalShow: true,
-
-      peopleConnected: 0,
+      alertShow: false
     }    
   },
   mounted() {
     feather.replace();
     this.state.studioId = this.$route.params.id;
     this.state.brickController = new BrickController();
+
     this.state.socket = io("http://localhost:3000", {
       query: "studioId=" + this.state.studioId
     });
+
+    this.state.user = {
+      id: localStorage.getItem('userId'),
+      name: localStorage.getItem('userName')
+    };
+
+    if(this.state.user.id !== 'null') { 
+      fetch(`http://localhost:3000/api/studio/${this.state.studioId}/member/` + this.state.user.id)
+      .then(res => res.text())
+      .then(res => {
+        this.enterStudio(this.state.user.name, this.state.user.id);
+        this.welcomeBackMessage()
+      });
+    }
 
     this.state.socket.on("isDead", () => {
       this.$router.push("/studios");
@@ -88,22 +102,34 @@ export default Vue.extend({
   
     setColour(colour) {
       this.brickColour = colour;
-
       this.brickController.colour = colour.class;
     },
-    enterStudio(name) {
+    enterStudio(name, id) {
       this.modalShow = false;
       fetch("http://localhost:3000/api/studio/" + this.state.studioId)
       .then(res => res.json())
       .then(body => {
+
         this.state.socket.emit('join', {
           "studioId": this.state.studioId,
-          "name": name
+          "name": name,
+          "id": id
         });
 
-        this.peopleConnected++;
+        this.state.socket.on('userJoined', userId => {
+          localStorage.setItem('userName', name);
+          localStorage.setItem("userId", userId)
+        });
       });
     },
+    welcomeBackMessage(){
+
+      this.alertShow = true;
+
+      setTimeout(() => {
+        this.alertShow = !this.alertShow;
+      }, 5000);
+    }
   },
 });
 </script>

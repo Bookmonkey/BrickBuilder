@@ -37,11 +37,21 @@ io.on('connection', (socket) => {
 
   socket.on('join', async (data) => {
     let currentStudio = await studioController.getStudioById(data.studioId);
+    let userId;
+    if(data.id) {
+      userId = data.id;
+    }
+    else {
+      userId = await studioController.generateToken();
+    }
+
     let builderInfo =   {
       name: data.name,
-      address: socket.handshake.address
+      address: socket.handshake.address,
+      userId: userId,
     }; 
 
+    socket.emit('userJoined', userId);
     currentStudio.addBuilder(builderInfo);
   });
 
@@ -95,6 +105,17 @@ app.get("/api/studio/:id", async function(req, res) {
   res.status(200).send(JSON.stringify(studio));
 });
 
+app.get("/api/studio/:id/member/:userId", async function(req, res) {
+  let studio = await studioController.getStudioById(req.params.id);
+  let userExists = await studio.findBuilderById(req.params.userId);
+
+  if(userExists) {
+    res.status(200).send("OK");
+  } 
+  else {
+    res.status(500).send("User doesnt exist");
+  }
+});
 
 function checkIfStudioExists(studioId){
   return (studioController.getStudioById(studioId)) ? true : false;

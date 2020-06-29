@@ -1,0 +1,21 @@
+.alert {
+    position: absolute;
+    box-sizing: border-box;
+
+    top: 12px;
+    right: 12px;
+    padding: 12px;
+    border-radius: 6px;
+    box-shadow: $box-shadow-lg;
+    background: white;
+
+    &.blue {
+        background: $color-light-blue;
+        color: white;;
+    }
+
+    &.green {
+        background: $color-light-green;
+        color: white;;
+    }
+}
