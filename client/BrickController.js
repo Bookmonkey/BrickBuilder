@@ -145,6 +145,15 @@ class BrickController {
       }
     }
 
+    deleteBrickByName(name){
+      this.bricks = this.bricks.filter(ele => {
+        if(ele.name !== name) return ele;
+        else {
+          ele.mesh.dispose();
+        }
+      });
+    }
+
     updateColour(name, mesh, colour) {
       this.setMaterialColour(mesh, colour);
       state.socket.emit('updateBrick', {
