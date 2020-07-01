@@ -56,7 +56,7 @@ export default {
       
     },
     portModal(){
-      console.log("show import/export modal");
+      // console.log("show import/export modal");
     }
   }
 }

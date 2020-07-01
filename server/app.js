@@ -27,12 +27,6 @@ io.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     console.log('user disconnected', socket.handshake.address);
     let studioId = socket.handshake.query.studioId;
-    // let currentStudio = await studioController.getStudioById(studioId);
-
-    // if(currentStudio){
-      // currentStudio.removeBuilderByIp(socket.handshake.address); 
-      
-    // }
   });
 
   socket.on('join', async (data) => {
@@ -53,22 +47,34 @@ io.on('connection', (socket) => {
       userId: userId,
     }; 
 
-    socket.emit('userJoined', userId);
-
+    
     if(!alreadyExists){
       currentStudio.addBuilder(builderInfo);
     }
+
+    let member = currentStudio.getBuilderById(userId);
+    let brickState = currentStudio.getBrickState;
+
+    let socketData = {
+      member: member,
+      brickState: brickState
+    };
+
+    socket.emit('userJoined', socketData);
   });
 
   socket.on("newBrick", async (data) => {
-    let currentStudio = await studioController.getStudioById(data.studioId);
-    currentStudio.addBrick(data);
+      let currentStudio = await studioController.getStudioById(data.studioId);
+      currentStudio.addBrick(data);
+      socket.broadcast.emit("addNewBrick", data);
   });
 
   socket.on("updateBrick", async (data) => {
     let currentStudio = await studioController.getStudioById(data.studioId);
     currentStudio.updateBrick(data);
-  })
+
+    socket.broadcast.emit("moveUpdatedBrick", data);
+  });
 });
 
 app.post("/api/studio/create", async function(req, res) {
@@ -108,7 +114,7 @@ app.get("/api/studio/:id", async function(req, res) {
 app.get("/api/studio/:id/member/:userId", async function(req, res) {
   let studio = await studioController.getStudioById(req.params.id);
   let userExists = await studio.findBuilderById(req.params.userId);
-  console.log(userExists);
+  
   if(userExists) {
     return res.status(200).send("OK");
   } 
@@ -119,7 +125,7 @@ app.get("/api/studio/:id/member/:userId", async function(req, res) {
 app.get("/api/studio/:id/member/:userId/getbricks", async function(req, res) {
   let params = req.params;
   let studio = await studioController.getStudioById(params.id);
-  let member = await studio.getBuilderById(params.userId);
+  let member = await studio.getBuilderById(params.userId);  
   let bricks = member.getMyBricks;
   res.status(200).send(bricks);
 });
@@ -129,6 +135,16 @@ app.get("/api/studio/:id/member/:userId/addbrick/:brickId", async function(req, 
   let studio = await studioController.getStudioById(params.id);
   let member = await studio.getBuilderById(params.userId);
   member.addToMyBricks(params.brickId);
+
+  res.status(200).send("OK");
+});
+
+app.get("/api/studio/:id/member/:userId/removebrick/:brickId", async function(req, res) {
+  let params = req.params;
+
+  let studio = await studioController.getStudioById(params.id);
+  let member = await studio.getBuilderById(params.userId);
+  member.removeFromMyBricks(params.brickId);
 
   res.status(200).send("OK");
 });
