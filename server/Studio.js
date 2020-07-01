@@ -5,6 +5,10 @@ class Studio {
         return this.members;
     }
 
+    get getBrickState() {
+        return this.brickState;
+    }
+
     constructor(info) {
         this.studio_id = info.studio_id;
         this.public = info.is_public;
@@ -39,10 +43,12 @@ class Studio {
 
     addBrick(brickInfo) {
         let brick = {
+            'id': brickInfo.brickId,
             'name': brickInfo.name,
             'position': brickInfo.position,
             'colour': brickInfo.colour
         }
+        
         this.brickState.push(brick)
     }
 

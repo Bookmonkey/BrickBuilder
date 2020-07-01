@@ -1,42 +1,50 @@
 <template>
-    <div class="builder-ui">
-
-      <div class="modal" v-show="modalShow">
-        <div class="content">
-          <h2>Pick a name</h2>
-          <div class="form-field">
-            <input type="text" v-model="name" autofocus />
-          </div>
-
-          <button class="button" @click="enterStudio(name)">Enter studio</button>
+  <div class="builder-ui">
+    <div class="modal" v-show="modalShow">
+      <div class="content">
+        <h2>Pick a name</h2>
+        <div class="form-field">
+          <input type="text" v-model="name" autofocus />
         </div>
-      </div>
-      <canvas id="renderCanvas"></canvas>
 
-      <BlockList v-show="state.ui.blockList"></BlockList>
-
-      <div class="alert" v-if="alertShow">
-        <i data-feather="check-circle"></i> 
-        Weclome back <strong>{{ state.user.name }}</strong>
-      </div>
-
-      <div class="ui">
-        <div class="ui-navigation">
-          <div class="item" @click="changeUIState('bricks')" :class="isActiveUI('bricks')">My bricks</div>
-          <div class="item" @click="changeUIState('catalogue')" :class="isActiveUI('catalogue')">Brick catalogue</div>
-          <div class="item" @click="changeUIState('settings')" :class="isActiveUI('settings')">Settings</div>
-        </div>
-        
-        <MyBricks v-if="state.ui.navigation === 'bricks'"></MyBricks>
-        <Catalogue v-if="state.ui.navigation === 'catalogue'"></Catalogue>
-        <Settings v-if="state.ui.navigation === 'settings'"></Settings>
+        <button class="button" @click="enterStudio(name)">Enter studio</button>
       </div>
     </div>
+    <canvas id="renderCanvas"></canvas>
+
+    <BlockList v-show="state.ui.blockList"></BlockList>
+
+    <div class="alert" v-if="alertShow">
+      <i data-feather="check-circle"></i>
+      Weclome back
+      <strong>{{ state.user.name }}</strong>
+    </div>
+
+    <div class="ui">
+      <div class="ui-navigation">
+        <div class="item" @click="changeUIState('bricks')" :class="isActiveUI('bricks')">My bricks</div>
+        <div
+          class="item"
+          @click="changeUIState('catalogue')"
+          :class="isActiveUI('catalogue')"
+        >Brick catalogue</div>
+        <div
+          class="item"
+          @click="changeUIState('settings')"
+          :class="isActiveUI('settings')"
+        >Settings</div>
+      </div>
+
+      <MyBricks v-if="state.ui.navigation === 'bricks'"></MyBricks>
+      <Catalogue v-if="state.ui.navigation === 'catalogue'"></Catalogue>
+      <Settings v-if="state.ui.navigation === 'settings'"></Settings>
+    </div>
+  </div>
 </template>
 
 <script>
 import Vue from "vue";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
 import BrickController from "../BrickController";
 import { Settings, MyBricks, BlockList, Catalogue } from "../components";
@@ -59,10 +67,10 @@ export default Vue.extend({
     return {
       state: state,
 
-      name: '',
+      name: "",
       modalShow: true,
       alertShow: false
-    }    
+    };
   },
   mounted() {
     feather.replace();
@@ -73,15 +81,17 @@ export default Vue.extend({
       query: "studioId=" + this.state.studioId
     });
 
-    let userId = localStorage.getItem('userId')
-    let userName = localStorage.getItem('userName');
+    let userId = localStorage.getItem("userId");
+    let userName = localStorage.getItem("userName");
 
-    if(this.state.user.id !== 'null') { 
-      fetch(`http://localhost:3000/api/studio/${this.state.studioId}/member/` + userId)
-      .then(res => {
-        if(res.status === 200) {
+    if (this.state.user.id !== "null") {
+      fetch(
+        `http://localhost:3000/api/studio/${this.state.studioId}/member/` +
+          userId
+      ).then(res => {
+        if (res.status === 200) {
           this.enterStudio(userName, userId);
-          this.welcomeBackMessage()
+          this.welcomeBackMessage();
         }
       });
     }
@@ -89,6 +99,16 @@ export default Vue.extend({
     this.state.socket.on("isDead", () => {
       this.$router.push("/studios");
     });
+
+    this.state.socket.on("addNewBrick", data => {
+      let brick = BrickList.filter(ele => ele.id === data.brickId)[0];
+      this.state.brickController.addBrick(data.name, data.colour, brick);
+    })
+
+
+    this.state.socket.on("moveUpdatedBrick", data => {
+      this.state.brickController.updateBrick(data);
+    })
   },
   methods: {
     changeUIState(state) {
@@ -96,9 +116,9 @@ export default Vue.extend({
     },
 
     isActiveUI(state) {
-      return (this.state.ui.navigation === state) ? 'active' : '';
+      return this.state.ui.navigation === state ? "active" : "";
     },
-  
+
     setColour(colour) {
       this.brickColour = colour;
       this.brickController.colour = colour.class;
@@ -106,33 +126,48 @@ export default Vue.extend({
     enterStudio(name, id) {
       this.modalShow = false;
       fetch("http://localhost:3000/api/studio/" + this.state.studioId)
-      .then(res => res.json())
-      .then(body => {
-        this.state.socket.emit('join', {
-          "studioId": this.state.studioId,
-          "id": id
-        });
+        .then(res => res.json())
+        .then(body => {
+          this.state.socket.emit("join", {
+            studioId: this.state.studioId,
+            id: id
+          });
 
-        this.state.socket.on('userJoined', userId => {
-          localStorage.setItem('userName', name);
-          localStorage.setItem("userId", userId);
+          this.state.socket.on("userJoined", socketData => {            
+            localStorage.setItem("userName", name);
+            localStorage.setItem("userId", socketData.member.userId);
 
-          this.state.user = {
-            name: name,
-            id: userId
-          };
+            this.state.user = {
+              name: name,
+              id: socketData.member.userId
+            };
+
+            let bricks = [];
+
+            BrickList.map(ele => {
+              socketData.member.myBricks.filter(brick => {
+                if (ele.id === parseInt(brick)) {
+                  bricks.push(ele);
+                }
+              });
+            });
+
+            this.state.myBricks = bricks;
+            
+
+            this.state.brickState = socketData.brickState;
+            this.state.brickController.initializeFromState();
+          });
         });
-      });
     },
-    welcomeBackMessage(){
-
+    welcomeBackMessage() {
       this.alertShow = true;
 
       setTimeout(() => {
         this.alertShow = !this.alertShow;
       }, 5000);
     }
-  },
+  }
 });
 </script>
 

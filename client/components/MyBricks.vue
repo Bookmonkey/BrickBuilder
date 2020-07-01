@@ -21,15 +21,19 @@ export default {
     return {
       brickColours: BrickColours,
       brickColour: BrickColours[0],
-      state: state,
+      state: state
     }
   },
   methods: {
     addBrick(brick){
-      let newBrick = this.state.brickController.addBrick(brick);
+      
+      let brickIndex = this.state.brickController.getBrickIndex;
+      let brickName = "brick" + brickIndex++;
+
+      let newBrick = this.state.brickController.addBrick(brickName, "red", brick);
       this.state.socket.emit('newBrick', {
           "studioId": this.state.studioId,
-          "brickId": 0,
+          "brickId": newBrick.id,
           "name": newBrick.name,
           "position": newBrick.position,
           "colour": newBrick.colour

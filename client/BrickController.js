@@ -1,4 +1,5 @@
 import state from "./state";
+import {  BrickList } from "./utils/config";
 
 class BrickController {
     
@@ -69,28 +70,64 @@ class BrickController {
         });
     }
 
-    // methods
-    addBrick(brickElement) {
-      let brickIndex = this.bricks.length;
-      let brickName = "brick" + brickIndex++;
-      let box = BABYLON.MeshBuilder.CreateBox(brickName, {
+
+    initializeFromState() {
+      state.brickState.map(brick => {
+        
+        let brickElement = BrickList.filter(ele => ele.id === brick.id)[0];
+        let box = this.createBox(brick.name, brick.colour, brickElement);
+        let positionVector = new BABYLON.Vector3(brick.position.x, brick.position.y, brick.position.z);
+        
+        box.setPositionWithLocalVector(positionVector)
+
+        this.bricks.push({
+          name: brick.name,
+          mesh: box
+        });
+      });
+    }
+
+    createBox(name, colour, brickElement) {
+      let box = BABYLON.MeshBuilder.CreateBox(name, {
         height: 5.0,
         width: brickElement.dims.x * 5,
         depth: brickElement.dims.y * 5
       }, this.scene);
-      box.material = this.getMaterialColour();
-      box.isPickable = true;
+      box.material = this.getMaterialColour(colour);      
+      box.isPickable = true;      
 
+      return box;
+    }
+
+    // methods
+    addBrick(name, colour, element) {
+      
+      let box = this.createBox(name, colour, element);
+      
       this.bricks.push({
-        name: brickName,
+        name: name,
         mesh: box
       });
 
       return {
-        name: brickName,
+        name: name,
+        id: element.id,
         position: box.position,
         colour: this.brickColour
       }
+    }
+
+    // data.studioId
+    // data.type
+    // data.name
+    // data.value
+    updateBrick(data) {
+      let brick = this.bricks.filter(ele => ele.name === data.name)[0];
+
+      if(data.type === 'position') {
+        let positionVector = new BABYLON.Vector3(data.value.x, data.value.y, data.value.z);
+        brick.mesh.setPositionWithLocalVector(positionVector);
+      }      
     }
 
     getBabylonColour(colour) {
@@ -122,13 +159,13 @@ class BrickController {
     }
 
 
-    getMaterialColour() {
+    getMaterialColour(colour) {
       var material = new BABYLON.StandardMaterial("ground", this.scene);
     
       material.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
       material.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
 
-      let babylonColour = this.getBabylonColour(this.brickColour);
+      let babylonColour = this.getBabylonColour(colour);
       material.emissiveColor = babylonColour;
       
       return material;
@@ -137,10 +174,6 @@ class BrickController {
     setMaterialColour(existingMaterial, newColour){
       console.log(newColour)
       existingMaterial.material.emissiveColor = this.getBabylonColour(newColour);
-    }
-
-    updateBrick(brickInfo) {
-        console.log(brickInfo);
     }
 
     // getters

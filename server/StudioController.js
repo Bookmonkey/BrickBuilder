@@ -46,7 +46,6 @@ const StudioController = {
 
   async deleteStudioById(tokenId){
     const { rows } = await db.query("DELETE FROM studio where studio_id = $1;", [tokenId]);
-    console.log(rows);    
     return rows[0];
   },
 
