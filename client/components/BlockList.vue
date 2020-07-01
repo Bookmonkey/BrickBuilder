@@ -8,11 +8,12 @@
     </div>
 
     <div class="brick-list">  
-      <div v-for="(brick, index) in state.brickController.getBricksList" :key="index" class="brick" @click="toggleView(index)">
-        <strong>{{ brick.name }}</strong> <span>{{ formatPosition(index)}}</span>
+      <div v-for="(brick, index) in state.brickController.getBricksList" :key="index" class="brick">
+        <strong @click="toggleView(index)">{{ brick.name }}</strong> <span>{{ formatPosition(index)}}</span>
         <div v-show="brick.open">
           <button class="button sm" @click="setBrickColour(index, 'green')">Colour</button>
           <button class="button sm" @click="toggleBrickVisibility(index)">Visibility</button>
+          <button class="button red sm" @click="deleteBrick(brick.name)">Delete</button>
         </div>
       </div>
     </div>
@@ -32,7 +33,6 @@ export default {
   methods: {
     toggleView(brickIndex) {
       this.state.brickController.UItoggleOpen(brickIndex);
-    
     },  
     toggleBrickVisibility(brickIndex) {
       this.state.brickController.UItoggleVisibility(brickIndex);
@@ -40,6 +40,9 @@ export default {
     setBrickColour(brickIndex, colour) {
       let brick = state.brickController.getBricksList[brickIndex];
       state.brickController.updateColour(brick.name, brick.mesh, 'green');
+    },
+    deleteBrick(name){
+      this.state.brickController.deleteBrickByName(name);
     },
     formatPosition(brickIndex) {
       let brick = state.brickController.getBricksList[brickIndex];
