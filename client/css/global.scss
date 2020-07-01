@@ -172,8 +172,8 @@ body {
     width: 100%;
     padding: 12px;
     box-sizing: border-box;
-    border:1px solid #edf2f7;
-    background: #edf2f7;
+    border:1px solid $color-light-grey;
+    background: $color-light-grey;
     outline: none;
 
     transition: all 0.3s ease-in-out;

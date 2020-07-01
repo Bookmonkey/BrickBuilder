@@ -2,17 +2,24 @@
   <div class="builder-ui">
     <div class="modal" v-show="modalShow">
       <div class="content">
-        <h2>Pick a name</h2>
-        <div class="form-field">
-          <input type="text" v-model="name" autofocus />
+
+        <div v-show="modalState === 'name'">
+          <h2>Pick a name</h2>
+          <div class="form-field">
+            <input type="text" v-model="name" autofocus />
+          </div>
+
+          <button class="button" @click="enterStudio(name)">Enter studio</button>
         </div>
 
-        <button class="button" @click="enterStudio(name)">Enter studio</button>
+        <div v-show="modalState === 'loading'">
+          <h2>Loading...</h2>
+        </div>
       </div>
     </div>
     <canvas id="renderCanvas"></canvas>
 
-    <BlockList v-show="state.ui.blockList"></BlockList>
+    <BlockList v-if="state.ui.blockList"></BlockList>
 
     <div class="alert" v-if="alertShow">
       <i data-feather="check-circle"></i>
@@ -69,6 +76,7 @@ export default Vue.extend({
 
       name: "",
       modalShow: true,
+      modalState: "name",
       alertShow: false
     };
   },
@@ -92,6 +100,8 @@ export default Vue.extend({
         if (res.status === 200) {
           this.enterStudio(userName, userId);
           this.welcomeBackMessage();
+
+          this.modalState = 'loading';
         }
       });
     }
@@ -106,7 +116,7 @@ export default Vue.extend({
     })
 
 
-    this.state.socket.on("moveUpdatedBrick", data => {
+    this.state.socket.on("moveUpdatedBrick", data => {      
       this.state.brickController.updateBrick(data);
     })
   },
@@ -124,7 +134,6 @@ export default Vue.extend({
       this.brickController.colour = colour.class;
     },
     enterStudio(name, id) {
-      this.modalShow = false;
       fetch("http://localhost:3000/api/studio/" + this.state.studioId)
         .then(res => res.json())
         .then(body => {
@@ -153,10 +162,9 @@ export default Vue.extend({
             });
 
             this.state.myBricks = bricks;
-            
-
             this.state.brickState = socketData.brickState;
             this.state.brickController.initializeFromState();
+            this.modalShow = false;
           });
         });
     },
