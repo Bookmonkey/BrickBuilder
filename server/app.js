@@ -72,7 +72,6 @@ io.on('connection', (socket) => {
   socket.on("updateBrick", async (data) => {
     let currentStudio = await studioController.getStudioById(data.studioId);
     currentStudio.updateBrick(data);
-
     socket.broadcast.emit("moveUpdatedBrick", data);
   });
 });

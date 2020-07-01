@@ -12,10 +12,14 @@
   margin-bottom: 6px;
   border: none;
   box-shadow: $box-shadow-md;
-  
-  svg, i, .icon {
-    margin-right: 6px;
+
+  &.sm {
+    padding: 8px 12px;
   }
+  
+  // svg, i, .icon {
+  //   // margin-right: 6px;
+  // }
 
   // default
 

@@ -1,17 +1,19 @@
 <template>
   <div class="block-list">
     <div class="heading">
-      <div class="h4">Block list</div>
-      <div class="button" @click="refreshList()">
-        <i data-feather="refresh-cw"></i>
+      <div class="h5">Block list</div>
+      <div class="button sm" @click="refreshList()">
+        <i data-feather="refresh-cw" width="18" height="18"></i>
       </div>
     </div>
 
-    <div class="brick-list" v-if="bricks !== null">  
-      <div v-for="(brick, index) in bricks" :key="index" class="brick">
+    <div class="brick-list">  
+      <div v-for="(brick, index) in state.brickController.getBricksList" :key="index" class="brick" @click="toggleView(index)">
         <strong>{{ brick.name }}</strong> <span>{{ formatPosition(index)}}</span>
-
-        <div @click="setBrickColour(index, 'green')">Set colour</div>
+        <div v-show="brick.open">
+          <button class="button sm" @click="setBrickColour(index, 'green')">Colour</button>
+          <button class="button sm" @click="toggleBrickVisibility(index)">Visibility</button>
+        </div>
       </div>
     </div>
   </div>
@@ -23,23 +25,24 @@ export default {
   name: "BickList",
   data(){
     return {
-      state: state
+      state: state,
+      bricks: []
     }
   },
   methods: {
-    refreshList(){
-    },
+    toggleView(brickIndex) {
+      this.state.brickController.UItoggleOpen(brickIndex);
+    
+    },  
     toggleBrickVisibility(brickIndex) {
-      let brick = this.bricks[brickIndex];
-
-      brick.mesh.isVisible = !brick.mesh.isVisible;
+      this.state.brickController.UItoggleVisibility(brickIndex);
     },
     setBrickColour(brickIndex, colour) {
-      let brick = this.bricks[brickIndex];
-      state.brickController.setMaterialColour(brick.mesh, 'green');
+      let brick = state.brickController.getBricksList[brickIndex];
+      state.brickController.updateColour(brick.name, brick.mesh, 'green');
     },
     formatPosition(brickIndex) {
-      let brick = this.bricks[brickIndex];
+      let brick = state.brickController.getBricksList[brickIndex];
       let pos = {
         x: Math.round(brick.mesh.position.x, 2),
         y: Math.round(brick.mesh.position.y, 2),
@@ -48,16 +51,7 @@ export default {
       return `${pos.x}, ${pos.y}, ${pos.z}`;
     }
   },
-  computed: {
-    bricks: function(){
-      if(this.state.brickController === null) {
-        return null;
-      }
-      else {
-        return this.state.brickController.getBricksList;
-      }
-    },
-  },
+
 }
 </script>
 

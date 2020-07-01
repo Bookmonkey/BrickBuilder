@@ -3,15 +3,28 @@
   top: 0;
   right: 0;
   width: 200px;
+  // padding: 6px;
   margin-top: 6px;
   margin-right: 6px;
   background: white;
-  box-shadow: $box-shadow;
+  box-shadow: $box-shadow-lg;
 
+  border-radius: 6px;
 
+  .heading {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
   .brick-list {
+
     .brick {
+      &:nth-child(even){
+        background: $color-light-grey;
+      }
       border-bottom: 1px solid black;
+      padding: 4px;
     }
   }
 }

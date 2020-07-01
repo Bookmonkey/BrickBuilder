@@ -4,11 +4,11 @@ export default {
     name: null,
     id: null
   },
-  brickController: null,
+  brickController: [],
   myBricks: [],
   ui: {
     navigation: 'bricks',
-    blockList: false,
+    blockList: true,
   },
   socket: null,
 };
