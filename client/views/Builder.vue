@@ -73,16 +73,14 @@ export default Vue.extend({
       query: "studioId=" + this.state.studioId
     });
 
-    this.state.user = {
-      id: localStorage.getItem('userId'),
-      name: localStorage.getItem('userName')
-    };
+    let userId = localStorage.getItem('userId')
+    let userName = localStorage.getItem('userName');
 
     if(this.state.user.id !== 'null') { 
-      fetch(`http://localhost:3000/api/studio/${this.state.studioId}/member/` + this.state.user.id)
+      fetch(`http://localhost:3000/api/studio/${this.state.studioId}/member/` + userId)
       .then(res => {
         if(res.status === 200) {
-          this.enterStudio(this.state.user.name, this.state.user.id);
+          this.enterStudio(userName, userId);
           this.welcomeBackMessage()
         }
       });
@@ -110,7 +108,6 @@ export default Vue.extend({
       fetch("http://localhost:3000/api/studio/" + this.state.studioId)
       .then(res => res.json())
       .then(body => {
-
         this.state.socket.emit('join', {
           "studioId": this.state.studioId,
           "id": id
@@ -118,7 +115,12 @@ export default Vue.extend({
 
         this.state.socket.on('userJoined', userId => {
           localStorage.setItem('userName', name);
-          localStorage.setItem("userId", userId)
+          localStorage.setItem("userId", userId);
+
+          this.state.user = {
+            name: name,
+            id: userId
+          };
         });
       });
     },

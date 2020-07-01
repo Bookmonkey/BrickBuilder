@@ -33,7 +33,13 @@ export default {
   mounted(){
     feather.replace();
 
-    this.state
+    if(this.state.myBricks.length === 0){
+      fetch(`http://localhost:3000/api/studio/${this.state.studioId}/member/${this.state.user.id}/getbricks`)
+      .then(res => res.json())
+      .then(res => {
+        console.log(res, this.bricks);
+      });
+    }
   },
 
   methods: {
@@ -52,7 +58,15 @@ export default {
         if(ele.id === brickItem.id) foundIndex = index;
       });
 
-      if(foundIndex === -1) this.state.myBricks.push(brickItem);
+      if(foundIndex === -1) {
+
+        fetch(`http://localhost:3000/api/studio/${this.state.studioId}/member/${this.state.user.id}/addbrick/${brickItem.id}`)
+        .then(res => res.text())
+        .then(res => {
+          console.log(res);
+        });
+        // this.state.myBricks.push(brickItem);
+      }
       else this.state.myBricks.splice(foundIndex, 1);       
 
       let bookmarkSVG = event.target.querySelector('.feather-bookmark').classList.toggle('selected');

@@ -27,7 +27,6 @@ export default {
   methods: {
     addBrick(brick){
       let newBrick = this.state.brickController.addBrick(brick);
-      console.log(newBrick);
       this.state.socket.emit('newBrick', {
           "studioId": this.state.studioId,
           "brickId": 0,
