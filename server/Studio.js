@@ -27,6 +27,11 @@ class Studio {
 
         return found;
     }
+
+    getBuilderById(userId){
+        let member = this.members.filter(ele => ele.userId === userId);
+        return member[0]
+    }
     
     removeBuilderByIp(ip) {
         this.members = this.members.filter(member => member.address !== ip);

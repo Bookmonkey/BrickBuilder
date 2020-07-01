@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     refreshList(){
-      // this.bricks.map(ele => console.log(ele.brick.position));
     },
     toggleBrickVisibility(brickIndex) {
       let brick = this.bricks[brickIndex];

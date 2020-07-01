@@ -63,11 +63,6 @@ io.on('connection', (socket) => {
   socket.on("newBrick", async (data) => {
     let currentStudio = await studioController.getStudioById(data.studioId);
     currentStudio.addBrick(data);
-    
-    // currentStudio.brickState.push({
-    //   brickId: data.brickId,
-    //   brickColour: data.brickColour
-    // });
   });
 
   socket.on("updateBrick", async (data) => {
@@ -107,7 +102,7 @@ app.get("/api/studios/:isPublic", async function(req, res) {
 
 app.get("/api/studio/:id", async function(req, res) {
   let studio = await studioController.getStudioById(req.params.id);
-  res.status(200).send(JSON.stringify(studio));
+  res.status(200).send(studio);
 });
 
 app.get("/api/studio/:id/member/:userId", async function(req, res) {
@@ -121,6 +116,23 @@ app.get("/api/studio/:id/member/:userId", async function(req, res) {
     return res.status(400).send("User doesnt exist");
   }
 });
+app.get("/api/studio/:id/member/:userId/getbricks", async function(req, res) {
+  let params = req.params;
+  let studio = await studioController.getStudioById(params.id);
+  let member = await studio.getBuilderById(params.userId);
+  let bricks = member.getMyBricks;
+  res.status(200).send(bricks);
+});
+
+app.get("/api/studio/:id/member/:userId/addbrick/:brickId", async function(req, res) {
+  let params = req.params;
+  let studio = await studioController.getStudioById(params.id);
+  let member = await studio.getBuilderById(params.userId);
+  member.addToMyBricks(params.brickId);
+
+  res.status(200).send("OK");
+});
+
 
 function checkIfStudioExists(studioId){
   return (studioController.getStudioById(studioId)) ? true : false;
