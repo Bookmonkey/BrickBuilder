@@ -46,11 +46,8 @@ export default {
     },
     formatPosition(brickIndex) {
       let brick = state.brickController.getBricksList[brickIndex];
-      let pos = {
-        x: Math.round(brick.mesh.position.x, 2),
-        y: Math.round(brick.mesh.position.y, 2),
-        z: Math.round(brick.mesh.position.z, 2)
-      }
+    
+      let pos = brick.getFormattedPosition;
       return `${pos.x}, ${pos.y}, ${pos.z}`;
     }
   },

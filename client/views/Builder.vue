@@ -128,11 +128,7 @@ export default Vue.extend({
     isActiveUI(state) {
       return this.state.ui.navigation === state ? "active" : "";
     },
-
-    setColour(colour) {
-      this.brickColour = colour;
-      this.brickController.colour = colour.class;
-    },
+    
     enterStudio(name, id) {
       fetch("http://localhost:3000/api/studio/" + this.state.studioId)
         .then(res => res.json())

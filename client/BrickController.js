@@ -5,14 +5,9 @@
 import state from "./state";
 import {  BrickList } from "./utils/config";
 
-class BrickController {
-  set colour(colour) {
-    this.brickColour = colour;
-  };
+import Brick from "./builder/Brick";
 
-  get colour() {
-    return this.brickColour;
-  }
+class BrickController {
 
   get getBrickIndex(){
     return this.bricks.length;
@@ -21,20 +16,12 @@ class BrickController {
   
   // Only return what is required for the BlockList component.
   get getBricksList() {
-    return this.bricks.map(ele => {
-      return {
-        name: ele.name,
-        mesh: ele.mesh,
-        open: ele.open
-      }
-    });
+    return this.bricks;
   }
     constructor() {
         const canvasElement = document.getElementById('renderCanvas');
         
         this.bricks = [];
-
-        this.brickColour = "red";
         this.engine = new BABYLON.Engine(canvasElement, true);
         // Events
         this.canvas = this.engine.getRenderingCanvas();
@@ -85,22 +72,28 @@ class BrickController {
       state.brickState.map(brick => {
         
         let brickElement = BrickList.filter(ele => ele.id === brick.id)[0];
+            
         let box = this.createBox(brick.name, brick.colour, brickElement);
         let positionVector = new BABYLON.Vector3(brick.position.x, brick.position.y, brick.position.z);
         
-        box.setPositionWithLocalVector(positionVector)
-
-        this.bricks.push({
+        box.setPositionWithLocalVector(positionVector);        
+        
+        let brickDefintion = {
+          id: brick.id,
           name: brick.name,
+          colour: brick.colour,
           mesh: box,
           open: false
-        });
+        };
+
+        let newBrick = new Brick(brickDefintion);
+        this.bricks.push(newBrick);
       });
     }
 
     createBox(name, colour, brickElement) {
       let box = BABYLON.MeshBuilder.CreateBox(name, {
-        height: 5.0,
+        height: 4.0,
         width: brickElement.dims.x * 5,
         depth: brickElement.dims.y * 5
       }, this.scene);
@@ -112,20 +105,20 @@ class BrickController {
 
     addBrick(name, colour, element) {
       
-      let box = this.createBox(name, colour, element);
+      let box = this.createBox(name, colour, element);  
       
-      this.bricks.push({
+
+      let brickDefintion = {
+        id: element.id,
         name: name,
+        colour: colour,
         mesh: box,
         open: false
-      });
+      };
 
-      return {
-        name: name,
-        id: element.id,
-        position: box.position,
-        colour: this.brickColour
-      }
+      let newBrick = new Brick(brickDefintion);
+      this.bricks.push(newBrick);
+      return newBrick;
     }
 
     // data.studioId
