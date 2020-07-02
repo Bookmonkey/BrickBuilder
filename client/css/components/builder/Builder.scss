@@ -7,7 +7,6 @@
   width: calc(100% - 24px);
   padding: 12px;
   background: $color-light-grey;
-  // border-top: 1px solid #eee;
   border-top: 1px solid #CBD5E0;
 }
 
@@ -29,6 +28,23 @@
       border-bottom: 1px solid $color-dark-blue;
       font-weight: 600;
     }
+  }
+}
+
+
+.colour-picker {
+  .options {
+    display: inline-block;
+    
+    // top: 300px;
+    z-index: 999;
+
+    width: 300px;
+    height: 200px;
+
+    background: white;
+
+    box-shadow: $box-shadow;
   }
 }
 
