@@ -4,44 +4,41 @@
       You havent picked any bricks. Goto the Brick Catalogue to choose some.
     </div>
 
-    <div class="bricks-picker">
+    <div class="bricks-list">
       <div class="brick" v-for="item in state.myBricks" @click="addBrick(item)" :key="item.id">
         {{ item.title }}
       </div>
     </div>
 
-    <!-- <ColourPicker :colour="brickColour"></ColourPicker> -->
+    <div class="colour-picker">
+      <div class="options" v-if="showColourOptions">
 
-    <!-- <div class="colours"> -->
-
-    <!-- <div class="select" @click="colourDropdown = !colourDropdown">
-      <div class="selected-item">
-        <span class="colour" :class="brickColour.class"></span> {{ brickColour.name }}
-      </div>
-
-      <div class="items" v-if="colourDropdown">
-        <div class="item" v-for="colour in brickColours" @click="setColour(colour)" :key="colour">
-          <span class="colour" :class="colour.class"></span> {{ colour.name }}
+        <div class="button-list">
+          <button class="button sm" v-for="colour in brickColours" @click="setColour(colour)" :key="colour.class">
+              <span class="colour" :class="colour.class"></span> {{ colour.name }}
+          </button>
         </div>
       </div>
-    </div> -->
-    <!-- </div> -->
+
+      <button class="button" @click="toggleOptions()">
+        <span class="colour" :class="selectedColour.class"></span> {{ selectedColour.name }}
+      </button>
+
+    </div>
     
   </div>
 </template>
 
 <script>
-// import ColourPicker from "./ColourPicker";
 import state from "../state";
+import { BrickColours } from '../utils/config';
 export default {
   name: "Bricks",
-  // components: {
-  //   ColourPicker,
-  // },
   data() {
     return {
-      brickColour: "red",
-      colourDropdown: false,
+      showColourOptions: false,
+      brickColours: BrickColours,
+      selectedColour: BrickColours[0],
       state: state
     }
   },
@@ -51,7 +48,7 @@ export default {
       let brickIndex = this.state.brickController.getBrickIndex;
       let brickName = "brick" + brickIndex++;
 
-      let newBrick = this.state.brickController.addBrick(brickName, this.brickColour, brick);
+      let newBrick = this.state.brickController.addBrick(brickName, this.selectedColour.class, brick);
         
       this.state.socket.emit('newBrick', {
           "studioId": this.state.studioId,
@@ -60,6 +57,13 @@ export default {
           "position": newBrick.mesh.position,
           "colour": newBrick.colour
         });
+    },
+    toggleOptions() {
+      this.showColourOptions = !this.showColourOptions;
+    },
+    setColour(colour) {
+      this.selectedColour = colour;
+      this.toggleOptions(); 
     }
   }
 }

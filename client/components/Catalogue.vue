@@ -6,7 +6,7 @@
       </div>
     </div>
 
-    <div class="bricks-picker">
+    <div class="bricks-list">
       <div class="brick" v-for="brick in bricks" @click="toggleToMyBricks(brick, $event)" :key="brick.id">
         <i data-feather="bookmark" v-bind:class="isSelected(brick.id)"></i>
         {{ brick.title }}
