@@ -11,7 +11,7 @@
   font-weight: 400;
   margin-bottom: 6px;
   border: none;
-  box-shadow: $box-shadow-md;
+  box-shadow: $box-shadow;
 
   &.sm {
     padding: 8px 12px;
@@ -20,8 +20,6 @@
   // svg, i, .icon {
   //   // margin-right: 6px;
   // }
-
-  // default
 
   &:hover {
     background: lighten($color: $color-dark-blue, $amount: 60);
@@ -42,5 +40,17 @@
     border: 1px solid $color-light-blue;
     color: #262626;
     transition: all 0.3s ease-in-out;
+  }
+}
+
+
+.button-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+
+  .button {
+    margin-right: 8px;
+    box-shadow: $box-shadow;
   }
 }
