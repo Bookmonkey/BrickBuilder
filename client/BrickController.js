@@ -157,32 +157,8 @@ class BrickController {
       });
     }
 
-    getBabylonColour(colour) {
-      let babylonColour;
-      switch (colour) {
-        case "red":
-          babylonColour = BABYLON.Color3.Red();
-          break;
-        case "green":
-          babylonColour = BABYLON.Color3.Green();
-          break;
-        case "blue":
-          babylonColour = BABYLON.Color3.Blue();
-          break;
-        case "yellow":
-          babylonColour = BABYLON.Color3.Yellow();
-          break;
-        case "black":
-          babylonColour = BABYLON.Color3.Black();
-          break;
-        case "purple":
-          babylonColour = BABYLON.Color3.Purple();
-          break;
-        case "white":
-          babylonColour = BABYLON.Color3.White();
-          break;
-      }
-      return babylonColour;
+    convertHexToBabylonColour(hexCode) {
+      return BABYLON.Color3.FromHexString(hexCode);
     }
 
 
@@ -192,7 +168,7 @@ class BrickController {
       material.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
       material.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
 
-      let babylonColour = this.getBabylonColour(colour);
+      let babylonColour = this.convertHexToBabylonColour(colour);
       material.emissiveColor = babylonColour;
       
       return material;
@@ -201,7 +177,7 @@ class BrickController {
     setMaterialColour(existingMaterial, newColour){
       console.log(existingMaterial);
       
-      existingMaterial.material.emissiveColor = this.getBabylonColour(newColour);
+      existingMaterial.material.emissiveColor = this.convertHexToBabylonColour(newColour);
     }
 
     // UI related - break this out or redo it
