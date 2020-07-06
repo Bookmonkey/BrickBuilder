@@ -1,6 +1,6 @@
 const crypto = require('crypto');
-const Studio = require("./Studio");
-const db = require("./db");
+const Studio = require("../Studio");
+const db = require("../db");
 const StudioController = {
   studios: [],
   async newStudio(info) {
