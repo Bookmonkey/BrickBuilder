@@ -7,7 +7,7 @@
   width: calc(100% - 24px);
   padding: 12px;
   background: $color-light-grey;
-  border-top: 1px solid #CBD5E0;
+  border-top: 1px solid $color-medium-grey;
 }
 
 
@@ -55,6 +55,79 @@
 }
 
 
+.my-bricks {
+  display: flex;
+  width: 100%;
+
+  .bricks-list {
+    flex-grow: 1;
+  }
+}
+
+
+$lego-colours: (
+  "white": #ffffff,
+  "tan": #D9BB7B,
+  "nougat": #D67240,
+  "red": #ff0000,
+  "blue": #0000ff,
+  "yellow": #Ffff00,
+  "black": #000000,
+  "green": #009900,
+  "bright-green": #00cc00,
+  "dark-orange": #A83D15,
+  "medium-blue": #478CC6,
+  "orange": #ff6600,
+  "teal": #059D9E,
+  "lime": #95B90B,
+  "magenta": #990066,
+  "sand-blue": #5E748C,
+  "sand-yellow": #8D7452,
+  "dark-blue": #002541,
+  "dark-green": #003300,
+  "sand-green": #5F8265,
+  "dark-red": #80081B,
+  "bright-orange": #F49B00,
+  "brown": #5B1C0C,
+  "medium-grey": #9C9291,
+  "dark-grey": #4C5156,
+  "light-grey": #E4E4DA,
+  "light-blue": #87C0EA,
+  "bright-pink": #DE378B,
+  "light-pink": #EE9DC3,
+  "light-yellow": #FFFF99,
+  "dark-purple": #2C1577,
+  "light-orange": #F5C189,
+  "dark-brown": #300F06,
+  "medium-orange": #AA7D55,
+  "dark-azure": #469bc3,
+  "azure": #68c3e2,
+  "aqua": #d3f2ea,
+  "medium-lavender": #a06eb9,
+  "lavender": #cda4de,
+  "white-glow": #f5f3d7,
+  "yellowy-green": #e2f99a,
+  "olive-green": #77774E,
+  "dark-lime": #96B93B
+);
+
+
+
+.lego-colour {
+  border-radius: 50%;
+  margin-right: 6px;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  @each $name, $colour in $lego-colours {
+    &.#{$name} {
+      background: $colour;
+      border: 1px solid darken($colour, 20);
+    }
+  }  
+}
+
+
 .colour-picker {
   .options {
     display: inline-block;
@@ -62,7 +135,7 @@
     padding: 12px;
     margin-bottom: 16px;
 
-    width: 300px;
+    width: 30%;
     background: white;
 
     box-shadow: $box-shadow-md;

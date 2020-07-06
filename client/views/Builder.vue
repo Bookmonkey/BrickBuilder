@@ -42,7 +42,7 @@
         >Settings</div>
       </div>
 
-      <MyBricks v-if="state.ui.navigation === 'bricks'"></MyBricks>
+      <MyBricks :colours="colours" v-if="state.ui.navigation === 'bricks'"></MyBricks>
       <Catalogue v-if="state.ui.navigation === 'catalogue'"></Catalogue>
       <Settings v-if="state.ui.navigation === 'settings'"></Settings>
     </div>
@@ -60,7 +60,7 @@ import feather from "feather-icons";
 
 import state from "../state";
 
-import { BrickColours, BrickList } from "../utils/config";
+import { BrickList } from "../utils/config";
 let socket;
 
 export default Vue.extend({
@@ -73,7 +73,7 @@ export default Vue.extend({
   data() {
     return {
       state: state,
-
+      colours: [],
       name: "",
       modalShow: true,
       modalState: "name",
@@ -146,6 +146,8 @@ export default Vue.extend({
               name: name,
               id: socketData.member.userId
             };
+
+            this.colours = socketData.colours;
 
             let bricks = [];
 
