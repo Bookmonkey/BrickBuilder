@@ -5,6 +5,8 @@ export default {
     id: null
   },
   brickController: [],
+  bricks: [],
+  colors: [],
   myBricks: [],
   ui: {
     navigation: 'bricks',

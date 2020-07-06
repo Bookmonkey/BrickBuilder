@@ -43,7 +43,7 @@
       </div>
 
       <MyBricks :colours="colours" v-if="state.ui.navigation === 'bricks'"></MyBricks>
-      <Catalogue v-if="state.ui.navigation === 'catalogue'"></Catalogue>
+      <Catalogue :bricks="bricks" v-if="state.ui.navigation === 'catalogue'"></Catalogue>
       <Settings v-if="state.ui.navigation === 'settings'"></Settings>
     </div>
   </div>
@@ -74,6 +74,7 @@ export default Vue.extend({
     return {
       state: state,
       colours: [],
+      bricks: [],
       name: "",
       modalShow: true,
       modalState: "name",
@@ -90,7 +91,7 @@ export default Vue.extend({
     });
 
     let userId = localStorage.getItem("userId");
-    let userName = localStorage.getItem("userName");
+    let userName = localStorage.getItem("userName");    
 
     if (this.state.user.id !== "null") {
       fetch(
@@ -111,7 +112,7 @@ export default Vue.extend({
     });
 
     this.state.socket.on("addNewBrick", data => {
-      let brick = BrickList.filter(ele => ele.id === data.brickId)[0];
+      let brick = this.state.bricks.filter(ele => ele.id === data.brickId)[0];
       this.state.brickController.addBrick(data.name, data.colour, brick);
     })
 
@@ -142,24 +143,28 @@ export default Vue.extend({
             localStorage.setItem("userName", name);
             localStorage.setItem("userId", socketData.member.userId);
 
+            
+
             this.state.user = {
               name: name,
               id: socketData.member.userId
             };
 
+            // TOOD: probably move to state
             this.colours = socketData.colours;
+            this.state.bricks = socketData.bricks;
 
-            let bricks = [];
+            let myBricks = [];
 
-            BrickList.map(ele => {
+            this.state.bricks.map(ele => {
               socketData.member.myBricks.filter(brick => {
                 if (ele.id === parseInt(brick)) {
-                  bricks.push(ele);
+                  myBricks.push(ele);
                 }
               });
             });
 
-            this.state.myBricks = bricks;
+            this.state.myBricks = myBricks;
             this.state.brickState = socketData.brickState;
             this.state.brickController.initializeFromState();
             this.modalShow = false;
