@@ -5,14 +5,14 @@ const bodyParser = require('body-parser');
 const cors = require("cors");
 const crypto = require('crypto');
 
-const studioController = require("./StudioController");
+const studioController = require("./controllers/studio");
+const socketController = require("./controllers/socket");
+const API = require("./api");
 
 app.use(cors())
 app.use(bodyParser.json())
 
 const port = 3000;
-
-let studios = [];
 
 const server = app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
 var io = require('socket.io')(server);
@@ -55,10 +55,18 @@ io.on('connection', (socket) => {
     let member = currentStudio.getBuilderById(userId);
     let brickState = currentStudio.getBrickState;
 
+
+    // get the brick defintion and brick colours
+    let brickColours = await API.getBrickColours();
+    // let bricks = await API.getBricks();
+
+    console.log(brickColours);
+    // console.log(bricks);
+
     let socketData = {
       member: member,
       brickState: brickState
-    };
+    };    
 
     socket.emit('userJoined', socketData);
   });
