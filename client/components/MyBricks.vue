@@ -1,5 +1,5 @@
 <template>
-  <div class="mybricks">
+  <div class="my-bricks">
     <div v-if="state.myBricks.length === 0">
       You havent picked any bricks. Goto the Brick Catalogue to choose some.
     </div>
@@ -10,18 +10,21 @@
       </div>
     </div>
 
-    <div class="colour-picker">
+    <div class="colour-picker" v-if="state.myBricks.length > 0">
       <div class="options" v-if="showColourOptions">
+        <div class="form-field">
+          <input type="text" placeholder="Search...">
+        </div>
 
         <div class="button-list">
-          <button class="button sm" v-for="colour in brickColours" @click="setColour(colour)" :key="colour.class">
-              <span class="colour" :class="colour.class"></span> {{ colour.name }}
+          <button class="button sm" v-for="colour in colours" @click="setColour(colour)" :key="colour.class">
+              <span class="lego-colour" :class="colour.css_class"></span> {{ colour.name }}
           </button>
         </div>
       </div>
 
       <button class="button" @click="toggleOptions()">
-        <span class="colour" :class="selectedColour.class"></span> {{ selectedColour.name }}
+        <span class="lego-colour" :class="selectedColour.css_class"></span> {{ selectedColour.name }}
       </button>
 
     </div>
@@ -31,14 +34,13 @@
 
 <script>
 import state from "../state";
-import { BrickColours } from '../utils/config';
 export default {
   name: "Bricks",
+  props: ["colours"],
   data() {
     return {
       showColourOptions: false,
-      brickColours: BrickColours,
-      selectedColour: BrickColours[0],
+      selectedColour: { name: "Bright Red", css_class: "red"},
       state: state
     }
   },

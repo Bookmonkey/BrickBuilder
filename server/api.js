@@ -21,7 +21,16 @@ const API = {
 
   getStudiosByMemberId() {
 
-  }
+  },
+
+
+  exportBrickStateByStudioId(studioId) {
+
+  },
+
+  importBrickState() {}
+
+
 }
 
 module.exports =  API;

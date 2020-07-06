@@ -60,12 +60,10 @@ io.on('connection', (socket) => {
     let brickColours = await API.getBrickColours();
     // let bricks = await API.getBricks();
 
-    console.log(brickColours);
-    // console.log(bricks);
-
     let socketData = {
       member: member,
-      brickState: brickState
+      brickState: brickState,
+      colours: brickColours
     };    
 
     socket.emit('userJoined', socketData);

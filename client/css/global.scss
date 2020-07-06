@@ -157,35 +157,6 @@ body {
   background: white;
 }
 
-// Forms
-.form-field {
-  margin-bottom: 8px;
-  label {
-    font-weight: 700;
-    margin-bottom: 8px;
-    display: block;
-
-    font-family: $font-family;
-  }
-  input {
-    border:none;
-    width: 100%;
-    padding: 12px;
-    box-sizing: border-box;
-    border:1px solid $color-light-grey;
-    background: $color-light-grey;
-    outline: none;
-
-    transition: all 0.3s ease-in-out;
-
-    &:focus, &:active {
-      background: white;
-      border: 1px solid #cfd6df;
-      outline-color: #cfd6df;
-    }
-  }
-}
-
 // Modal
 .modal {
   position: absolute;

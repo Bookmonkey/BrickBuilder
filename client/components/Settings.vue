@@ -3,8 +3,9 @@
   <div class="settings">
     <div class="group">
       <div class="button" @click="toggleBlockList()">
-        <i data-feather="file-text"></i>    
-        Show Block list
+        <i data-feather="file-text"></i>
+        <span v-if="!state.ui.blockList">Show block list</span>
+        <span v-else>Hide block list</span>
       </div>
     </div>
     <div class="group">

@@ -1,11 +1,11 @@
 <template>
   <div class="catalogue">
     <div class="header">
-      <div class="form">
+      <div class="form-field">
         <input type="text" />
       </div>
     </div>
-
+``
     <div class="bricks-list">
       <div class="brick" v-for="brick in bricks" @click="toggleToMyBricks(brick, $event)" :key="brick.id">
         <i data-feather="bookmark" v-bind:class="isSelected(brick.id)"></i>
