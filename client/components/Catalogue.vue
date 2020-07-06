@@ -17,16 +17,14 @@
 </template>
 
 <script>
-import { BrickList } from "../utils/config";
-
 import state from "../state";
 import feather from "feather-icons";
 
 export default {
   name: "Catalogue",
+  props: ['bricks'],
   data() {
     return {
-      bricks: BrickList,
       state: state
     }
   },

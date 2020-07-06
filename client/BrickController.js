@@ -3,7 +3,6 @@
 
 
 import state from "./state";
-import {  BrickList } from "./utils/config";
 
 import Brick from "./builder/Brick";
 
@@ -71,7 +70,7 @@ class BrickController {
     initializeFromState() {
       state.brickState.map(brick => {
         
-        let brickElement = BrickList.filter(ele => ele.id === brick.id)[0];
+        let brickElement = state.bricks.filter(ele => ele.id === brick.id)[0];
             
         let box = this.createBox(brick.name, brick.colour, brickElement);
         let positionVector = new BABYLON.Vector3(brick.position.x, brick.position.y, brick.position.z);
@@ -94,8 +93,8 @@ class BrickController {
     createBox(name, colour, brickElement) {
       let box = BABYLON.MeshBuilder.CreateBox(name, {
         height: 4.0,
-        width: brickElement.dims.x * 5,
-        depth: brickElement.dims.y * 5
+        width: brickElement.dim_x * 5,
+        depth: brickElement.dim_y * 5
       }, this.scene);
       box.material = this.getMaterialColour(colour);      
       box.isPickable = true;      
