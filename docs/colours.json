@@ -1,0 +1,43 @@
+{ colourId: 1, colourName: "White", class: "white" }
+{ colourId: 5, colourName: "Brick Yellow", class: "tan" }
+{ colourId: 18, colourName: "Nougat", class: "nougat" }
+{ colourId: 21, colourName: "Bright Red", class: "red" }
+{ colourId: 23, colourName: "Bright Blue", class: "blue", }
+{ colourId: 24, colourName: "Bright Yellow", class: "yellow" }
+{ colourId: 26, colourName: "Black", class: "black" }
+{ colourId: 28, colourName: "Dark Green", class: "green" }
+{ colourId: 37, colourName: "Bright Green", class: "bright-green", }
+{ colourId: 38, colourName: "Dark Orange", class: "dark-orange" }
+{ colourId: 102, colourName: "Medium Blue", class: "medium-blue" }
+{ colourId: 106, colourName: "Bright Orange", class: "orange" }
+{ colourId: 107, colourName: "Bright Bluish Green", class: "teal" }
+{ colourId: 119, colourName: "Bright Yellowish-Green", class: "lime" }
+{ colourId: 124, colourName: "Bright Reddish Violet", class: "magenta" }
+{ colourId: 135, colourName: "Sand Blue", class: "sand-blue" }
+{ colourId: 138, colourName: "Sand Yellow", class: "sand-yellow" }
+{ colourId: 140, colourName: "Earth Blue", class: "dark-blue" }
+{ colourId: 141, colourName: "Earth Green", class: "dark-green" }
+{ colourId: 151, colourName: "Sand Green", class: "sand-green" }
+{ colourId: 154, colourName: "Dark Red", class: "dark-red" }
+{ colourId: 191, colourName: "Flame Yellowish Orange", class: "bright-orange" }
+{ colourId: 192, colourName: "Reddish Brown",  class: "brown" }
+{ colourId: 194, colourName: "Medium Stone Grey", class: "medium-grey" }
+{ colourId: 199, colourName: "Dark Stone Grey", class: "dark-grey" }
+{ colourId: 208, colourName: "Light Stone Grey", class: "light-grey" }
+{ colourId: 212, colourName: "Light Royal Blue", class: "light-blue" }
+{ colourId: 221, colourName: "Bright Purple", class: "bright-pink" }
+{ colourId: 222, colourName: "Light Purple", class: "light-pink" }
+{ colourId: 226, colourName: "Cool Yellow", class: "light-yellow" }
+{ colourId: 268, colourName: "Medium Lilac", class: "dark-purple" }
+{ colourId: 283, colourName: "Light Nougat", class: "light-orange" }
+{ colourId: 308, colourName: "Dark Brown", class: "dark-brown" }
+{ colourId: 312, colourName: "Medium Nougat", class: "medium-orange" }
+{ colourId: 321, colourName: "Dark Azur", class: "dark-azure" }
+{ colourId: 322, colourName: "Medium Azur", class: "azure" }
+{ colourId: 323, colourName: "Aqua", class: "aqua" }
+{ colourId: 324, colourName: "Medium Lavender", class: "medium-lavender" }
+{ colourId: 325, colourName: "Lavender", class: "lavender" }
+{ colourId: 329, colourName: "White Glow", class: "white-glow" }
+{ colourId: 326, colourName: "Spring Yellowish Green", class: "yellowy-green" }
+{ colourId: 330, colourName: "Olive Green", class: "olive-green" }
+{ colourId: 331, colourName: "Medium-Yellowish green", class: "dark-lime" }

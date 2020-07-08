@@ -6,7 +6,7 @@
         <div v-show="modalState === 'name'">
           <h2>Pick a name</h2>
           <div class="form-field">
-            <input type="text" v-model="name" autofocus />
+            <input class="full-size" type="text" v-model="name" autofocus />
           </div>
 
           <button class="button" @click="enterStudio(name)">Enter studio</button>
@@ -19,13 +19,37 @@
     </div>
     <canvas id="renderCanvas"></canvas>
 
+    <div class="brick-ui hidden">
+      <div class="tools">
+        <div class="button-list">
+          <div class="button sm" @click="move()">
+            <Icon :icon="'move'"></Icon>
+          </div>
+          <div class="button sm" @click="rotate()">
+            <Icon :icon="'refresh-cw'"></Icon>
+          </div>
+
+          <div class="button sm">
+            <Icon :icon="'droplet'"></Icon>
+          </div>
+        </div>
+      </div>
+
+      <div class="close">
+        <div class="button sm" @click="closeBrickUI()">
+          <Icon :icon="'x-circle'"></Icon>
+        </div>
+      </div>
+    </div>
+
     <BlockList v-if="state.ui.blockList"></BlockList>
 
     <div class="alert" v-if="alertShow">
-      <i data-feather="check-circle"></i>
+      <Icon :icon="'check-circle'"></Icon>
       Weclome back
       <strong>{{ state.user.name }}</strong>
     </div>
+
 
     <div class="ui">
       <div class="ui-navigation">
@@ -35,16 +59,10 @@
           @click="changeUIState('catalogue')"
           :class="isActiveUI('catalogue')"
         >Brick catalogue</div>
-        <div
-          class="item"
-          @click="changeUIState('settings')"
-          :class="isActiveUI('settings')"
-        >Settings</div>
       </div>
 
       <MyBricks :colours="colours" v-if="state.ui.navigation === 'bricks'"></MyBricks>
       <Catalogue :bricks="bricks" v-if="state.ui.navigation === 'catalogue'"></Catalogue>
-      <Settings v-if="state.ui.navigation === 'settings'"></Settings>
     </div>
   </div>
 </template>
@@ -56,19 +74,18 @@ import io from "socket.io-client";
 import BrickController from "../BrickController";
 import { Settings, MyBricks, BlockList, Catalogue } from "../components";
 
-import feather from "feather-icons";
-
 import state from "../state";
 
-import { BrickList } from "../utils/config";
+import Icon from "../components/Icon";
+
 let socket;
 
 export default Vue.extend({
   components: {
-    Settings,
     MyBricks,
     BlockList,
-    Catalogue
+    Catalogue,
+    Icon
   },
   data() {
     return {
@@ -82,7 +99,6 @@ export default Vue.extend({
     };
   },
   mounted() {
-    feather.replace();
     this.state.studioId = this.$route.params.id;
     this.state.brickController = new BrickController();
 
@@ -177,6 +193,19 @@ export default Vue.extend({
       setTimeout(() => {
         this.alertShow = !this.alertShow;
       }, 5000);
+    },
+
+    closeBrickUI() {
+      // this.state.brickController
+      let brickUI = document.querySelector('.brick-ui');
+      brickUI.classList.toggle('hidden');    
+    },
+
+    move(){
+      this.state.brickController.UIToggleMove();
+    },
+    rotate(){
+      this.state.brickController.UIToggleRotation();
     }
   }
 });

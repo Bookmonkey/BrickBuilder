@@ -1,6 +1,11 @@
 .settings {
 
   display: flex;
+  flex-direction: column;
+
+  .option {
+    width: 60%;
+  }
 
   .group {
     padding: 0 12px;

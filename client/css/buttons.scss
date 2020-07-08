@@ -9,17 +9,26 @@
   display: flex;
   align-items: center;
   font-weight: 400;
-  margin-bottom: 6px;
+  // margin-bottom: 6px;
   border: none;
   box-shadow: $box-shadow;
 
   &.sm {
     padding: 8px 12px;
   }
+
+  &.icon-left {
+    svg, i, .icon {
+      margin-right: 6px;
+    }
+  }
+
+  &.icon-right {
+    svg, i, .icon {
+      margin-left: 6px;
+    }
+  }
   
-  // svg, i, .icon {
-  //   // margin-right: 6px;
-  // }
 
   &:hover {
     background: lighten($color: $color-dark-blue, $amount: 60);
@@ -41,6 +50,11 @@
     color: #262626;
     transition: all 0.3s ease-in-out;
   }
+
+
+  &.round {
+    border-radius: 50%;
+  }
 }
 
 
@@ -52,5 +66,9 @@
   .button {
     margin-right: 8px;
     box-shadow: $box-shadow;
+
+    &:last-child{
+      margin-right: 0;
+    }
   }
 }

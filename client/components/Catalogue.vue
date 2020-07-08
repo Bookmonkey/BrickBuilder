@@ -2,13 +2,13 @@
   <div class="catalogue">
     <div class="header">
       <div class="form-field">
-        <input type="text" />
+        <input class="full-size" type="text" />
       </div>
     </div>
-``
+
     <div class="bricks-list">
       <div class="brick" v-for="brick in bricks" @click="toggleToMyBricks(brick, $event)" :key="brick.id">
-        <i data-feather="bookmark" v-bind:class="isSelected(brick.id)"></i>
+        <i data-feather="star" v-bind:class="isSelected(brick.id)"></i>
         {{ brick.title }}
       </div>
     </div>
@@ -22,22 +22,14 @@ import feather from "feather-icons";
 
 export default {
   name: "Catalogue",
-  props: ['bricks'],
   data() {
     return {
-      state: state
+      state: state,
+      bricks: state.bricks,
     }
   },
   mounted(){
-    feather.replace();
-
-    if(this.state.myBricks.length === 0){
-      fetch(`http://localhost:3000/api/studio/${this.state.studioId}/member/${this.state.user.id}/getbricks`)
-      .then(res => res.json())
-      .then(res => {
-        // console.log(res, this.bricks);
-      });
-    }
+    feather.replace();    
   },
 
   methods: {
@@ -73,14 +65,14 @@ export default {
         });
       }
 
-      let bookmarkSVG = event.target.querySelector('.feather-bookmark').classList.toggle('selected');
+      let bookmarkSVG = event.target.querySelector('.feather-star').classList.toggle('selected');
     }
   }
 }
 </script>
 
 <style lang="scss">
-  .feather-bookmark {
+  .feather-star {
     pointer-events: none;
 
     &.selected {

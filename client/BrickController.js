@@ -27,17 +27,23 @@ class BrickController {
         this.scene = new BABYLON.Scene(this.engine);
 
         this.camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 100, new BABYLON.Vector3.Zero(), this.scene);        
-        var ground = BABYLON.Mesh.CreateGround("ground", 250, 250, 1, this.scene, false);
+        var ground = new BABYLON.Mesh.CreateGround("ground", 250, 250, 1, this.scene, false);
         var groundMaterial = new BABYLON.StandardMaterial("ground", this.scene);
-        groundMaterial.specularColor = BABYLON.Color3.Black();
+        groundMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        groundMaterial.specularColor = new BABYLON.Color3(0.9, 0.9, 0.9);
+        groundMaterial.emissiveColor = new BABYLON.Color3.FromHexString("#009900");
         ground.material = groundMaterial;
 
         
         this.gizmoManager = new BABYLON.GizmoManager(this.scene);
         this.gizmoManager.positionGizmoEnabled = true;
+        // this.gizmoManager.rotationGizmoEnabled = false;
 
         this.gizmoManager.gizmos.positionGizmo.onDragEndObservable.add((evt) => {
           let selectedBrick = this.gizmoManager.gizmos.positionGizmo.attachedMesh;
+          this.moveBrickUI('log', evt);
+          console.log(selectedBrick);
+          
 
           state.socket.emit('updateBrick', {
             "studioId": state.studioId,
@@ -46,6 +52,8 @@ class BrickController {
             "value": selectedBrick.position
           });
         });
+
+        this.gizmoManager.positionGizmoEnabled = false;
 
 
         // initialze the scene
@@ -57,7 +65,11 @@ class BrickController {
         this.camera.attachControl(this.canvas, false);
 
         // create a basic light, aiming 0,1,0 - meaning, to the sky
-        var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene);
+        // var light = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 0), this.scene);
+        this.light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), this.scene);
+
+        // this.highlight = new BABYLON.HighlightLayer("highlight", this.scene);
+        
         this.scene.clearColor = new BABYLON.Color3.FromHexString("#87CEEB")
 
         
@@ -92,12 +104,28 @@ class BrickController {
 
     createBox(name, colour, brickElement) {
       let box = BABYLON.MeshBuilder.CreateBox(name, {
-        height: 4.0,
+        height: brickElement.height,
         width: brickElement.dim_x * 5,
         depth: brickElement.dim_y * 5
       }, this.scene);
+
       box.material = this.getMaterialColour(colour);      
       box.isPickable = true;      
+      box.actionManager = new BABYLON.ActionManager(this.scene);
+
+      box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, ev => {
+        this.moveBrickUI(ev);  
+        
+      }));
+
+      box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, ev => {	
+        box.material.emissiveColor = this.convertHexToBabylonColour("#999999");
+      }));
+
+      box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, (ev) => {
+        box.material.emissiveColor = this.convertHexToBabylonColour(colour);
+      }));
+      
 
       return box;
     }
@@ -179,6 +207,13 @@ class BrickController {
       existingMaterial.material.emissiveColor = this.convertHexToBabylonColour(newColour);
     }
 
+    moveBrickUI(ev){      
+      let brickUI = document.querySelector('.brick-ui');
+      brickUI.classList.remove('hidden');
+      brickUI.style.top = `${ev.pointerY - 40}px`;
+      brickUI.style.left = `${ev.pointerX - 100}px`;     
+    }
+
     // UI related - break this out or redo it
     UItoggleOpen(index){
       let brick = this.bricks[index];
@@ -188,6 +223,24 @@ class BrickController {
     UItoggleVisibility(index) {
       let brick = this.bricks[index];
       brick.mesh.isVisible = !brick.mesh.isVisible;
+    }
+
+    UIUpdateLight() {
+      this.light.setDirectionToTarget(new BABYLON.Vector3(1, 0, 0));
+    }
+
+    UIUpdateSkyBoxColour(newHexCode) {
+    }
+
+    UIUpdateGroundColour(newHexCode) {
+
+    }
+
+    UIToggleMove() {
+      this.gizmoManager.positionGizmoEnabled = !this.gizmoManager.positionGizmoEnabled;
+    }
+    UIToggleRotation() {
+      this.gizmoManager.rotationGizmoEnabled = !this.gizmoManager.rotationGizmoEnabled;
     }
 }
 

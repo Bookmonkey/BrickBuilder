@@ -84,15 +84,10 @@
 </template>
 
 <script>
-import { BrickColours } from "../utils/config";
-
 export default {
   name: "Studios",
   data() {
     return {
-      
-      brickColours: BrickColours,
-      brickColour: BrickColours[0],
       colourDropdown: false, 
 
       showCreateUI: false,
