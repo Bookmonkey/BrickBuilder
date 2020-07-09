@@ -4,12 +4,10 @@
     <div class="modal" v-if="showCreateUI">
       <div class="content">
         <h2>Create Studio</h2>
-
         <div>
-
           <div class="form-field">
             <label for="title">Studio title</label>
-            <input type="text" v-model="newStudio.title">
+            <input type="text" class="full-size" v-model="newStudio.title">
           </div>
 
           <div class="form-field">
@@ -24,7 +22,7 @@
 
           <div class="form-field">
             <label for="password">Password (optional)</label>
-            <input type="text" />
+            <input type="text" class="full-size" />
           </div>
 
           <div class="form-field">
@@ -43,7 +41,7 @@
     </div>
 
     
-    <div class="landing pattern-cross-dots-lg bg-dark-blue">
+    <div class="landing bg-dark-blue">
       <div class="card">
         <div class="breadcrumb"><router-link to="/">Home</router-link> ></div>
         <div class="card-title">
@@ -54,7 +52,7 @@
 
         <div class="form-field search">
           <label for="search">Search for studio</label>
-          <input type="text" v-model="search"/>
+          <input type="text" class="full-size" v-model="search"/>
         </div>
       
 

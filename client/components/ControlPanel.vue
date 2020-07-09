@@ -46,14 +46,19 @@
       </div>
     </Modal>
     
+    <div class="button" v-show="!ui.showPanel" @click="toggleShowPanel()">Show panel</div>
     <div class="panel">
       <div class="heading">
-        <div class="h5">Block list</div>
+        <div class="h5">Control Panel</div>
         <div class="dropdown" @click="dropdown = !dropdown">
           <div class="button sm">
             <Icon :icon="'menu'"></Icon>
           </div>
           <div class="items" v-if="dropdown">
+            <div class="item" @click="toggleShowPanel()">
+              <Icon :icon="'file'"></Icon>
+              Hide control panel
+            </div>
             <div class="item">
               <Icon :icon="'file'"></Icon>
               Import / Export
@@ -109,6 +114,9 @@ export default {
   },
   data() {
     return {
+      ui: {
+        showPanel: false
+      },
       showModal: false,
       dropdown: false,
       state: state,
@@ -116,6 +124,9 @@ export default {
     };
   },
   methods: {
+    toggleShowPanel() {
+      this.ui.showPanel = !this.ui.showPanel;
+    },
     toggleView(brickIndex) {
       this.state.brickController.UItoggleOpen(brickIndex);
     },

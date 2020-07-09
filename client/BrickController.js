@@ -53,8 +53,6 @@ class BrickController {
           });
         });
 
-        this.gizmoManager.positionGizmoEnabled = false;
-
 
         // initialze the scene
         this.camera.attachControl(this.canvas, true);
@@ -210,7 +208,7 @@ class BrickController {
     moveBrickUI(ev){      
       let brickUI = document.querySelector('.brick-ui');
       brickUI.classList.remove('hidden');
-      brickUI.style.top = `${ev.pointerY - 40}px`;
+      brickUI.style.top = `${ev.pointerY - 200}px`;
       brickUI.style.left = `${ev.pointerX - 100}px`;     
     }
 

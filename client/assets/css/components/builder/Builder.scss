@@ -108,14 +108,14 @@
 .colour-picker {
   .options {
     position: absolute;
-    bottom: 106px;
+    bottom: 200px;
     right: 12px;
     display: inline-block;
     z-index: 999;
     padding: 12px;
     margin-bottom: 16px;
 
-    width: 30%;
+    width: 600px;
     background: white;
 
     box-shadow: $box-shadow-md;
