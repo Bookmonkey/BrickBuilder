@@ -22,7 +22,7 @@
     <div class="brick-ui hidden">
       <div class="tools">
         <div class="button-list">
-          <div class="button sm" @click="move()">
+          <div class="button active sm" @click="move()">
             <Icon :icon="'move'"></Icon>
           </div>
           <div class="button sm" @click="rotate()">
@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <BlockList v-if="state.ui.blockList"></BlockList>
+    <control-panel v-if="state.ui.blockList"></control-panel>
 
     <div class="alert" v-if="alertShow">
       <Icon :icon="'check-circle'"></Icon>
@@ -72,7 +72,7 @@ import Vue from "vue";
 import io from "socket.io-client";
 
 import BrickController from "../BrickController";
-import { Settings, MyBricks, BlockList, Catalogue } from "../components";
+import { Settings, MyBricks, ControlPanel, Catalogue } from "../components";
 
 import state from "../state";
 
@@ -83,7 +83,7 @@ let socket;
 export default Vue.extend({
   components: {
     MyBricks,
-    BlockList,
+    ControlPanel,
     Catalogue,
     Icon
   },

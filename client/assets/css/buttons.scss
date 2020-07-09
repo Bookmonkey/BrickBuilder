@@ -29,7 +29,7 @@
     }
   }
   
-
+  &.active,
   &:hover {
     background: lighten($color: $color-dark-blue, $amount: 60);
   }

@@ -1,14 +1,19 @@
 <template>
   <div class="home">
+
+    <div class="banner">
+      <Icon :icon="'alert-circle'" :width="28" :height="28"></Icon>
+      In active development
+    </div>
     <div class="landing">
 
       <div class="card">
-        <h2>Brick builder</h2>
+        <h2>Not a Lego Builder</h2>
 
         <p class="p">Build and create Lego sets all online. By yourself or with others. </p>
 
         <div class="cta">
-          <router-link to="/studios" class="button blue">Create a Studio</router-link>
+          <router-link to="/studios" class="button blue">Studios</router-link>
         </div>
       </div>
     </div>
@@ -18,19 +23,19 @@
 
       <div class="features-list">
         <div class="feature-item blue">
-          <img class="feature-image" src="../images/users.svg" alt="Build together with your friends">
+          <!-- <Icon :icon="'users'"></Icon> -->
           <div class="title">Build together!</div>
         </div>
 
         <div class="feature-item green">
-          <img  class="feature-image" src="../images/lock.svg" alt="Locked padlock">
+          <!-- <Icon :icon="'users'"></Icon> -->
           <div class="title">Public and Private studio!</div>
           Create with friends or family!
         </div>
 
         <div class="feature-item yellow">
           
-          <img class="feature-image" src="../images/book-open.svg" alt="Open book">
+          <!-- <Icon :icon="'book-open'"></Icon> -->
           <div class="title">Open source</div>
           This project is open source!
         </div>
@@ -45,8 +50,12 @@
 </template>
 
 <script>
+import Icon from "../components/Icon";
 export default {
-  name: "Home"
+  name: "Home",
+  components: {
+    Icon
+  }
 }
 </script>
 

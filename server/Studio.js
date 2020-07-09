@@ -10,6 +10,8 @@ class Studio {
     }
 
     constructor(info) {
+        console.log(info);
+        
         this.studio_id = info.studio_id;
         this.public = info.is_public;
         this.members = new Array();
