@@ -3,7 +3,7 @@
 .form-field {
   margin-bottom: 8px;
   label {
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: 8px;
     display: block;
 
@@ -49,6 +49,13 @@
   }
   
   
+  .dropdown.sm .items {
+    width: 100px;
+  }
+  .dropdown.md .items {
+    width: 150px;
+  }
+
   .dropdown > .items {
     display: block;
     position: absolute;
@@ -60,12 +67,17 @@
   }
   
   .dropdown .items .item {
-    padding: 6px;
+    padding: 8px;
     cursor: pointer;
+    display: flex;
   }
   
   .dropdown .items .item:hover {
-    background: #d1d5da;
+    background: lighten($color: $color-dark-blue, $amount: 60);
   }
   
+
+  .dropdown .items .item.disabled {
+    cursor: not-allowed;
+  }
 

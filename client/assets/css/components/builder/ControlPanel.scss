@@ -1,3 +1,9 @@
+.panel-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
 .panel {
   position: absolute;
   top: 12px;
@@ -18,14 +24,32 @@
 
   .content {
     padding: 12px;
-  }
-  .brick-list {
 
+    .title {
+      @extend .h5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .brick-list {
     .brick {
+
+      &.selected {
+        border-left: 5px solid $color-dark-blue;
+      }
+
       &:nth-child(even){
         background: $color-light-grey;
       }
-      border-bottom: 1px solid black;
+
+      &:last-child {
+        border-bottom: 1px solid;
+      }
+      border: 1px solid black;
+      border-bottom: 0px;
+
       padding: 4px;
     }
   }

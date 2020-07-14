@@ -1,43 +1,48 @@
 <template>
   <div class="builder-ui">
-    <div class="modal" v-show="modalShow">
-      <div class="content">
+    <Modal v-show="modalShow" :size="'sm'">
+      <div v-show="modalState === 'name'">
 
-        <div v-show="modalState === 'name'">
-          <h2>Pick a name</h2>
+        <h2 class="heading">
+            Pick a name
+        </h2>
           <div class="form-field">
             <input class="full-size" type="text" v-model="name" autofocus />
           </div>
 
-          <button class="button" @click="enterStudio(name)">Enter studio</button>
+          <button class="button blue" @click="enterStudio(name)">Enter studio</button>
         </div>
 
         <div v-show="modalState === 'loading'">
           <h2>Loading...</h2>
         </div>
-      </div>
-    </div>
+    </Modal>
+
     <canvas id="renderCanvas"></canvas>
 
     <div class="brick-ui hidden">
       <div class="tools">
-        <div class="button-list">
-          <div class="button active sm" @click="move()">
-            <Icon :icon="'move'"></Icon>
-          </div>
-          <div class="button sm" @click="rotate()">
-            <Icon :icon="'refresh-cw'"></Icon>
+        <div class="dropdown sm">
+          <div class="button sm icon-left" @click="brickUIDropdown = !brickUIDropdown">
+            <Icon :icon="'menu'"></Icon>
+            {{ this.state.selectedBrick.name }}
           </div>
 
-          <div class="button sm">
-            <Icon :icon="'droplet'"></Icon>
-          </div>
-        </div>
-      </div>
+          <div class="items" v-if="brickUIDropdown">
+            <!-- <div class="item active icon-left" @click="move()">
+              <Icon :icon="'move'"></Icon> Move
+            </div> -->
 
-      <div class="close">
-        <div class="button sm" @click="closeBrickUI()">
-          <Icon :icon="'x-circle'"></Icon>
+            <div class="item icon-left" @click="rotate()">
+              <Icon :icon="'refresh-cw'"></Icon>
+              Rotate
+            </div>
+
+            <div class="item icon-left disabled">
+              <Icon :icon="'droplet'"></Icon>
+              Colour
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -73,6 +78,7 @@ import io from "socket.io-client";
 
 import BrickController from "../BrickController";
 import { Settings, MyBricks, ControlPanel, Catalogue } from "../components";
+import Modal from "../components/Modal";
 
 import state from "../state";
 
@@ -85,7 +91,8 @@ export default Vue.extend({
     MyBricks,
     ControlPanel,
     Catalogue,
-    Icon
+    Icon,
+    Modal
   },
   data() {
     return {
@@ -95,7 +102,8 @@ export default Vue.extend({
       name: "",
       modalShow: true,
       modalState: "name",
-      alertShow: false
+      alertShow: false,
+      brickUIDropdown: false
     };
   },
   mounted() {
@@ -196,16 +204,17 @@ export default Vue.extend({
     },
 
     closeBrickUI() {
-      // this.state.brickController
       let brickUI = document.querySelector('.brick-ui');
       brickUI.classList.toggle('hidden');    
+      this.state.selectedBrick = null;
     },
 
     move(){
       this.state.brickController.UIToggleMove();
     },
-    rotate(){
-      this.state.brickController.UIToggleRotation();
+    rotate(brickIndex){
+      let mesh = this.state.selectedBrick;
+      this.state.brickController.UIToggleRotation(mesh);
     }
   }
 });

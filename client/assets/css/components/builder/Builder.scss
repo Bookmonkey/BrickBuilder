@@ -23,7 +23,6 @@
     margin-right: 12px;
     padding-bottom: 4px;
     font-size: 1.3rem;
-    font-weight: 500;
 
 
     &.active {
@@ -40,9 +39,9 @@
   position: absolute;
   top: 0;
   left: 0;
-  background: white;
+  // background: white;
   justify-content: space-between;
-  box-shadow: $box-shadow-lg;
+  // box-shadow: $box-shadow-lg;
   border-radius: 12px;
   padding: 12px;
 
