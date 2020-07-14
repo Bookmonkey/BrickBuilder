@@ -19,6 +19,7 @@ body {
   padding: 0;
 
   font-family: $font-family;
+  font-weight: 400;
   font-variation-settings: "CASL" 0.4;
  	-webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
@@ -99,7 +100,6 @@ body {
 
     .title {
       font-family: $font-family;
-      font-weight: 600;
       font-size: 1.2rem;
   
     }
@@ -141,7 +141,6 @@ body {
       font-family: $font-family;
       
       .title{
-        font-weight: 700;
         font-size: 1.5rem;
       }
 
@@ -191,6 +190,9 @@ body {
     background: #003A54;
   } 
   
+  &.sm .content {
+    width: 25%;
+  }
   
   .content {
     width: 50%;
@@ -203,6 +205,24 @@ body {
     box-shadow: $box-shadow-lg;
     border-radius: 5px;
     box-sizing: border-box;
+
+
+    .heading {
+      display: flex;
+      align-items: center;
+      margin: -18px -18px 18px -18px;
+      padding: 18px;
+
+      .heading-icon {
+        // background: lighten($color-dark-blue, $amount: 40);
+        color: $color-dark-blue;
+        margin-right: 14px;
+        border-radius: 50%;
+        
+        padding: 16px;
+        line-height: 16px;
+      }
+    }
   }
 }
 
@@ -214,7 +234,6 @@ h2 {
   font-size: 2rem;
   padding: 16px 0;
   margin: 0;
-  font-weight: 700;
   font-variation-settings: "CASL" 1, "MONO" 0;
   // letter-spacing: 1px;
 
@@ -228,7 +247,6 @@ h3 {
 }
 
 .h5, h5{
-  font-weight: 600;
   font-size: 1rem;
 }
 
@@ -240,4 +258,17 @@ h3 {
 .breadcrumb {
   margin: 0;
   padding: 0;
+}
+
+
+.icon-left {
+  svg, i, .icon {
+    margin-right: 6px;
+  }
+}
+
+.icon-right {
+  svg, i, .icon {
+    margin-left: 6px;
+  }
 }

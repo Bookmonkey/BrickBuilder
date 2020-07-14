@@ -8,6 +8,10 @@ export default {
   bricks: [],
   colors: [],
   myBricks: [],
+
+  selectedBrick: {
+    name: ''
+  },
   ui: {
     navigation: 'bricks',
     blockList: true,

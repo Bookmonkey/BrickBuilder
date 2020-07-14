@@ -58,10 +58,7 @@ io.on('connection', (socket) => {
 
     // get the brick defintion and brick colours
     let brickColours = await API.getBrickColours();
-    let bricks = await API.getBricks();
-
-    console.log(bricks);
-    
+    let bricks = await API.getBricks();    
 
     let socketData = {
       member: member,

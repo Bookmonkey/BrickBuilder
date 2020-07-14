@@ -8,25 +8,11 @@
   border-radius: 4px;
   display: flex;
   align-items: center;
-  font-weight: 400;
-  // margin-bottom: 6px;
   border: none;
   box-shadow: $box-shadow;
 
   &.sm {
     padding: 8px 12px;
-  }
-
-  &.icon-left {
-    svg, i, .icon {
-      margin-right: 6px;
-    }
-  }
-
-  &.icon-right {
-    svg, i, .icon {
-      margin-left: 6px;
-    }
   }
   
   &.active,

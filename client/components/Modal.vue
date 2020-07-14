@@ -1,5 +1,5 @@
 <template>
-  <div class="modal">
+  <div class="modal" :class="size">
     <div class="content">
       <slot></slot>
     </div>
@@ -9,6 +9,7 @@
 <script>
 export default {
   name: "Modal",
+  props: ["size"],
 }
 </script>
 

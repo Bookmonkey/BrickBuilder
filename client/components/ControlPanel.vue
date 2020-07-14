@@ -2,7 +2,15 @@
   <div class="control-panel">
 
     <Modal v-show="showModal">
-      <h3>Settings for Studio</h3>
+      
+      <h2 class="heading">
+        Settings for Studio
+
+        <div class="button" @click="showModal = false">
+          <Icon :icon="'x-circle'"></Icon>
+        </div>
+      </h2>
+      
       <div class="settings">
         <div class="h5">Studio</div>
         <div class="option">
@@ -15,24 +23,32 @@
         <div class="option">
           <div class="title">Direction of Light</div>
           <div class="form-field inline">
-            <input type="text">
-            <input type="text">
-            <input type="text">
+            <input type="text" v-model="light.x">
+            <input type="text" v-model="light.y">
+            <input type="text" v-model="light.z">
 
-            <button class="button">Update</button>
+            <button class="button" @click="changeLightDirection()">Update</button>
           </div>
 
         </div>
         <div class="option">
-
           <div class="title">Skybox colour</div>
           <div class="form-field inline">
-            <input type="text">
-            <button class="button">Update</button>
+            <input type="text" v-model="skyboxHexCode">
+            <button class="button" @click="changeSkybox()">Update</button>
           </div>
         </div>
 
-        <div class="h5">Dangerous - This is dangerous. Beware.</div>
+        <div class="option">
+          <div class="title">Ground colour</div>
+          <div class="form-field inline">
+            <input type="text" v-model="groundHexCode">
+            <button class="button" @click="changeGround()">Update</button>
+          </div>
+        </div>
+
+        <div class="h5">Dangerous - This is dangerous,
+          . Beware.</div>
 
         <div class="option">
           <div class="form-field">
@@ -46,24 +62,32 @@
       </div>
     </Modal>
     
-    <div class="button" v-show="!ui.showPanel" @click="toggleShowPanel()">Show panel</div>
-    <div class="panel">
+    <div class="panel-button button sm icon-left" v-show="!ui.showPanel" @click="toggleShowPanel()">
+      <Icon :icon="'menu'"></Icon>
+      Control Panel
+    </div>
+    <div class="panel"  v-show="ui.showPanel">
       <div class="heading">
         <div class="h5">Control Panel</div>
         <div class="dropdown" @click="dropdown = !dropdown">
-          <div class="button sm">
+          <div class="button sm icon-left">
             <Icon :icon="'menu'"></Icon>
+            Menu
           </div>
           <div class="items" v-if="dropdown">
-            <div class="item" @click="toggleShowPanel()">
-              <Icon :icon="'file'"></Icon>
+            <div class="item icon-left" @click="toggleShowPanel()">
+              <Icon :icon="'x-square'"></Icon>
               Hide control panel
             </div>
-            <div class="item">
+            <div class="item icon-left" @click="saveStudio()">
+              <Icon :icon="'save'"></Icon>
+              Save Studio
+            </div>
+            <div class="item icon-left">
               <Icon :icon="'file'"></Icon>
               Import / Export
             </div>
-            <div class="item" @click="showModal = true">
+            <div class="item icon-left" @click="showModal = true">
               <Icon :icon="'settings'"></Icon>
               Settings
             </div>
@@ -73,12 +97,19 @@
 
       <div class="content">
       
-        <div class="h5">Sets</div>
+        <div class="title">
+          Sets
+
+          <button class="button sm icon-left">
+            <Icon :icon="'plus'"></Icon>
+          </button>
+        </div>
         <div class="brick-list">
           <div
+            
             v-for="(brick, index) in state.brickController.getBricksList"
             :key="index"
-            class="brick"
+            :class="{ brick, selected: isSelectedBrick(brick.name)  }"
           >
             <strong @click="toggleView(index)">{{ brick.name }}</strong>
             <span>{{ formatPosition(index)}}</span>
@@ -114,6 +145,13 @@ export default {
   },
   data() {
     return {
+      skyboxHexCode: "#87CEEB",
+      groundHexCode: "#87CEEB",
+      light: {
+        x: 0,
+        y: 1,
+        z: 0
+      },
       ui: {
         showPanel: false
       },
@@ -124,6 +162,11 @@ export default {
     };
   },
   methods: {
+    isSelectedBrick(brickName) {
+      let selectedBrick = this.state.selectedBrick;
+      if(selectedBrick !== null && selectedBrick.name === brickName) return true;
+      else return false;
+    },
     toggleShowPanel() {
       this.ui.showPanel = !this.ui.showPanel;
     },
@@ -150,8 +193,17 @@ export default {
       this.state.ui.blockList = !this.state.ui.blockList;
     },
     changeLightDirection(){
-      this.state.brickController.UIUpdateLight();
+      this.state.brickController.UIUpdateLight(this.light);
     },
+
+    changeSkybox(){
+      this.state.brickController.UIUpdateSkyBoxColour(this.skyboxHexCode);
+    },
+
+    changeGround() {
+      this.state.brickController.UIUpdateGroundColour(this.groundHexCode);
+    },
+
     deleteStudioPrompt(){
       fetch("http://localhost:3000/api/studio/delete", {
         method: 'POST',

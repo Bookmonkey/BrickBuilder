@@ -9,9 +9,7 @@ class Studio {
         return this.brickState;
     }
 
-    constructor(info) {
-        console.log(info);
-        
+    constructor(info) {        
         this.studio_id = info.studio_id;
         this.public = info.is_public;
         this.members = new Array();

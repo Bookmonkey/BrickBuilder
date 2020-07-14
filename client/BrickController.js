@@ -27,13 +27,12 @@ class BrickController {
         this.scene = new BABYLON.Scene(this.engine);
 
         this.camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 100, new BABYLON.Vector3.Zero(), this.scene);        
-        var ground = new BABYLON.Mesh.CreateGround("ground", 250, 250, 1, this.scene, false);
+        this.ground = new BABYLON.Mesh.CreateGround("ground", 250, 250, 1, this.scene, false);
         var groundMaterial = new BABYLON.StandardMaterial("ground", this.scene);
         groundMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
         groundMaterial.specularColor = new BABYLON.Color3(0.9, 0.9, 0.9);
         groundMaterial.emissiveColor = new BABYLON.Color3.FromHexString("#009900");
-        ground.material = groundMaterial;
-
+        this.ground.material = groundMaterial;
         
         this.gizmoManager = new BABYLON.GizmoManager(this.scene);
         this.gizmoManager.positionGizmoEnabled = true;
@@ -68,7 +67,7 @@ class BrickController {
 
         // this.highlight = new BABYLON.HighlightLayer("highlight", this.scene);
         
-        this.scene.clearColor = new BABYLON.Color3.FromHexString("#87CEEB")
+        this.scene.clearColor = new BABYLON.Color3.FromHexString("#87CEEB");
 
         
         this.engine.runRenderLoop(() => {
@@ -112,8 +111,8 @@ class BrickController {
       box.actionManager = new BABYLON.ActionManager(this.scene);
 
       box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, ev => {
-        this.moveBrickUI(ev);  
-        
+        this.setAsSelectedBrick(ev);
+        this.moveBrickUI(ev);        
       }));
 
       box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, ev => {	
@@ -122,6 +121,7 @@ class BrickController {
 
       box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, (ev) => {
         box.material.emissiveColor = this.convertHexToBabylonColour(colour);
+        // this.clearSelectedBrick();
       }));
       
 
@@ -140,6 +140,8 @@ class BrickController {
         mesh: box,
         open: false
       };
+
+      box.setPositionWithLocalVector(new BABYLON.Vector3(0, 2, 0));
 
       let newBrick = new Brick(brickDefintion);
       this.bricks.push(newBrick);
@@ -205,6 +207,10 @@ class BrickController {
       existingMaterial.material.emissiveColor = this.convertHexToBabylonColour(newColour);
     }
 
+    setAsSelectedBrick(ev) {
+      state.selectedBrick = ev.source;
+    }
+
     moveBrickUI(ev){      
       let brickUI = document.querySelector('.brick-ui');
       brickUI.classList.remove('hidden');
@@ -223,22 +229,23 @@ class BrickController {
       brick.mesh.isVisible = !brick.mesh.isVisible;
     }
 
-    UIUpdateLight() {
-      this.light.setDirectionToTarget(new BABYLON.Vector3(1, 0, 0));
+    UIUpdateLight(light) {
+      this.light.setDirectionToTarget(new BABYLON.Vector3(light.x, light.y, light.z));
     }
 
     UIUpdateSkyBoxColour(newHexCode) {
+      this.scene.clearColor = new BABYLON.Color3.FromHexString(newHexCode)
     }
 
     UIUpdateGroundColour(newHexCode) {
-
+      this.ground.emissiveColor = new BABYLON.Color3.FromHexString(newHexCode);
     }
 
     UIToggleMove() {
       this.gizmoManager.positionGizmoEnabled = !this.gizmoManager.positionGizmoEnabled;
     }
-    UIToggleRotation() {
-      this.gizmoManager.rotationGizmoEnabled = !this.gizmoManager.rotationGizmoEnabled;
+    UIToggleRotation(mesh) {
+      mesh.rotation.y += Math.PI / 2.0;
     }
 }
 
