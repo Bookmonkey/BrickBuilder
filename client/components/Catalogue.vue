@@ -35,7 +35,7 @@ export default {
   methods: {
     isSelected(brickId) {
       let found = false;
-      this.state.myBricks.filter(ele => {
+      this.state.user.bricks.filter(ele => {
         if(!found && ele.id === brickId) found = true;
       });
     
@@ -44,7 +44,7 @@ export default {
     toggleToMyBricks(brickItem, event) {     
       let foundIndex = -1;
   
-      this.state.myBricks.filter((ele, index) => {
+      this.state.user.bricks.filter((ele, index) => {
         if(ele.id === brickItem.id) foundIndex = index;
       });
 
@@ -53,7 +53,7 @@ export default {
         fetch(`http://localhost:3000/api/studio/${this.state.studioId}/member/${this.state.user.id}/addbrick/${brickItem.id}`)
         .then(res => res.text())
         .then(res => {
-          this.state.myBricks.push(brickItem);
+          this.state.user.bricks.push(brickItem);
         });
       }
       else {
@@ -61,7 +61,7 @@ export default {
         .then(res => res.text())
         .then(res => {
           console.log(res);
-          this.state.myBricks.splice(foundIndex, 1);
+          this.state.user.bricks.splice(foundIndex, 1);
         });
       }
 
