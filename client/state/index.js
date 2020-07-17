@@ -1,13 +1,16 @@
-export default {
+let state = {
   studioId: null,
   user: {
+    bricks: [],
     name: null,
     id: null
   },
+  engine: [],
+
   brickController: [],
+
   bricks: [],
   colors: [],
-  myBricks: [],
 
   selectedBrick: {
     name: ''
@@ -18,3 +21,5 @@ export default {
   },
   socket: null,
 };
+
+export default state;

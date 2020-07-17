@@ -66,7 +66,7 @@
         >Brick catalogue</div>
       </div>
 
-      <MyBricks :colours="colours" v-if="state.ui.navigation === 'bricks'"></MyBricks>
+      <MyBricks :colours="state.colours" v-if="state.ui.navigation === 'bricks'"></MyBricks>
       <Catalogue :bricks="bricks" v-if="state.ui.navigation === 'catalogue'"></Catalogue>
     </div>
   </div>
@@ -76,7 +76,8 @@
 import Vue from "vue";
 import io from "socket.io-client";
 
-import BrickController from "../BrickController";
+import Engine from "../builder/Engine";
+import BrickController from "../builder/BrickController";
 import { Settings, MyBricks, ControlPanel, Catalogue } from "../components";
 import Modal from "../components/Modal";
 
@@ -97,7 +98,6 @@ export default Vue.extend({
   data() {
     return {
       state: state,
-      colours: [],
       bricks: [],
       name: "",
       modalShow: true,
@@ -108,7 +108,7 @@ export default Vue.extend({
   },
   mounted() {
     this.state.studioId = this.$route.params.id;
-    this.state.brickController = new BrickController();
+    this.state.engine = new Engine();    
 
     this.state.socket = io("http://localhost:3000", {
       query: "studioId=" + this.state.studioId
@@ -136,13 +136,16 @@ export default Vue.extend({
     });
 
     this.state.socket.on("addNewBrick", data => {
-      let brick = this.state.bricks.filter(ele => ele.id === data.brickId)[0];
-      this.state.brickController.addBrick(data.name, data.colour, brick);
+      console.log('abc', data);   
+
+      // this.state.engine.createBrickPiece();
+      
+      // this.state.brickController.addBrick(data.name, data.colour, brick);
     })
 
 
     this.state.socket.on("moveUpdatedBrick", data => {      
-      this.state.brickController.updateBrick(data);
+      this.state.engine.updateBrickPiece(data);
     })
   },
   methods: {
@@ -169,28 +172,23 @@ export default Vue.extend({
 
             
 
-            this.state.user = {
-              name: name,
-              id: socketData.member.userId
-            };
+            this.state.user.name = name;
+            this.state.user.id = socketData.member.userId;
 
             // TOOD: probably move to state
-            this.colours = socketData.colours;
+            this.state.colours = socketData.colours;
             this.state.bricks = socketData.bricks;
-
-            let myBricks = [];
 
             this.state.bricks.map(ele => {
               socketData.member.myBricks.filter(brick => {
                 if (ele.id === parseInt(brick)) {
-                  myBricks.push(ele);
+                  this.state.user.bricks.push(ele);
                 }
               });
             });
 
-            this.state.myBricks = myBricks;
-            this.state.brickState = socketData.brickState;
-            this.state.brickController.initializeFromState();
+            this.state.engine.intializeFromState(socketData.brickState);
+            
             this.modalShow = false;
           });
         });

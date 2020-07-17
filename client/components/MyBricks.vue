@@ -1,19 +1,19 @@
 <template>
   <div class="my-bricks">
     <div
-      v-if="state.myBricks.length === 0"
+      v-if="state.user.bricks.length === 0"
     >You havent picked any bricks. Goto the Brick Catalogue to choose some.</div>
 
     <div class="bricks-list">
       <div
         class="brick"
-        v-for="item in state.myBricks"
-        @click="addBrick(item)"
+        v-for="item in state.user.bricks"
+        @click="addBrick(item.id)"
         :key="item.id"
       >{{ item.title }}</div>
     </div>
 
-    <div class="colour-picker" v-if="state.myBricks.length > 0">
+    <div class="colour-picker" v-if="state.user.bricks.length > 0">
       <div class="options" v-if="showColourOptions">
         <div class="form-field">
           <input type="text" placeholder="Search..." v-model="colourSearch" autofocus/>
@@ -63,23 +63,18 @@ export default {
       }
       else return this.colours;
     },
-    addBrick(brick) {
-      let brickIndex = this.state.brickController.getBrickIndex;
-      let brickName = "brick" + brickIndex++;
+    addBrick(brickIndex) {
+      let newBrick = this.state.engine.createBrickPiece(brickIndex);
 
-      let newBrick = this.state.brickController.addBrick(
-        brickName,
-        this.selectedColour.hex_code,
-        brick
-      );
-
-      this.state.socket.emit("newBrick", {
+      let socketData = {
         studioId: this.state.studioId,
         brickId: newBrick.id,
         name: newBrick.name,
         position: newBrick.mesh.position,
         colour: newBrick.colour
-      });
+      };
+
+      this.state.socket.emit("newBrick", socketData);
     },
     toggleOptions() {
       this.showColourOptions = !this.showColourOptions;

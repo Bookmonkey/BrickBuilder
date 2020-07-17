@@ -71,12 +71,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on("newBrick", async (data) => {
-      let currentStudio = await studioController.getStudioById(data.studioId);
-      currentStudio.addBrick(data);
-      socket.broadcast.emit("addNewBrick", data);
+    let currentStudio = await studioController.getStudioById(data.studioId);
+    currentStudio.addBrick(data);
+    socket.broadcast.emit("addNewBrick", data);
   });
 
   socket.on("updateBrick", async (data) => {
+    console.log(data);
     let currentStudio = await studioController.getStudioById(data.studioId);
     currentStudio.updateBrick(data);
     socket.broadcast.emit("moveUpdatedBrick", data);
