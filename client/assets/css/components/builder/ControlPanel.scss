@@ -19,6 +19,15 @@
     padding: 12px;
     display: flex;
     align-items: center;
+    font-weight: 700;
+    
+    &.settings {
+      justify-content: unset;
+
+      button {
+        margin-right: 12px;
+      }
+    }
     justify-content: space-between;
   }
 
@@ -35,7 +44,6 @@
 
   .brick-list {
     .brick {
-
       &.selected {
         border-left: 5px solid $color-dark-blue;
       }
