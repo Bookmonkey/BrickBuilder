@@ -1,67 +1,5 @@
 <template>
-  <div class="control-panel">
-
-    <Modal v-show="showModal">
-      
-      <h2 class="heading">
-        Settings for Studio
-
-        <div class="button" @click="showModal = false">
-          <Icon :icon="'x-circle'"></Icon>
-        </div>
-      </h2>
-      
-      <div class="settings">
-        <div class="h5">Studio</div>
-        <div class="option">
-          <div class="form-field">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password">
-          </div>
-        </div>
-        <div class="h5">Interface</div>
-        <div class="option">
-          <div class="title">Direction of Light</div>
-          <div class="form-field inline">
-            <input type="text" v-model="light.x">
-            <input type="text" v-model="light.y">
-            <input type="text" v-model="light.z">
-
-            <button class="button" @click="changeLightDirection()">Update</button>
-          </div>
-
-        </div>
-        <div class="option">
-          <div class="title">Skybox colour</div>
-          <div class="form-field inline">
-            <input type="text" v-model="skyboxHexCode">
-            <button class="button" @click="changeSkybox()">Update</button>
-          </div>
-        </div>
-
-        <div class="option">
-          <div class="title">Ground colour</div>
-          <div class="form-field inline">
-            <input type="text" v-model="groundHexCode">
-            <button class="button" @click="changeGround()">Update</button>
-          </div>
-        </div>
-
-        <div class="h5">Dangerous - This is dangerous,
-          . Beware.</div>
-
-        <div class="option">
-          <div class="form-field">
-            
-            <div class="button red icon-left" @click="deleteStudioPrompt()">
-              <i data-feather="trash"></i>        
-                Delete studio    
-            </div>
-          </div>
-        </div>
-      </div>
-    </Modal>
-    
+  <div class="control-panel">    
     <div class="panel-button button sm icon-left" v-show="!ui.showPanel" @click="toggleShowPanel()">
       <Icon :icon="'menu'"></Icon>
       Control Panel
@@ -87,7 +25,7 @@
               <Icon :icon="'file'"></Icon>
               Import / Export
             </div>
-            <div class="item icon-left" @click="showModal = true">
+            <div class="item icon-left" @click="toggleSettings()">
               <Icon :icon="'settings'"></Icon>
               Settings
             </div>
@@ -130,6 +68,57 @@
         </div>
       </div>
     </div>
+
+    <div class="panel" v-show="ui.showSettings">
+      <div class="heading settings">
+        <button class="button sm" @click="toggleSettings()">
+          <Icon :icon="'arrow-left'"></Icon>
+        </button>
+        <div class="h5">Settings</div>
+      </div>
+
+      <div class="content">
+        <div class="h5">Studio</div>
+        <div class="form-field">
+          <label for="visibility">Visibility</label>
+          <select c name="visibility" id="visibility">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input class="full-size" type="password" name="password" id="password" />
+        </div>
+        
+        <div class="h5">Interface</div>
+        <label for="dol">Direction of Light</label>
+        <div class="form-field inline">
+          <input type="text" v-model="light.x">
+          <input type="text" v-model="light.y">
+          <input type="text" v-model="light.z">
+        </div>
+
+        <div class="form-field">
+          <label for="skybox">Skybox colour</label>
+          <input type="text" id="skybox" name="skybox" class="full-size" value="#87CEEB" />
+        </div>
+
+        <div class="form-field">
+          <label for="ground">Ground colour</label>
+          <input type="text" id="ground" name="ground" class="full-size" value="#009900" />
+        </div>
+
+
+        <div class="h5">Dangerous</div>
+        <div class="form-field">
+          <div class="button red icon-left" @click="deleteStudioPrompt()">
+              <i data-feather="trash"></i>        
+                Delete studio    
+            </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -153,7 +142,8 @@ export default {
         z: 0
       },
       ui: {
-        showPanel: false
+        showPanel: false,
+        showSettings: false,
       },
       showModal: false,
       dropdown: false,
@@ -162,11 +152,18 @@ export default {
     };
   },
   methods: {
+    
     isSelectedBrick(brickName) {
       let selectedBrick = this.state.selectedBrick;
       if(selectedBrick !== null && selectedBrick.name === brickName) return true;
       else return false;
     },
+    
+    toggleSettings() {
+      this.ui.showSettings = !this.ui.showSettings;
+      this.ui.showPanel = !this.ui.showPanel;
+    },
+
     toggleShowPanel() {
       this.ui.showPanel = !this.ui.showPanel;
     },
