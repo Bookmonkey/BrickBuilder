@@ -154,7 +154,7 @@
 
           <div class="form-field">
             <label for="export">Export</label>
-            <button class="button sm icon-right">
+            <button class="button sm icon-right" @click="saveFile()">
               Download file
               <Icon :icon="'download'"></Icon>
             </button>
@@ -172,13 +172,11 @@
 import state from "../state";
 import Icon from "../components/Icon";
 import Modal from "../components/Modal";
-import BrickListItem from "../components/BrickListItem";
 export default {
   name: "ControlPanel",
   components: {
     Icon,
-    Modal,
-    BrickListItem
+    Modal
   },
   data() {
     return {
@@ -245,6 +243,21 @@ export default {
 
     deleteBrick(){
       let brick = state.engine.brickController.getBrickByName(this.selectedBrick.name);
+    },
+
+    saveFile() {
+      fetch(`http://localhost:3000/api/studio/${state.studioId}/save`)
+      .then(res =>  res.blob())
+      .then(blob => {
+          var url = window.URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = `${state.studioId}.json`;
+          document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+          a.click();    
+          a.remove();  //afterwards we remove the element again         
+      });
+      
     },
 
     changeLightDirection(){
