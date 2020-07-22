@@ -16,7 +16,7 @@
     <div class="colour-picker" v-if="state.user.bricks.length > 0">
       <div class="options" v-if="showColourOptions">
         <div class="form-field">
-          <input type="text" placeholder="Search..." v-model="colourSearch" autofocus/>
+          <input type="text" placeholder="Search..." v-model="colourSearch" autofocus />
         </div>
 
         <div class="h5">Colours in use</div>
@@ -35,8 +35,8 @@
       </div>
 
       <button class="button" @click="toggleOptions()">
-        <span class="lego-colour" :style="{ background: selectedColour.hex_code }"></span>
-        {{ selectedColour.name }}
+        <span class="lego-colour" :style="{ background: state.user.colour.hex_code }"></span>
+        {{ state.user.colour.name }}
       </button>
     </div>
   </div>
@@ -50,7 +50,6 @@ export default {
   data() {
     return {
       showColourOptions: false,
-      selectedColour: { name: "Bright Red", hex_code: "#ff0000" },
       state: state,
       filteredColours: this.colours,
       colourSearch: null
@@ -80,7 +79,7 @@ export default {
       this.showColourOptions = !this.showColourOptions;
     },
     setColour(colour) {
-      this.selectedColour = colour;
+      this.state.user.colour = colour;
       this.toggleOptions();
     }
   },

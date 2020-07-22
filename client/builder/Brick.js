@@ -2,11 +2,7 @@ import * as BABYLON from 'babylonjs';
 
 class Brick {
   get getFormattedPosition() {
-    return {
-      x: Math.round(this.mesh.position.x, 2),
-      y: Math.round(this.mesh.position.y, 2),
-      z: Math.round(this.mesh.position.z, 2) 
-    }
+    return  [Math.round(this.mesh.position.x, 2), Math.round(this.mesh.position.y, 2), Math.round(this.mesh.position.z, 2) ];      
   }
 
   /**
@@ -66,6 +62,10 @@ class Brick {
 
   setPosition(x, y, z) {
     this.mesh.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); 
+  }
+
+  toggleVisibility(){
+    this.mesh.isVisible = !this.mesh.isVisible;
   }
 }
 

@@ -21,14 +21,11 @@
     align-items: center;
     font-weight: 700;
     
-    &.settings {
-      justify-content: unset;
-
-      button {
-        margin-right: 12px;
-      }
+    button,
+    div.button {
+      margin-right: 12px;
     }
-    justify-content: space-between;
+  
   }
 
   .content {
@@ -44,6 +41,14 @@
 
   .brick-list {
     .brick {
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .title {
+        font-weight: 600;
+      }
       &.selected {
         border-left: 5px solid $color-dark-blue;
       }
@@ -53,12 +58,13 @@
       }
 
       &:last-child {
-        border-bottom: 1px solid;
+        border-bottom: 1px solid $color-medium-grey;
       }
-      border: 1px solid black;
+
+      border: 1px solid $color-medium-grey;
       border-bottom: 0px;
 
-      padding: 4px;
+      padding: 6px;
     }
   }
 }

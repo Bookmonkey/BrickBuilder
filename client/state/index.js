@@ -1,11 +1,17 @@
 let state = {
   studioId: null,
+
   user: {
     bricks: [],
     name: null,
-    id: null
+    id: null,
+    colour: {
+      name: "Bright Red",
+      hex_code: "#ff0000"
+    }
   },
-  engine: [],
+
+  engine: null,
 
   brickController: [],
 
