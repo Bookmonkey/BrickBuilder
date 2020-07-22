@@ -4,10 +4,13 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const crypto = require('crypto');
+const fs = require("fs");
+const path = require("path");
 
 const studioController = require("./controllers/studio");
 const socketController = require("./controllers/socket");
 const API = require("./api");
+const { studios } = require('./controllers/studio');
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -116,6 +119,18 @@ app.get("/api/studios/:isPublic", async function(req, res) {
 app.get("/api/studio/:id", async function(req, res) {
   let studio = await studioController.getStudioById(req.params.id);
   res.status(200).send(studio);
+});
+
+app.get("/api/studio/:id/save", async function(req, res) {
+  let studio = await studioController.getStudioById(req.params.id);
+  let fileName = path.join("./", "server", "tmp", `${req.params.id}.json`);
+  
+  fs.writeFile(fileName, JSON.stringify(studio, null, 2), function(err) {
+    if(err) throw err;
+
+    let file = path.resolve(fileName);
+    res.sendFile(file);
+  });
 });
 
 app.get("/api/studio/:id/member/:userId", async function(req, res) {
