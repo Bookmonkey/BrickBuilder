@@ -52,11 +52,16 @@
     display: block;
     position: absolute;
     margin-top: 4px;
-    right: 12px;
+    left: 12px;
     width: 200px;
     font-weight: 400;
-    box-shadow: inset 0 0 0 1px #d1d5da;
+    box-shadow: $box-shadow-lg;
     background: white;
+
+    &.right {
+      right: 12px;
+      left: unset;
+    }
 
     .item {
       display: flex;

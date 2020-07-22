@@ -22,6 +22,14 @@ class BrickController {
   getBrickByName(name) {
     return this.brickState.filter(ele => ele.name === name)[0];
   }
+
+  getBricksList() {
+    return this.brickState.map(ele => {
+      return {
+        "name": ele.name
+      }    
+    });
+  }
 }
 
 export default BrickController;

@@ -105,7 +105,7 @@ export default Vue.extend({
       alertShow: false,
       brickUIDropdown: false
     };
-  },
+  },  
   mounted() {
     this.state.studioId = this.$route.params.id;
     this.state.engine = new Engine();    
@@ -194,11 +194,11 @@ export default Vue.extend({
         });
     },
     welcomeBackMessage() {
-      this.alertShow = true;
+      // this.alertShow = true;
 
-      setTimeout(() => {
-        this.alertShow = !this.alertShow;
-      }, 5000);
+      // setTimeout(() => {
+      //   this.alertShow = !this.alertShow;
+      // }, 5000);
     },
 
     closeBrickUI() {
@@ -207,13 +207,13 @@ export default Vue.extend({
       this.state.selectedBrick = null;
     },
 
-    move(){
-      this.state.brickController.UIToggleMove();
-    },
-    rotate(brickIndex){
-      let mesh = this.state.selectedBrick;
-      this.state.brickController.UIToggleRotation(mesh);
-    }
+    // move(){
+    //   this.state.brickController.UIToggleMove();
+    // },
+    // rotate(brickIndex){
+    //   let mesh = this.state.selectedBrick;
+    //   this.state.brickController.UIToggleRotation(mesh);
+    // }
   }
 });
 </script>

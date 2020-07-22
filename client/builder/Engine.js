@@ -74,6 +74,11 @@ class Engine {
   }
 
 
+  getBricksList() {
+    return this.brickController.getBricksList();
+  }
+
+
 
   /**
    * Creates the Brick mesh and adds to the BrickController
@@ -84,7 +89,7 @@ class Engine {
     let brickName = "brick" + brickTotal++;
 
     let brickDefinition = state.bricks.filter(ele => parseInt(ele.id) === parseInt(defintionIndex))[0];
-    let brickColour = "#ff0000";
+    let brickColour = state.user.colour.hex_code;
   
     let newBrick = new Brick({
       name: brickName,
