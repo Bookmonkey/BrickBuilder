@@ -3,8 +3,12 @@ create table studio (
   studio_id text not null,
   is_public boolean,
   password text,
+  title text,
   colour text,
-  title text
+  direction_light integer[],
+  skybox text,
+  ground text,
+  brick_state json
 );
 
 create table member (

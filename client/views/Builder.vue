@@ -108,6 +108,7 @@ export default Vue.extend({
   },  
   mounted() {
     this.state.studioId = this.$route.params.id;
+
     this.state.engine = new Engine();    
 
     this.state.socket = io("http://localhost:3000", {
@@ -166,16 +167,23 @@ export default Vue.extend({
             id: id
           });
 
+          this.state.studioInfo = {
+            title: body.title,
+            colour: body.colour,
+            direction_light: body.direction_light,
+            skybox: body.skybox,
+            ground: body.ground
+          };
+
+
           this.state.socket.on("userJoined", socketData => {            
             localStorage.setItem("userName", name);
             localStorage.setItem("userId", socketData.member.userId);
 
-            
 
             this.state.user.name = name;
             this.state.user.id = socketData.member.userId;
 
-            // TOOD: probably move to state
             this.state.colours = socketData.colours;
             this.state.bricks = socketData.bricks;
 

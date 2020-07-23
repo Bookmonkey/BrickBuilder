@@ -9,13 +9,20 @@ class Studio {
         return this.brickState;
     }
 
-    constructor(info) {        
+    constructor(info) {
         this.studio_id = info.studio_id;
         this.public = info.is_public;
         this.members = new Array();
         this.title = info.title;
         this.colour = info.colour;
-        this.brickState = [];
+        this.direction_light = info.direction_light;
+        this.skybox = info.skybox;
+        this.ground = info.ground;
+
+        if(info.brick_state) {
+            this.brickState = info.brick_state;
+        }
+        else this.brickState = [];
     }
 
 
@@ -58,6 +65,14 @@ class Studio {
                 ele[data.type] = data.value
             }
         });
+    }
+
+    saveSettings(settings){
+        this.title = settings.title;
+        this.colour = settings.colour;
+        this.direction_light = settings.direction_light;
+        this.skybox = settings.skybox;
+        this.ground = settings.ground;
     }
 }
 

@@ -58,6 +58,9 @@ class Engine {
   }
 
   intializeFromState(brickState) {
+
+    if(brickState === null || brickState === undefined) return;
+    
     brickState.map(brick => {
       let pos = brick.position;
       let brickDefinition = state.bricks.filter(ele => parseInt(ele.id) === parseInt(brick.id))[0];  
