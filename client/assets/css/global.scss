@@ -22,8 +22,14 @@ body {
   font-weight: 400;
   font-variation-settings: "CASL" 0.4;
  	-webkit-font-smoothing: auto;
-  -moz-osx-font-smoothing: auto;
-  
+  -moz-osx-font-smoothing: auto; 
+}
+
+#app, 
+.builder-ui {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;  // firefox shows a scrollbar. 
 }
 
 .banner {
@@ -78,18 +84,24 @@ body {
     transition: transform 0.2s cubic-bezier(0.45, 0, 0.55, 1);
     cursor: pointer;
 
+    &.blue {
+      border-top-color: $color-light-blue;
+    }
+    &.green {
+      border-top-color: $color-light-green;
+    }    
+    &.purple {
+      border-top-color: $color-light-purple;
+    }
+    &.yellow {
+      border-top-color: $color-light-yellow;
+    }
     &.orange {
       border-top-color: $color-light-orange;
     }
 
     &.red {
       border-top-color: $color-red;
-    }
-    &.blue {
-      border-top-color: $color-light-blue;
-    }
-    &.green {
-      border-top-color: $color-light-green;
     }
 
 
