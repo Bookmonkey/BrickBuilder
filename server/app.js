@@ -22,10 +22,10 @@ var io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
 
-  let exists = checkIfStudioExists(socket.handshake.query.studioId);
-  if(!exists){
-    io.emit("isDead");
-  }
+  // let exists = checkIfStudioExists(socket.handshake.query.studioId);
+  // if(!exists){
+  //   io.emit("isDead");
+  // }
   
   socket.on('disconnect', async () => {
     console.log('user disconnected', socket.handshake.address);
@@ -80,12 +80,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on("updateBrick", async (data) => {
-    console.log(data);
     let currentStudio = await studioController.getStudioById(data.studioId);
     currentStudio.updateBrick(data);
     socket.broadcast.emit("moveUpdatedBrick", data);
   });
 });
+
 
 app.post("/api/studio/create", async function(req, res) {
   let body = req.body;
@@ -95,12 +95,15 @@ app.post("/api/studio/create", async function(req, res) {
     "builders": 0,
     "title": body.title,
     "colour": body.colour,
+    "direction_light": [0, 1, 0],
+    "skybox": "#87CEEB",
+    "ground": "#009900",
     "brickState": [],
   };
 
-  newStudio.id = await studioController.newStudio(newStudio);
+  newStudio.studio_id = await studioController.newStudio(newStudio);
 
-  res.status(200).send(newStudio.id);
+  res.status(200).send(newStudio.studio_id);
 });
 
 app.post("/api/studio/delete", async function(req, res) {
@@ -121,7 +124,18 @@ app.get("/api/studio/:id", async function(req, res) {
   res.status(200).send(studio);
 });
 
-app.get("/api/studio/:id/save", async function(req, res) {
+app.get("/api/studio/:id/saveState", async function(req, res) {
+  await studioController.saveStudioStateById(req.params.id);
+  res.status(200).send("OK");
+});
+
+app.post("/api/studio/:id/saveSettings", async function(req, res) {
+  let settings = req.body;
+  await studioController.saveStudioSettingsById(req.params.id, settings);
+  res.status(200).send("OK");
+});
+
+app.get("/api/studio/:id/export", async function(req, res) {
   let studio = await studioController.getStudioById(req.params.id);
   let fileName = path.join("./", "server", "tmp", `${req.params.id}.json`);
   

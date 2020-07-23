@@ -1,6 +1,13 @@
 let state = {
   studioId: null,
 
+  studioInfo: {
+    title: "",
+    direction: "",
+    skybox: "",
+    ground: ""
+  },
+
   user: {
     bricks: [],
     name: null,
@@ -12,8 +19,6 @@ let state = {
   },
 
   engine: null,
-
-  brickController: [],
 
   bricks: [],
   colors: [],
