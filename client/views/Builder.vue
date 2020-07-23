@@ -77,13 +77,9 @@ import Vue from "vue";
 import io from "socket.io-client";
 
 import Engine from "../builder/Engine";
-import BrickController from "../builder/BrickController";
-import { Settings, MyBricks, ControlPanel, Catalogue } from "../components";
-import Modal from "../components/Modal";
+import { MyBricks, ControlPanel, Catalogue, Icon, Modal } from "../components";
 
 import state from "../state";
-
-import Icon from "../components/Icon";
 
 let socket;
 
