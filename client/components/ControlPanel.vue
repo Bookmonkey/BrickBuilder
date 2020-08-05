@@ -269,7 +269,12 @@ export default {
     },
 
     deleteBrick(){
-      let brick = state.engine.brickController.getBrickByName(this.selectedBrick.name);
+      let brick = state.engine.brickController.removeBrickByName(this.selectedBrick.name);
+      this.state.socket.emit("removeBrick", {
+        studioId: this.state.studioId,
+        brickName: this.selectedBrick.name
+      });
+      
     },
 
     saveStudio() {

@@ -59,6 +59,10 @@ class Studio {
         this.brickState.push(brick)
     }
 
+    removeBrick(brickName) {
+        this.brickState = this.brickState.filter(ele => ele.name === brickName);
+    }
+
     updateBrick(data) {
         this.brickState.map(ele => {
             if(ele.name === data.name) {
