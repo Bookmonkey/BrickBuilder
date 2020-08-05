@@ -23,11 +23,28 @@ class BrickController {
     return this.brickState.filter(ele => ele.name === name)[0];
   }
 
+  removeBrickByName(name) {
+    this.brickState = this.brickState.filter(ele => ele.name !== name);
+  }
+
+  getAllBricksButThisOne(name) {
+    return this.brickState.filter(ele => ele.name !== name);
+  }
+
   getBricksList() {
     return this.brickState.map(ele => {
       return {
         "name": ele.name
       }    
+    });
+  }
+
+  getBrickMeshes() {
+    return this.brickState.map(ele => {
+      return {
+        mesh: ele.mesh,
+        colour: ele.colour
+      }
     });
   }
 }

@@ -3,7 +3,7 @@ let state = {
 
   studioInfo: {
     title: "",
-    direction: "",
+    direction_light: "",
     skybox: "",
     ground: ""
   },

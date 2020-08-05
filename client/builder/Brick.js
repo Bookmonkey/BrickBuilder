@@ -28,20 +28,8 @@ class Brick {
     mesh.material = this.createMaterial(this.colour, ENGINE_SCENE);      
     mesh.isPickable = true;      
     mesh.actionManager = new BABYLON.ActionManager(ENGINE_SCENE);
-
-    mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, ev => {
-      // this.setAsSelectedBrick(ev);
-      // this.moveBrickUI(ev);        
-      console.log("picked")
-    }));
-
-    mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, ev => {	
-      mesh.material.emissiveColor = BABYLON.Color3.FromHexString("#999999");
-    }));
-
-    mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, (ev) => {
-      mesh.material.emissiveColor = BABYLON.Color3.FromHexString(this.colour);
-    }));
+    // mesh.showBoundingBox = true;
+    mesh.checkCollisions = true;
 
     return mesh;
   }
@@ -64,9 +52,14 @@ class Brick {
     this.mesh.setPositionWithLocalVector(new BABYLON.Vector3(x, y, z)); 
   }
 
+  setMesh(mesh) {
+    this.mesh = mesh;
+  }
+
   toggleVisibility(){
     this.mesh.isVisible = !this.mesh.isVisible;
   }
+  
 }
 
 export default Brick;

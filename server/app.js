@@ -79,6 +79,13 @@ io.on('connection', (socket) => {
     socket.broadcast.emit("addNewBrick", data);
   });
 
+  socket.on("removeBrick", async (data) => {
+    let currentStudio = await studioController.getStudioById(data.studioId);
+    currentStudio.removeBrick(data.brickName);
+    // socket.broadcast.emit("addNewBrick", data);
+  });
+
+
   socket.on("updateBrick", async (data) => {
     let currentStudio = await studioController.getStudioById(data.studioId);
     currentStudio.updateBrick(data);
