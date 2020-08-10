@@ -1,0 +1,44 @@
+.features {
+  text-align: center;
+  padding: 28px;
+  background: $color-light-grey;
+
+
+  .features-list {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    .feature-item {
+      width: 300px;
+      height: 80px;
+      padding: 24px;
+      box-shadow: $box-shadow-md;
+  
+
+      font-size: 1.2rem;
+      font-family: $font-family;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      
+      .title{
+        font-size: 1.5rem;
+      }
+
+
+      &.green {
+        border-top: 6px solid $color-light-green;
+      }
+
+      &.blue {
+        border-top: 6px solid $color-light-blue;
+      }
+
+      &.yellow {
+        border-top: 6px solid $color-light-orange ;
+      }
+    }
+  }
+
+}

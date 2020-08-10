@@ -30,7 +30,7 @@ class Engine {
     var groundMaterial = new BABYLON.StandardMaterial("ground", this.scene);
     groundMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
     groundMaterial.specularColor = new BABYLON.Color3(0.9, 0.9, 0.9);
-    groundMaterial.emissiveColor = new BABYLON.Color3.FromHexString("#009900");
+    groundMaterial.emissiveColor = new BABYLON.Color3.FromHexString("#007b28");
     this.ground.material = groundMaterial;
 
     this.gizmoManager = new BABYLON.GizmoManager(this.scene);
@@ -61,7 +61,7 @@ class Engine {
     // create a basic light, aiming 0,1,0 - meaning, to the sky
     this.light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), this.scene);
 
-    this.scene.clearColor = new BABYLON.Color3.FromHexString("#87CEEB");
+    this.scene.clearColor = new BABYLON.Color3.FromHexString("#d3f2ea");
 
     this.engine.runRenderLoop(() => {
       this.scene.render();
@@ -114,6 +114,13 @@ class Engine {
     let diff = current.subtract(this.startingCursorPoint);
     this.selectedBrick.position.addInPlace(diff);
     this.startingCursorPoint = current;
+
+    state.socket.emit('updateBrick', {
+      "studioId": state.studioId,
+      "type": "position",
+      "name": this.selectedBrick.name,
+      "value": this.selectedBrick.position
+    });
   }
 
   getGroundPosition() {

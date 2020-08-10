@@ -1,6 +1,7 @@
 <template>
+  
   <div class="studio">
-
+    <Navigation></Navigation>
     <div class="modal" v-if="showCreateUI">
       <div class="content">
         <h2>Create Studio</h2>
@@ -44,7 +45,7 @@
     </div>
 
     
-    <div class="landing bg-dark-blue">
+    <div class="page-content bg-dark-blue">
       <div class="card">
         <div class="breadcrumb"><router-link to="/">Home</router-link> ></div>
         <div class="card-title">
@@ -85,8 +86,12 @@
 </template>
 
 <script>
+import Navigation from "../components/Navigation";
 export default {
   name: "Studios",
+  components: {
+    Navigation
+  },
   data() {
     return {
       colourDropdown: false, 
