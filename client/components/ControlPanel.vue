@@ -154,7 +154,7 @@
               <input type="text" class="full-size" v-model="selectedBrick.name" />
             </div>
 
-            <div class="form-field">
+            <div class="button-list">
               <button class="button sm" @click="toggleVisibility()">
                 Visibility
               </button>

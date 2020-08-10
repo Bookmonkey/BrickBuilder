@@ -24,7 +24,13 @@ class BrickController {
   }
 
   removeBrickByName(name) {
-    this.brickState = this.brickState.filter(ele => ele.name !== name);
+    this.brickState = this.brickState.filter(ele => {
+      if(ele.name === name) {
+        ele.mesh.dispose();
+      }
+
+      if(ele.name !== name) return ele;
+    });
   }
 
   getAllBricksButThisOne(name) {
