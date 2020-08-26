@@ -23,7 +23,8 @@
     }
   }
 
-  input {
+  input,
+  select {
     border:none;
     width: 64px;
     padding: 12px;
@@ -31,6 +32,7 @@
     border:1px solid $color-medium-grey;
     border-radius: 4px;
     outline: none;
+    // font-size: 0.9rem;
 
     transition: all 0.3s ease-in-out;
 
