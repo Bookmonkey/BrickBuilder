@@ -17,6 +17,8 @@ class Engine {
       y: 0
     };
 
+    this.debug = true;
+
 
     const canvasElement = document.getElementById('renderCanvas');
     this.engine = new BABYLON.Engine(canvasElement, true);
@@ -89,6 +91,9 @@ class Engine {
     if (this.startingCursorPoint) {
       this.camera.attachControl(this.canvas, true);
       this.startingCursorPoint = null;
+
+
+      this.selectedBrick.position.y = Math.round(this.selectedBrick.position.y);
       state.socket.emit('updateBrick', {
         "studioId": state.studioId,
         "type": "position",
@@ -138,6 +143,11 @@ class Engine {
 
   intializeFromState(brickState) {
 
+    // set the ground and skybox if changed.  we assume default
+
+    this.UISetGroundColour(state.studioInfo.ground);
+    this.UISetSkyboxColour(state.studioInfo.skybox)
+
     if (brickState === null || brickState === undefined) return;
 
     brickState.map(brick => {
@@ -183,7 +193,16 @@ class Engine {
     this.setMeshPointerEvents(newBrick.mesh, newBrick.colour);
 
     newBrick.setPosition(0, 2, 0);
+
+    
     this.brickController.addBrickToState(newBrick);
+
+    this.brickController.brickState.map(ele => {
+      let meshesCanCollideWith = this.brickController.getAllBricksButThisOne(ele.name);
+
+      this.setMeshCollision(ele.mesh, meshesCanCollideWith);
+    });
+
     return newBrick;
   }
 
@@ -232,14 +251,63 @@ class Engine {
         trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger,
         parameter: currentMesh
       }, () => {
-        currentMesh.showBoundingBox = true;
+
+        // if the mesh is already on top of the next brick, just skip 
+        
+        if(this.selectedBrick){
+
+          this.selectedBrick.showBoundingBox = true;
+          
+          
+          let elementHeight = parseFloat(element.definition.height, 2);
+          let elementDimY = parseInt(element.definition.dim_y);
+          let elementYPos = element.mesh.position.y;
+
+          
+          let newYPos = elementYPos + elementDimY;
+          // console.log(newYPos);
+
+          if(newYPos > 6) {
+            newYPos + 4.0;
+          }
+
+          
+          if(newYPos > elementYPos) {
+            this.selectedBrick.position.y = newYPos;
+            this.selectedBrick.position.x = element.mesh.position.x;
+            this.selectedBrick.position.z = element.mesh.position.z;
+          }
+
+
+          // if its not the first block, we dont add the extra dim_y 
+          // if(newYPos > 4.0) {
+          //   newYPos + 2;
+          // }
+
+          // console.log('newY', newYPos, 'elemYPos', elementYPos, 'elemDim', elementDimY);
+          
+          // if(this.selectedBrick.position.y <= newYPos || this.selectedBrick.position.y >= newYPos){
+            // this.selectedBrick.position.y = newYPos;
+          // }
+        }
+          
+          
+          // console.log(this.selectedBrick.position.y, newYPos);
+          
+        // let newYPosition = element.dimenstions
+        // console.log(element.mesh.position.y, currentMesh.position.y);
+
 
         
-        if(this.selectedBrick) {
-          let currentPos = this.selectedBrick.position;
-          let newYPos = Math.round(Math.ceil(currentMesh.position.y) + 4);
-          this.selectedBrick.position.y = newYPos;
-        } 
+        // if(this.selectedBrick) {
+          // let currentPos = this.selectedBrick.position;
+          // let newYPos = Math.round(Math.ceil(element.position.y) + 4);
+          // currentMesh.position.y = newYPos;
+
+
+          // if(this.debug) {
+          // }
+        // } 
 
       }));
 
@@ -253,27 +321,6 @@ class Engine {
         
     });
   }
-
-
-  // checkIfColliding(brick) {
-  //   let mesh = brick.mesh;
-  //   let meshPoint = new BABYLON.Vector3(mesh.position.x, mesh.position.y, mesh.position.z);
-  //   // console.log(meshPoint);
-  //   let meshes = this.brickController.getBrickMeshes();
-  //   meshes.forEach(element => {
-  //     if (mesh.intersectsMesh(element)) {
-  //       // console.log("collision");
-  //     }
-  //   });
-  //   // this.brickController.getBrickMeshes().map(ele => {
-  //   //   if(ele.intersectsMesh(mesh, false)){
-  //   //     // mesh.position.y += 8.0;
-  //   //   }
-  //   //   else {
-  //   //     console.log('nothing');
-  //   //   }
-  //   // });
-  // }
 
   LightenDarkenColor(col, amt) {
     var usePound = false;
@@ -302,11 +349,18 @@ class Engine {
     return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
   }
 
-  UISetSkyboxColour() {
-
+  UISetSkyboxColour(newColour) {
+    this.scene.clearColor =  new BABYLON.Color3.FromHexString(newColour);
   }
 
-  UISetGroundColour() {}
+  UISetGroundColour(newColour) {    
+    this.ground.material.emissiveColor = new BABYLON.Color3.FromHexString(newColour);
+  }
+
+
+  toggleDebugMode() {
+    this.debug = !this.debug;
+  }
 }
 
 
