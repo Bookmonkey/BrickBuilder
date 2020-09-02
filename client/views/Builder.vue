@@ -105,7 +105,9 @@ export default Vue.extend({
   mounted() {
     this.state.studioId = this.$route.params.id;
 
-    this.state.engine = new Engine();    
+    Engine.init();
+    Engine.render();
+        
 
     this.state.socket = io("http://localhost:3000", {
       query: "studioId=" + this.state.studioId
@@ -142,7 +144,7 @@ export default Vue.extend({
 
 
     this.state.socket.on("moveUpdatedBrick", data => {      
-      this.state.engine.updateBrickPiece(data);
+      // this.state.engine.updateBrickPiece(data);
     })
   },
   methods: {
@@ -191,7 +193,7 @@ export default Vue.extend({
               });
             });
 
-            this.state.engine.intializeFromState(socketData.brickState);
+            // this.state.engine.intializeFromState(socketData.brickState);
             
             this.modalShow = false;
           });

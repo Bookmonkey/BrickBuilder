@@ -4,8 +4,8 @@ module.exports = {
   database: {
     host: "localhost",
     user: "postgres",
-    // password: "password",
-    database: "brickbuilder",
+    password: "hereliesafreeelf215",
+    database: "bricks",
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000

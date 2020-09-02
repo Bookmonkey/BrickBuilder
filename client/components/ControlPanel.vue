@@ -250,7 +250,7 @@ export default {
   computed: {
     brickList: function () {
       if (this.state.engine === null) return [];
-      else return this.state.engine.getBricksList();
+      // else return this.state.engine.getBricksList();
     },
   },
   methods: {
