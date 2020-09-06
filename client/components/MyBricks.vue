@@ -7,8 +7,9 @@
     <div class="bricks-list">
       <div
         class="brick"
+        :class="{ 'selected': isSelectedBrick(item.id) }"
         v-for="item in state.user.bricks"
-        @click="addBrick(item.id)"
+        @click="selectBrick(item.id)"
         :key="item.id"
       >{{ item.title }}</div>
     </div>
@@ -44,11 +45,14 @@
 
 <script>
 import state from "../state";
+import Engine from "../builder/Engine";
+
 export default {
   name: "Bricks",
   props: ["colours"],
   data() {
     return {
+      selectedBrickId: null,
       showColourOptions: false,
       state: state,
       filteredColours: this.colours,
@@ -62,24 +66,19 @@ export default {
       }
       else return this.colours;
     },
-    addBrick(brickIndex) {
-      let newBrick = this.state.engine.createBrickPiece(brickIndex);
-
-      let socketData = {
-        studioId: this.state.studioId,
-        brickId: newBrick.id,
-        name: newBrick.name,
-        position: newBrick.mesh.position,
-        colour: newBrick.colour
-      };
-
-      this.state.socket.emit("newBrick", socketData);
+    isSelectedBrick(id) {
+      return (id === this.selectedBrickId) ? true : false;
+    },
+    selectBrick(brickIndex) {
+      this.selectedBrickId = brickIndex;
+      Engine.setBrickDefinition(brickIndex);
     },
     toggleOptions() {
       this.showColourOptions = !this.showColourOptions;
     },
     setColour(colour) {
-      this.state.user.colour = colour;
+      Engine.setBrickColour(colour);
+      // this.state.user.colour = colour;
       this.toggleOptions();
     }
   },

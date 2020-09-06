@@ -103,11 +103,7 @@ export default Vue.extend({
     };
   },  
   mounted() {
-    this.state.studioId = this.$route.params.id;
-
-    Engine.init();
-    Engine.render();
-        
+    this.state.studioId = this.$route.params.id;        
 
     this.state.socket = io("http://localhost:3000", {
       query: "studioId=" + this.state.studioId
@@ -196,6 +192,7 @@ export default Vue.extend({
             // this.state.engine.intializeFromState(socketData.brickState);
             
             this.modalShow = false;
+            Engine.init();
           });
         });
     },
