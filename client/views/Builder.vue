@@ -279,7 +279,7 @@ export default Vue.extend({
             // this.state.engine.intializeFromState(socketData.brickState);
 
             this.modalShow = false;
-            Engine.init();
+            Engine.init(socketData.brickState);
           });
         });
     },

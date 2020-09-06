@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {
   OrbitControls
 } from 'three/examples/jsm/controls/OrbitControls.js';
-
+import Brick from "./Brick";
 import state from "../state";
 
 
@@ -34,7 +34,7 @@ const Engine = {
   selectedBrick: null,
   objects: [],
 
-  init() {
+  init(brickState) {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
     this.camera.position.set(500, 800, 1300);
     this.camera.lookAt(0, 0, 0);
@@ -106,6 +106,13 @@ const Engine = {
 
     this.scene.add(this.hoverBrickMesh);
 
+    if(brickState) {
+      if(brickState.length > 0) {
+        this.initializeFromState(brickState);
+      }
+    }
+
+
     this.render();
     document.getElementById("renderCanvas").focus();
   },
@@ -133,7 +140,7 @@ const Engine = {
     geometry.rotateX(-Math.PI / 2);
 
     const material = new THREE.MeshLambertMaterial({
-      name: "ground",
+      name: "groundMaterial",
       color: 0x007b28,
       side: THREE.DoubleSide
     });
@@ -143,6 +150,7 @@ const Engine = {
 
     // add an object
     this.ground = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
+      name: 'ground',
       visible: false
     }));
 
@@ -176,9 +184,9 @@ const Engine = {
 
     this.hoverBrickMesh.visible = true;
 
-    
+
     state.ui.mode = 'add';
-    
+
     this.render();
   },
 
@@ -217,12 +225,112 @@ const Engine = {
     state.ui.mode = mode;
   },
 
-  deselect(){
+  deselect() {
     this.hoverBrickMesh.visible = false;
-    // this.brickDefinition = [];
+    this.brickDefinition = [];
+    this.selectedBrick = [];
 
     state.ui.mode = '';
     state.ui.navigation = 'menu';
+  },
+
+
+  initializeFromState(brickState) {
+    brickState.map(brick => {
+      let position = brick.position;
+      let brickDefinition = state.bricks.filter(ele => parseInt(ele.id) === parseInt(brick.id))[0];
+      if(brickDefinition) {
+        
+        let newBrick = new Brick({
+          id: brick.id,
+          name: brick.name,
+          colour: brick.colour,
+          definition: brickDefinition
+        });
+        
+        
+        var voxel = new THREE.Mesh(this.brickGeometry, ...[this.brickMaterial]);
+        voxel.name = brick.name;
+        voxel.position.x = position.x;
+        voxel.position.y = position.y;
+        voxel.position.z = position.z;
+        
+        newBrick.setPosition(voxel.position);
+        
+        this.scene.add(voxel);
+        
+        this.objects.push(voxel);
+        state.brickController.addBrickToState(newBrick);
+      }
+    })
+  },
+
+
+
+  addBrick(intersect) {
+    let brickTotal = state.brickController.getIndex;
+    let brickName = "brick" + brickTotal++;
+
+    let newBrick = new Brick({
+      name: brickName,
+      colour: this.selectedColour,
+      definition: this.brickDefinition
+    });
+
+
+    var voxel = new THREE.Mesh(this.brickGeometry, ...[this.brickMaterial]);
+    voxel.name = brickName;
+
+    voxel = this.correctlyPositionBrick(voxel, intersect);
+    newBrick.setPosition(voxel.position);
+
+    state.brickController.addBrickToState(newBrick);
+    this.scene.add(voxel);
+    this.objects.push(voxel);
+
+
+    let socketData = {
+      studioId: state.studioId,
+      brickId: newBrick.id,
+      name: newBrick.name,
+      position: newBrick.position,
+      colour: newBrick.colour
+    };
+
+    state.socket.emit("newBrick", socketData);
+
+  },
+
+  // this function must only be used on the move event.
+  // it creates a new brick but will update the exsiting brick controller item
+  updateBrick(intersect, brickName) {
+    var voxel = new THREE.Mesh(this.brickGeometry, ...[this.brickMaterial]);
+    voxel.name = brickName;
+    voxel = this.correctlyPositionBrick(voxel, intersect);
+    this.scene.add(voxel);
+    this.objects.push(voxel);
+
+
+    let brick = state.brickController.getBrickByName(brickName);
+    brick.setPosition(voxel.position);
+
+    state.socket.emit('updateBrick', {
+      "studioId": state.studioId,
+      "type": "position",
+      "name": brick.name,
+      "value": brick.position
+    });
+
+    this.render();
+  },
+
+
+  // only deletes from the render, not the brick controller at this stage
+  removeBrick(intersect) {
+    if (intersect !== null && intersect.object !== this.ground) {
+      this.scene.remove(intersect.object);
+      this.objects.splice(this.objects.indexOf(intersect.object), 1);
+    }
   },
 
   onMouseDown(event) {
@@ -240,25 +348,27 @@ const Engine = {
       if (intersects.length > 0) {
         var intersect = intersects[0];
         if (state.ui.mode === 'add') {
-          var voxel = new THREE.Mesh(this.brickGeometry, ...[this.brickMaterial]);
-          
-          voxel = this.correctlyPositionBrick(voxel, intersect);
-          
-          this.scene.add(voxel);
-          this.objects.push(voxel);
+          this.addBrick(intersect);
         }
-        
-        if(state.ui.mode === 'move') {
-          this.controls.enabled = false;
-          this.hoverBrickMesh.visible = true;
 
-          if(intersect.object !== this.ground){
+        console.log(intersect);
+
+        if (state.ui.mode === 'move') {
+          
+          if (intersect.object !== this.ground) {
+            
+            this.controls.enabled = false;
+            this.hoverBrickMesh.visible = true;
+            
             this.selectedBrick = intersect;
+            let brickName = this.selectedBrick.object.name;
+            let brick = state.brickController.getBrickByName(brickName);
+            this.brickDefinition = brick.definition;
             this.selectedBrick.object.material.opacity = 0.4;
             this.selectedBrick.object.material.transparent = true;
           }
 
-          // this.removeBrick(this.selectedBrick);
+          this.removeBrick(this.selectedBrick);
         }
 
         if (state.ui.mode === 'remove') {
@@ -270,40 +380,22 @@ const Engine = {
     this.render();
   },
 
-  removeBrick(intersect) {
-    if(intersect.object !== this.ground) {
-      this.scene.remove(intersect.object);
-      this.objects.splice(this.objects.indexOf(intersect.object), 1);
-    }
-  }, 
-
-  addBrick(intersect) {
-    var voxel = new THREE.Mesh(this.brickGeometry, ...[this.brickMaterial]);  
-    voxel = this.correctlyPositionBrick(voxel, intersect);
-    this.scene.add(voxel);
-    this.objects.push(voxel);
-  },
-
   onMouseMove(event) {
     event.preventDefault();
-    this.mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
-
     // Break out if there is no brick selected
     if (!this.brickDefinition) return;
 
+    this.mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
     var intersects = this.raycaster.intersectObjects(this.objects);
     if (intersects.length > 0) {
-
       var intersect = intersects[0];
-
-      if(state.ui.mode === 'add' || state.ui.mode === 'move') {
+      if (state.ui.mode === 'add' || state.ui.mode === 'move') {
         this.hoverBrickMesh = this.correctlyPositionBrick(this.hoverBrickMesh, intersect);
       }
     }
-
     this.render();
   },
 
@@ -311,35 +403,35 @@ const Engine = {
     event.preventDefault();
     this.mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
-    if(state.ui.mode === 'move' && this.selectedBrick) {
+    if (state.ui.mode === 'move' && this.selectedBrick.object) {
 
       this.raycaster.setFromCamera(this.mouse, this.camera);
       var intersects = this.raycaster.intersectObjects(this.objects);
 
       if (intersects.length > 0) {
         var intersect = intersects[0];
-
-        this.selectedBrick.object.material.opacity = 0;
-        this.selectedBrick.object.material.transparent = false;
-
-        this.addBrick(intersect);
-        this.removeBrick(this.selectedBrick);
-
-        this.hoverBrickMesh.visible = false;
+            
+          this.selectedBrick.object.material.opacity = 0;
+          this.selectedBrick.object.material.transparent = false;
+          
+          
+          this.updateBrick(intersect, this.selectedBrick.object.name);
+          this.removeBrick(this.selectedBrick);
+          
+          this.hoverBrickMesh.visible = false;
       }
 
 
       this.controls.enabled = true;
-      this.selectedBrick = null;
+      this.selectedBrick = [];
 
       this.render();
     }
   },
 
   onWheelEvent(event) {
-    // event.preventDefault();
+    event.preventDefault();
     this.render();
-    console.log('wheel moved');
   },
 
   onKeyDown(event) {
@@ -351,8 +443,6 @@ const Engine = {
 
     if (key === 27) {
       if (this.brickDefinition) {
-
-
         this.deselect();
       }
     }
@@ -366,6 +456,11 @@ const Engine = {
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.render('window_resize');
+  },
+
+
+  getBrickList() {
+    return state.brickController.getBricksList();
   }
 };
 

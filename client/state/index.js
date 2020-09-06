@@ -1,3 +1,5 @@
+import BrickController from "../builder/BrickController";
+
 let state = {
   studioId: null,
 
@@ -18,10 +20,10 @@ let state = {
     }
   },
 
-  engine: null,
-
   bricks: [],
   colors: [],
+
+  brickController: new BrickController(),
 
   selectedBrick: {
     name: ''
