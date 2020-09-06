@@ -1,16 +1,22 @@
 .ui {
   position: absolute;
   bottom: 12px;
-  right: 12px;
-  width: calc(100% - 24px);
+  left: 12px;
+  width: calc(auto - 24px);
   max-height: 400px;
   box-sizing: border-box;
   padding: 14px;
-  background: $color-light-blue;
+  background: $color-grey;
   box-shadow: $box-shadow-lg;
   // border: 1px solid $color-medium-grey;
-  // border-radius: 6px;
+  // border-radius: 12px;
   transition: all 0.3s linear;
+
+
+  &.remove { 
+    background: $color-light-yellow;
+    border-top: 6px solid #111;
+  }
 }
 
 

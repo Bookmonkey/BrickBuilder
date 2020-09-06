@@ -27,9 +27,11 @@ const Engine = {
   brickMaterial: null,
 
   hoverBrickGeometry: null,
-  hoverBrickMaterial:null,
+  hoverBrickMaterial: null,
   hoverBrickMesh: null,
-  brickDefinition: null,
+  brickDefinition: [], // leave it as an array, this causes rendering issues with inputs without 
+
+  selectedBrick: null,
   objects: [],
 
   init() {
@@ -74,11 +76,11 @@ const Engine = {
 
     document.addEventListener("mousedown", (event) => this.onMouseDown(event), false);
     document.addEventListener('mousemove', (event) => this.onMouseMove(event), false);
+    document.addEventListener('mouseup', (event) => this.onMouseUp(event), false);
     document.addEventListener('keydown', (event) => this.onKeyDown(event), false);
-    document.addEventListener('wheel', (event) => this.onWheelEvent(event));
-    
-    window.addEventListener('resize', (event) => this.onResize(event), false);
+    document.getElementById("renderCanvas").addEventListener('wheel', (event) => this.onWheelEvent(event));
 
+    window.addEventListener('resize', (event) => this.onResize(event), false);
 
 
     // define the default cude geo and material
@@ -100,7 +102,7 @@ const Engine = {
     this.hoverBrickMesh = new THREE.Mesh(this.hoverBrickGeometry, this.hoverBrickMaterial);
 
     this.hoverBrickMesh.name = "hoverBrickMesh";
-    this.hoverBrickMesh.visible = true;
+    this.hoverBrickMesh.visible = false;
 
     this.scene.add(this.hoverBrickMesh);
 
@@ -108,17 +110,18 @@ const Engine = {
     document.getElementById("renderCanvas").focus();
   },
 
+
   render(from) {
     this.renderer.render(this.scene, this.camera);
     this.controls.update();
-    
-    if(this.debug) {
-      console.log(from);      
+
+    if (this.debug) {
+      console.log(from);
     }
   },
 
   getBrickList: () => {
-    
+
   },
 
   initializeFromState: () => {},
@@ -129,7 +132,7 @@ const Engine = {
     const geometry = new THREE.PlaneBufferGeometry(1000, 1000);
     geometry.rotateX(-Math.PI / 2);
 
-    const material = new THREE.MeshLambertMaterial ({
+    const material = new THREE.MeshLambertMaterial({
       name: "ground",
       color: 0x007b28,
       side: THREE.DoubleSide
@@ -139,19 +142,19 @@ const Engine = {
     this.scene.add(this.ground);
 
     // add an object
-    const groundObject = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial ({
+    this.ground = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
       visible: false
     }));
 
-    this.objects.push(groundObject);
+    this.objects.push(this.ground);
 
-    this.scene.add(groundObject);
+    this.scene.add(this.ground);
 
   },
 
 
   setBrickColour(colour) {
-    
+
     // delete old material colour
     this.brickMaterial.dispose();
 
@@ -165,13 +168,18 @@ const Engine = {
     state.user.colour = colour;
   },
 
-  setBrickDefinition(brickIndex){
-    this.brickDefinition = state.bricks.filter(ele => parseInt(ele.id) === parseInt(brickIndex))[0];        
+  setBrickDefinition(brickIndex) {
+    this.brickDefinition = state.bricks.filter(ele => parseInt(ele.id) === parseInt(brickIndex))[0];
     let newGeometry = new THREE.BoxBufferGeometry(this.brickDefinition.dim_x, this.brickDefinition.dim_y, this.brickDefinition.height);
     this.hoverBrickMesh.geometry = newGeometry;
     this.brickGeometry = newGeometry;
 
     this.hoverBrickMesh.visible = true;
+
+    
+    state.ui.mode = 'add';
+    
+    this.render();
   },
 
   updateGroundColour() {
@@ -191,48 +199,98 @@ const Engine = {
 
   },
 
+  correctlyPositionBrick(mesh, intersect) {
+    mesh.position.copy(intersect.point).add(intersect.face.normal);
+    if ((this.brickDefinition.dim_x % 100) === 0) {
+      mesh.position.divideScalar(25).floor().multiplyScalar(25).addScalar(25).divideScalar(50).floor().multiplyScalar(50);
+      mesh.position.z += 25;
+      mesh.position.y += this.brickDefinition.dim_y / 2;
+    } else {
+      mesh.position.divideScalar(this.brickDefinition.dim_x).floor().multiplyScalar(this.brickDefinition.height).addScalar(this.brickDefinition.dim_y / 2);
+    }
+
+    return mesh;
+  },
+
+
+  setMode(mode) {
+    state.ui.mode = mode;
+  },
+
+  deselect(){
+    this.hoverBrickMesh.visible = false;
+    // this.brickDefinition = [];
+
+    state.ui.mode = '';
+    state.ui.navigation = 'menu';
+  },
+
   onMouseDown(event) {
     event.preventDefault();
-    
-    // Break out if there is no brick selected
-    if(!this.brickDefinition) return;
 
-    // left click
-    if(event.which === 1) {
-      this.mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
-  
-      this.raycaster.setFromCamera(this.mouse, this.camera);
-  
-      var intersects = this.raycaster.intersectObjects(this.objects);
-      
-      if (intersects.length > 0) {  
-          var intersect = intersects[0];
+    // Break out if there is no brick selected
+    if (!this.brickDefinition) return;
+
+    this.mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    var intersects = this.raycaster.intersectObjects(this.objects);
+
+    if (event.which === 1) {
+      if (intersects.length > 0) {
+        var intersect = intersects[0];
+        if (state.ui.mode === 'add') {
           var voxel = new THREE.Mesh(this.brickGeometry, ...[this.brickMaterial]);
-          voxel.position.copy(intersect.point).add(intersect.face.normal);
-          if((this.brickDefinition.dim_x % 100) === 0) {        
-            voxel.position.divideScalar( 25 ).floor().multiplyScalar( 25 ).addScalar( 25 ).divideScalar( 50 ).floor().multiplyScalar( 50 );
-            voxel.position.z += 25;
-            voxel.position.y += this.brickDefinition.dim_y / 2;
-          }
-          else {
-            voxel.position.divideScalar(this.brickDefinition.dim_x).floor().multiplyScalar(this.brickDefinition.height).addScalar(this.brickDefinition.dim_y / 2);
-          }
-  
+          
+          voxel = this.correctlyPositionBrick(voxel, intersect);
+          
           this.scene.add(voxel);
           this.objects.push(voxel);
+        }
+        
+        if(state.ui.mode === 'move') {
+          this.controls.enabled = false;
+          this.hoverBrickMesh.visible = true;
 
+          if(intersect.object !== this.ground){
+            this.selectedBrick = intersect;
+            this.selectedBrick.object.material.opacity = 0.4;
+            this.selectedBrick.object.material.transparent = true;
+          }
+
+          // this.removeBrick(this.selectedBrick);
+        }
+
+        if (state.ui.mode === 'remove') {
+          this.removeBrick(intersect);
         }
       }
-      this.render('mousedown');
+    }
+
+    this.render();
+  },
+
+  removeBrick(intersect) {
+    if(intersect.object !== this.ground) {
+      this.scene.remove(intersect.object);
+      this.objects.splice(this.objects.indexOf(intersect.object), 1);
+    }
+  }, 
+
+  addBrick(intersect) {
+    var voxel = new THREE.Mesh(this.brickGeometry, ...[this.brickMaterial]);  
+    voxel = this.correctlyPositionBrick(voxel, intersect);
+    this.scene.add(voxel);
+    this.objects.push(voxel);
   },
 
   onMouseMove(event) {
     event.preventDefault();
+    this.mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
     // Break out if there is no brick selected
-    if(!this.brickDefinition) return;
+    if (!this.brickDefinition) return;
 
-    this.mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
@@ -240,21 +298,42 @@ const Engine = {
     if (intersects.length > 0) {
 
       var intersect = intersects[0];
-      
-      this.hoverBrickMesh.position.copy(intersect.point).add(intersect.face.normal);
-      if((this.brickDefinition.dim_x % 100) === 0) {        
 
-        this.hoverBrickMesh.position.divideScalar( 12.5 ).floor().multiplyScalar( 12.5 ).addScalar( 12.5 ).divideScalar( 50 ).floor().multiplyScalar( 50 );
-        this.hoverBrickMesh.position.z += 25;
-        this.hoverBrickMesh.position.y += this.brickDefinition.dim_y / 2;
+      if(state.ui.mode === 'add' || state.ui.mode === 'move') {
+        this.hoverBrickMesh = this.correctlyPositionBrick(this.hoverBrickMesh, intersect);
       }
-      else {
-        this.hoverBrickMesh.position.divideScalar(this.brickDefinition.dim_x).floor().multiplyScalar(this.brickDefinition.height).addScalar(this.brickDefinition.dim_y / 2);
-      }
-
     }
 
-    this.render('mousemove');
+    this.render();
+  },
+
+  onMouseUp(event) {
+    event.preventDefault();
+    this.mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+
+    if(state.ui.mode === 'move' && this.selectedBrick) {
+
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+      var intersects = this.raycaster.intersectObjects(this.objects);
+
+      if (intersects.length > 0) {
+        var intersect = intersects[0];
+
+        this.selectedBrick.object.material.opacity = 0;
+        this.selectedBrick.object.material.transparent = false;
+
+        this.addBrick(intersect);
+        this.removeBrick(this.selectedBrick);
+
+        this.hoverBrickMesh.visible = false;
+      }
+
+
+      this.controls.enabled = true;
+      this.selectedBrick = null;
+
+      this.render();
+    }
   },
 
   onWheelEvent(event) {
@@ -264,34 +343,27 @@ const Engine = {
   },
 
   onKeyDown(event) {
-    
-    // this.render();
+
     let key = event.keyCode;
-    if(key === 37 || key === 38 || key === 39 ||  key === 40) {
+    if (key === 37 || key === 38 || key === 39 || key === 40) {
       event.preventDefault();
-      this.render();
     }
 
-    // if(key === 40) {
-    // }
-    // this.render();
+    if (key === 27) {
+      if (this.brickDefinition) {
 
-    // // zoom in and out
-    // if(key === 109 || key === 173) {
-    //   this.camera.position.z += theta;
-    // }
 
-    // if(key === 107 || key === 61) {
-    //   this.camera.position.z -= theta;
-    // }
+        this.deselect();
+      }
+    }
+    this.render();
 
-    // this.render();
   },
 
-  onResize(event){
-    this.camera.aspect = window.innerWidth / window.innerHeight;  
+  onResize(event) {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
-  
+
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.render('window_resize');
   }

@@ -27,7 +27,8 @@ let state = {
     name: ''
   },
   ui: {
-    navigation: 'bricks',
+    navigation: 'menu',
+    mode: 'add',
     blockList: true,
   },
   socket: null,
