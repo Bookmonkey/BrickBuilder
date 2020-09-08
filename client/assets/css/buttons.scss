@@ -49,6 +49,11 @@
   &.round {
     border-radius: 50%;
   }
+
+  &.unstyled {
+    box-shadow: none !important;
+    background: transparent;
+  }
 }
 
 
