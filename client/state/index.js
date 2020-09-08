@@ -30,7 +30,7 @@ let state = {
   },
   ui: {
     navigation: 'menu',
-    mode: 'add',
+    mode: '',
     blockList: true,
   },
   socket: null,

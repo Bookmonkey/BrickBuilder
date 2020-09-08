@@ -13,33 +13,6 @@
         :key="item.id"
       >{{ item.title }}</div>
     </div>
-
-    <div class="colour-picker" v-if="state.user.bricks.length > 0">
-      <div class="options" v-if="showColourOptions">
-        <div class="form-field">
-          <input type="text" placeholder="Search..." v-model="colourSearch" autofocus />
-        </div>
-
-        <div class="h5">Colours in use</div>
-
-        <div class="button-list">
-          <button
-            class="button sm"
-            v-for="colour in getColours()"
-            @click="setColour(colour)"
-            :key="colour.hex_code"
-          >
-            <span class="lego-colour" :style="{ background: colour.hex_code }"></span>
-            {{ colour.name }}
-          </button>
-        </div>
-      </div>
-
-      <button class="button" @click="toggleOptions()">
-        <span class="lego-colour" :style="{ background: state.user.colour.hex_code }"></span>
-        {{ state.user.colour.name }}
-      </button>
-    </div>
   </div>
 </template>
 

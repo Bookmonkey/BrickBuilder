@@ -59,7 +59,7 @@
           <Icon :icon="'book-open'"></Icon>Catalogue
         </div>
 
-        <div class="button icon-left">
+        <div class="button icon-left" @click="showColourOptions()">
           <Icon :icon="'droplet'"></Icon>Colour
         </div>
 
@@ -70,9 +70,12 @@
 
       <div v-show="isActiveNavItem('add-bricks')">
         <div class="button-list">
-          <button class="button sm" @click="gotoMenu()">
+          <button class="button unstyled" @click="gotoMenu()">
             <Icon :icon="'arrow-left'"></Icon>
           </button>
+        
+          <div v-if="state.user.bricks.length === 0">No bricks added</div>
+
           <div
             class="button"
             :class="{ 'selected': isSelectedBrick(item.id) }"
@@ -80,12 +83,14 @@
             @click="selectBrick(item.id)"
             :key="item.id"
           >{{ item.title }}</div>
-        </div>
-      </div>
 
+          <ColourPicker></ColourPicker>
+        </div>
+
+      </div>
       <div v-show="isActiveNavItem('edit-bricks')">
         <div class="button-list">
-          <button class="button sm" @click="gotoMenu()">
+          <button class="button unstyled" @click="gotoMenu()">
             <Icon :icon="'arrow-left'"></Icon>
           </button>
 
@@ -102,27 +107,22 @@
         </div>
       </div>
 
-      <!-- <div v-show="isActiveUI('remove-bricks')">
+
+      <div v-show="isActiveNavItem('colour-options')">
         <div class="button-list">
-          <button class="button" @click="changeUIState('menu')">
+          <button class="button unstyled" @click="gotoMenu()">
             <Icon :icon="'arrow-left'"></Icon>
           </button>
+
+          <button class="button" @click="changeMode('paint')">Repaint</button>
+
+          <ColourPicker></ColourPicker>
         </div>
-        Remove bricks
-      </div>-->
-      <!-- <div class="ui-navigation">
-        <div class="item" @click="changeUIState('bricks')" :class="isActiveUI('bricks')">My bricks</div>
-        <div
-          class="item"
-          @click="changeUIState('catalogue')"
-          :class="isActiveUI('catalogue')"
-        >Brick catalogue</div>
+
       </div>
 
-      <MyBricks :colours="state.colours" v-if="state.ui.navigation === 'bricks'"></MyBricks>
-      -->
       <div v-if="state.ui.navigation === 'catalog'">
-        <button @click="gotoMenu()">
+        <button class="button sm unstyled" @click="gotoMenu()">
           <Icon :icon="'arrow-left'"></Icon>
         </button>
         <Catalogue :bricks="bricks"></Catalogue>
@@ -137,6 +137,7 @@ import io from "socket.io-client";
 
 import Engine from "../builder/Engine";
 import { MyBricks, ControlPanel, Catalogue, Icon, Modal } from "../components";
+import ColourPicker from "../components/ColourPicker";
 
 import state from "../state";
 import { log } from "three";
@@ -150,6 +151,7 @@ export default Vue.extend({
     Catalogue,
     Icon,
     Modal,
+    ColourPicker
   },
   data() {
     return {
@@ -192,7 +194,7 @@ export default Vue.extend({
     });
 
     this.state.socket.on("addNewBrick", (data) => {
-      console.log("abc", data);
+      Engine.renderNewBrick(data, 'brickId');
 
       // this.state.engine.createBrickPiece();
 
@@ -201,6 +203,11 @@ export default Vue.extend({
 
     this.state.socket.on("moveUpdatedBrick", (data) => {
       // this.state.engine.updateBrickPiece(data);
+    });
+
+
+    this.state.socket.on("removeBrick", data => {
+      Engine.unrenderBrick(data.brickName);
     });
   },
   methods: {
@@ -214,6 +221,10 @@ export default Vue.extend({
     showEditBricks() {
       // this.state.ui.mode = 'edit';
       this.state.ui.navigation = "edit-bricks";
+    },
+
+    showColourOptions() {
+      this.state.ui.navigation = 'colour-options';
     },
 
     gotoCatalog() {

@@ -117,21 +117,24 @@
 
 
 .colour-picker {
+  position: relative;
+  display: inline-block;
+  
   .options {
+    bottom: 55px;
+    left: -195px;
     position: absolute;
-    bottom: 200px;
-    right: 12px;
-    display: inline-block;
+    display: block;
     z-index: 999;
     padding: 12px;
     margin-bottom: 16px;
 
-    width: 600px;
-    background: white;
+    width: 700px;
+    background: $color-light-grey;
 
-    box-shadow: $box-shadow-md;
+    box-shadow: $box-shadow-lg;
 
-    border-radius: 5px;
+    // border-radius: 5px;
   }
 }
 
