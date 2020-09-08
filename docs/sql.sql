@@ -26,8 +26,8 @@ create table brick_definition (
 );
 
 insert into brick_definition(title, dim_x, dim_y, height, model_reference) VALUES
-('Brick 1X2', 1, 2, 4.0, null),
-('Brick 2X2', 2, 2, 4.0, null),
+('Brick 1X2', 50, 50, 50, null),
+('Brick 2X2', 50, 100, 50, null),
 ('Plate 1X8', 1, 8, 2.0, null),
 ('Plate 2X16', 1, 16, 2.0, null);
 

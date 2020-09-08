@@ -34,7 +34,8 @@ class BrickController {
   getBricksList() {
     return this.brickState.map(ele => {
       return {
-        "name": ele.name
+        "name": ele.name,
+        "position": ele.position
       }    
     });
   }
