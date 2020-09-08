@@ -214,6 +214,7 @@
 import state from "../state";
 import Icon from "../components/Icon";
 import Modal from "../components/Modal";
+import Engine from "../builder/Engine";
 export default {
   name: "ControlPanel",
   components: {
@@ -247,10 +248,14 @@ export default {
       state: state,
     };
   },
+  mounted(){
+    // console.log(Engine.brickController);
+  },
   computed: {
     brickList: function () {
-      if (this.state.engine === null) return [];
-      else return this.state.engine.getBricksList();
+      return Engine.getBrickList();
+      // if (this.state.engine === null) return [];
+      // else return Engine.getBrickList();
     },
   },
   methods: {
