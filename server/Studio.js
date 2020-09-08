@@ -60,7 +60,7 @@ class Studio {
     }
 
     removeBrick(brickName) {
-        this.brickState = this.brickState.filter(ele => ele.name === brickName);
+        this.brickState = this.brickState.filter(ele => ele.name !== brickName);
     }
 
     updateBrick(data) {
