@@ -38,34 +38,43 @@
       </div>
     </div>
 
-    <control-panel v-if="state.ui.blockList"></control-panel>
+    <control-panel></control-panel>
 
-    <div class="alert" v-if="alertShow">
+    <div class="alert blue" v-if="alertShow">
       <Icon :icon="'check-circle'"></Icon>Weclome back
       <strong>{{ state.user.name }}</strong>
     </div>
 
+
+    <div class="alert" v-if="debugMode">
+      You're in debug mode!
+    </div>
+
     <div class="ui" :class="state.ui.mode">
       <div class="button-list" v-show="isActiveNavItem('menu')">
-        <div class="button icon-left" @click="showAddBricks()">
+        <button class="button icon-left" @click="showAddBricks()">
           <Icon :icon="'plus-square'"></Icon>Add
-        </div>
+        </button>
 
-        <div class="button icon-left" @click="showEditBricks()">
+        <button class="button icon-left" @click="setNavigation('edit-bricks')">
           <Icon :icon="'edit-2'"></Icon>Edit
-        </div>
+        </button>
 
-        <div class="button icon-left" @click="gotoCatalog()">
+        <button class="button icon-left" @click="setNavigation('catalog')">
           <Icon :icon="'book-open'"></Icon>Catalogue
-        </div>
+        </button>
 
-        <div class="button icon-left" @click="showColourOptions()">
+        <!-- <div class="button icon-left" @click="showColourOptions()">
           <Icon :icon="'droplet'"></Icon>Colour
-        </div>
+        </div>-->
 
-        <div class="button icon-left">
+        <button class="button icon-left disabled" @click="setNavigation('settings')" disabled>
+          <Icon :icon="'info'"></Icon> Help
+        </button>
+
+        <button class="button icon-left" @click="setNavigation('settings')">
           <Icon :icon="'settings'"></Icon>Settings
-        </div>
+        </button>
       </div>
 
       <div v-show="isActiveNavItem('add-bricks')">
@@ -73,7 +82,7 @@
           <button class="button unstyled" @click="gotoMenu()">
             <Icon :icon="'arrow-left'"></Icon>
           </button>
-        
+
           <div v-if="state.user.bricks.length === 0">No bricks added</div>
 
           <div
@@ -86,7 +95,6 @@
 
           <ColourPicker></ColourPicker>
         </div>
-
       </div>
       <div v-show="isActiveNavItem('edit-bricks')">
         <div class="button-list">
@@ -95,30 +103,25 @@
           </button>
 
           <div
-          class="button icon-left"
+            class="button icon-left"
             :class="isActiveMode('remove')"
             @click="changeMode('remove')"
           >
             <Icon :icon="'minus-square'"></Icon>Remove
           </div>
-          <div class="button icon-left" @click="changeMode('move')">
+          <div class="button icon-left" :class="isActiveMode('move')" @click="changeMode('move')">
             <Icon :icon="'move'"></Icon>Move
           </div>
-        </div>
-      </div>
 
-
-      <div v-show="isActiveNavItem('colour-options')">
-        <div class="button-list">
-          <button class="button unstyled" @click="gotoMenu()">
-            <Icon :icon="'arrow-left'"></Icon>
+          <button
+            class="button icon-left"
+            :class="isActiveMode('paint')"
+            @click="changeMode('paint')"
+          >
+            <Icon :icon="'droplet'"></Icon>Repaint
           </button>
-
-          <button class="button" @click="changeMode('paint')">Repaint</button>
-
           <ColourPicker></ColourPicker>
         </div>
-
       </div>
 
       <div v-if="state.ui.navigation === 'catalog'">
@@ -126,6 +129,127 @@
           <Icon :icon="'arrow-left'"></Icon>
         </button>
         <Catalogue :bricks="bricks"></Catalogue>
+      </div>
+
+      <div class="settings-ui" v-if="state.ui.navigation === 'settings'">
+        <div class="heading">
+          <button class="button sm unstyled" @click="gotoMenu()">
+            <Icon :icon="'arrow-left'"></Icon>
+          </button>
+          Settings
+        </div>
+
+        <div class="ui-navigation">
+          <div class="item" @click="setSettingsUI('interface')">Interface</div>
+          <div class="item" @click="setSettingsUI('admin')">Admin</div>
+        </div>
+
+        <div class="setting-panel" v-if="settingsUI === 'interface'">
+          <div class="form-field">
+            <label for="showBrickList">
+              Show brick list
+              <input type="checkbox" name="showBrickList" id="showBrickList" @click="toggleSetting('showBrickList')" />
+            </label>
+          </div>
+          <div class="form-field" >
+            <label for="debug">
+              Show debug mode
+              <input type="checkbox" name="debug" id="debug" @click="toggleSetting('debugMode')"/>
+            </label>
+          </div>
+
+          <div class="form-field">
+            <label for="soundEffects">
+              Play sound effects
+              <input type="checkbox" name="soundEffects" id="soundEffects" @click="toggleSetting('playSoundEffects')"/>
+            </label>
+          </div>
+
+          <div class="form-field inline">
+            
+            <label for="groundSize" class="full-size">Size of Ground</label>
+            <input type="text" id="groundSizeX" name="groundSizeX" v-model="state.studioInfo.groundSize.x" disabled />
+            <input type="text" id="groundSizeY" name="groundSizeY" v-model="state.studioInfo.groundSize.y" disabled />
+          </div>
+
+          <div class="form-field">
+            <label for="skybox">Skybox colour</label>
+            <input
+              type="text"
+              id="skybox"
+              name="skybox"
+              class="full-size"
+              v-model="state.studioInfo.skybox"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="ground">Ground colour</label>
+            <input
+              type="text"
+              id="ground"
+              name="ground"
+              class="full-size"
+              v-model="state.studioInfo.ground"
+            />
+          </div>
+
+          <div class="form-field">
+            <button class="button icon-left" @click="updateInterfaceSettings()">
+              <Icon :icon="'save'"></Icon>
+              Update settings
+            </button>
+          </div>
+        </div>
+
+                <div class="setting-panel" v-if="settingsUI === 'admin'">
+          <h5 class="h5">Studio</h5>
+          <div class="form-field">
+            <label for="studioName">Studio name</label>
+            <input
+              class="full-size"
+              type="studioName"
+              name="studioName"
+              id="studioName"
+              v-model="state.studioInfo.title"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="visibility">Visibility</label>
+            <select class="full-size" name="visibility" id="visibility">
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="colour">Studio colour</label>
+            <select class="full-size" id="colour" name="colour" v-model="state.studioInfo.colour">
+              <option value="black">Black</option>
+              <option value="blue">Blue</option>
+              <option value="green">Green</option>
+              <option value="purple">Purple</option>
+              <option value="yellow">Yellow</option>
+              <option value="orange">Orange</option>
+              <option value="red">Red</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="password">Password</label>
+            <input class="full-size" type="password" name="password" id="password" />
+          </div>
+
+
+          <div class="form-field">
+            <div class="button red icon-left" @click="deleteStudioPrompt()">
+                <Icon :icon="'trash'"></Icon> 
+                Delete studio
+              </div>
+          </div>
+          
+        </div>
       </div>
     </div>
   </div>
@@ -151,7 +275,7 @@ export default Vue.extend({
     Catalogue,
     Icon,
     Modal,
-    ColourPicker
+    ColourPicker,
   },
   data() {
     return {
@@ -163,6 +287,8 @@ export default Vue.extend({
       alertShow: false,
       brickUIDropdown: false,
       selectedBrickId: 0,
+
+      settingsUI: "interface",
     };
   },
   mounted() {
@@ -194,19 +320,14 @@ export default Vue.extend({
     });
 
     this.state.socket.on("addNewBrick", (data) => {
-      Engine.renderNewBrick(data, 'brickId');
-
-      // this.state.engine.createBrickPiece();
-
-      // this.state.brickController.addBrick(data.name, data.colour, brick);
+      Engine.renderNewBrick(data, "brickId");
     });
 
     this.state.socket.on("moveUpdatedBrick", (data) => {
       // this.state.engine.updateBrickPiece(data);
     });
 
-
-    this.state.socket.on("removeBrick", data => {
+    this.state.socket.on("removeBrick", (data) => {
       Engine.unrenderBrick(data.brickName);
     });
   },
@@ -218,39 +339,53 @@ export default Vue.extend({
       this.state.ui.mode = "add";
       this.state.ui.navigation = "add-bricks";
     },
-    showEditBricks() {
-      // this.state.ui.mode = 'edit';
-      this.state.ui.navigation = "edit-bricks";
-    },
 
-    showColourOptions() {
-      this.state.ui.navigation = 'colour-options';
-    },
-
-    gotoCatalog() {
-      this.state.ui.navigation = "catalog";
+    setNavigation(nav) {
+      this.state.ui.navigation = nav;
     },
 
     changeMode(mode) {
       this.state.ui.mode = mode;
-      // Engine.setMode(state);
     },
 
-    isActiveMode(state) {
-      return this.state.ui.state === state ? "active  " : "";
+    isActiveMode(mode) {
+      return this.state.ui.mode === mode ? "active" : "";
     },
 
     isActiveNavItem(navItem) {
       return this.state.ui.navigation === navItem ? true : false;
     },
-
     isSelectedBrick(id) {
       return id === this.selectedBrickId ? true : false;
     },
+
     selectBrick(brickIndex) {
       this.selectedBrickId = brickIndex;
       Engine.setBrickDefinition(brickIndex);
     },
+
+    setSettingsUI(ui) {
+      this.settingsUI = ui;
+    },
+
+    toggleSetting(setting){
+      this.state.ui[setting] = !this.state.ui[setting];
+      Engine.settingToggleUpdate(setting);
+    },
+
+    updateInterfaceSettings(){
+      let info = {
+        skybox: state.studioInfo.skybox,
+        ground: state.studioInfo.ground,
+        groundSize: state.studioInfo.groundSize // refactor
+      };
+
+      Engine.interfaceSettingsUpdate(info);
+    },
+    updateStudioSettings() {
+      console.log("update studio settings")
+    },
+
 
     enterStudio(name, id) {
       fetch("http://localhost:3000/api/studio/" + this.state.studioId)
@@ -267,6 +402,10 @@ export default Vue.extend({
             direction_light: body.direction_light,
             skybox: body.skybox,
             ground: body.ground,
+            groundSize: {
+              x: 0,
+              y: 0
+            }
           };
 
           this.state.socket.on("userJoined", (socketData) => {
@@ -295,10 +434,10 @@ export default Vue.extend({
         });
     },
     welcomeBackMessage() {
-      // this.alertShow = true;
-      // setTimeout(() => {
-      //   this.alertShow = !this.alertShow;
-      // }, 5000);
+      this.alertShow = true;
+      setTimeout(() => {
+        this.alertShow = !this.alertShow;
+      }, 5000);
     },
 
     closeBrickUI() {
@@ -307,19 +446,28 @@ export default Vue.extend({
       this.state.selectedBrick = null;
     },
 
-    // move(){
-    //   this.state.brickController.UIToggleMove();
-    // },
-    // rotate(brickIndex){
-    //   let mesh = this.state.selectedBrick;
-    //   this.state.brickController.UIToggleRotation(mesh);
-    // }
+    deleteStudioPrompt() {
+      fetch("http://localhost:3000/api/studio/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: this.state.studioId,
+        }),
+      }).then((res) => {
+        this.$router.push("/studios");
+      });
+    },
   },
 
   computed: {
     currentMode: function () {
       return this.state.ui.mode;
     },
+    debugMode: function() {
+      return this.state.ui.debugMode;
+    }
   },
 });
 </script>

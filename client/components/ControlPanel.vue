@@ -1,35 +1,20 @@
 <template>
   <div class="control-panel">
-    <div class="panel-button button sm icon-left" v-show="!showPanel" @click="showControlPanel()">
-      <Icon :icon="'menu'"></Icon> Control panel
-    </div>
-
     <div class="panel" v-show="showPanel">
       <div v-show="uiState === 'panel'">
         <div class="heading">
-          <div class="dropdown" @click="dropdown = !dropdown">
-            <div class="button sm icon-left">
-              <Icon :icon="'menu'"></Icon>Menu
-            </div>
-            <div class="items" v-if="dropdown">
-              <div class="item icon-left" @click="hideControlPanel()">
-                <Icon :icon="'x-square'"></Icon>Hide control panel
-              </div>
-              <div class="item icon-left" @click="saveStudio()">
-                <Icon :icon="'save'"></Icon>Save Studio
-              </div>
-              <div class="item icon-left" @click="toggleView('port')">
-                <Icon :icon="'file'"></Icon>Import / Export
-              </div>
-              <div class="item icon-left" @click="toggleView('settings')">
-                <Icon :icon="'settings'"></Icon>Settings
-              </div>
-            </div>
-          </div>
           <div class="h5">Control Panel</div>
         </div>
 
         <div class="content">
+
+          <div class="button icon-left" @click="saveStudio()">
+            <Icon :icon="'save'"></Icon>Save Studio
+          </div>
+          <div class="button icon-left" @click="toggleView('port')">
+            <Icon :icon="'file'"></Icon>Import / Export
+          </div>
+          
           <div class="title">
             Sets
             <button class="button sm icon-left">
@@ -59,106 +44,6 @@
             <Icon :icon="'arrow-left'"></Icon>
           </button>
           <div class="h5">Settings</div>
-        </div>
-
-        <div class="content">
-          <!-- <div class="form-field">
-            <button class="button sm" @click="toggleDebugMode()">Debug mode ({{ state.engine.debug}})</button>
-          </div> -->
-          <div class="accordan">
-            <div class="h4" @click="toggleAccordan('studio')">Studio</div>
-            <div v-show="accordan.studio">
-              <div class="form-field">
-                <label for="studioName">Studio name</label>
-                <input
-                  class="full-size"
-                  type="studioName"
-                  name="studioName"
-                  id="studioName"
-                  v-model="state.studioInfo.title"
-                />
-              </div>
-
-              <div class="form-field">
-                <label for="visibility">Visibility</label>
-                <select class="full-size" name="visibility" id="visibility">
-                  <option value="public">Public</option>
-                  <option value="private">Private</option>
-                </select>
-              </div>
-
-              <div class="form-field">
-                <label for="colour">Studio colour</label>
-                <select class="full-size" id="colour" name="colour" v-model="state.studioInfo.colour">
-                  <option value="black">Black</option>
-                  <option value="blue">Blue</option>
-                  <option value="green">Green</option>
-                  <option value="purple">Purple</option>
-                  <option value="yellow">Yellow</option>
-                  <option value="orange">Orange</option>
-                  <option value="red">Red</option>
-                </select>
-              </div>
-
-              <div class="form-field">
-                <label for="password">Password</label>
-                <input class="full-size" type="password" name="password" id="password" />
-              </div>
-            </div>
-          </div>
-
-          <div class="accordan">
-            <div class="h4" @click="toggleAccordan('interface')">Interface</div>
-
-            <div v-show="accordan.interface">
-              <label for="dol">Direction of Light</label>
-              <div class="form-field inline">
-                <input type="text" v-model="state.studioInfo.direction_light[0]" />
-                <input type="text" v-model="state.studioInfo.direction_light[1]" />
-                <input type="text" v-model="state.studioInfo.direction_light[2]" />
-              </div>
-
-              <div class="form-field">
-                <label for="skybox">Skybox colour</label>
-                <input
-                  type="text"
-                  id="skybox"
-                  name="skybox"
-                  class="full-size"
-                  v-model="state.studioInfo.skybox"
-                />
-              </div>
-
-              <div class="form-field">
-                <label for="ground">Ground colour</label>
-                <input
-                  type="text"
-                  id="ground"
-                  name="ground"
-                  class="full-size"
-                  v-model="state.studioInfo.ground"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="accordan">
-            <div class="h4" @click="toggleAccordan('dangerous')">Dangerous</div>
-            <div v-show="accordan.dangerous">
-              <div class="form-field">
-                <div class="button red icon-left" @click="deleteStudioPrompt()">
-                  <i data-feather="trash"></i>
-                  Delete studio
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-field">
-            <div class="button green icon-left" @click="updateStudioDetails()">
-              <Icon :icon="'save'"></Icon>Save settings
-            </div>
-          </div>
         </div>
       </div>
 
@@ -233,15 +118,8 @@ export default {
 
       uiState: "panel",
 
-      accordan: {
-        studio: false,
-        interface: false,
-        dangerous: false
-      },
-
       selectedBrick: [],
-
-      showPanel: false,
+      
       showModal: false,
 
       dropdown: false,
@@ -256,6 +134,9 @@ export default {
       return Engine.getBrickList();
       // if (this.state.engine === null) return [];
       // else return Engine.getBrickList();
+    },
+    showPanel: function(){
+      return this.state.ui.showBrickList;
     },
   },
   methods: {
@@ -361,20 +242,6 @@ export default {
     // changeGround() {
     //   this.state.brickController.UIUpdateGroundColour(this.groundHexCode);
     // },
-
-    deleteStudioPrompt() {
-      fetch("http://localhost:3000/api/studio/delete", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: this.state.studioId,
-        }),
-      }).then((res) => {
-        this.$router.push("/studios");
-      });
-    },
   },
 };
 </script>

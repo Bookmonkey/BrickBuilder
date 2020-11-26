@@ -7,13 +7,19 @@ let state = {
     title: "",
     direction_light: "",
     skybox: "",
-    ground: ""
+    ground: "",
+
+    groundSize: {
+      x: 0,
+      y: 0,
+    }
   },
 
   user: {
     bricks: [],
     name: null,
     id: null,
+    
     colour: {
       name: "Bright Red",
       hex_code: "#ff0000"
@@ -31,7 +37,9 @@ let state = {
   ui: {
     navigation: 'menu',
     mode: '',
-    blockList: true,
+    showBrickList: false,
+    playSoundEffects: false,
+    debugMode: true,
   },
   socket: null,
 };
