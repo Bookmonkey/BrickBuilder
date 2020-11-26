@@ -3,7 +3,7 @@
   bottom: 12px;
   left: 12px;
   width: calc(auto - 24px);
-  max-height: 400px;
+  max-height: 600px;
   box-sizing: border-box;
   padding: 14px;
   background: $color-grey;
@@ -24,17 +24,16 @@
   width: 100%;
   display: flex;
   margin-bottom: 12px;
-  color: $color-light-grey;
 
   .item {
     cursor: pointer;
     margin-right: 18px;
     padding-bottom: 6px;
-    font-size: 1.4rem;
+    font-size: 1.1rem;
 
 
     &.active {      
-      border-bottom: 1px solid $color-light-grey;
+      // border-bottom: 1px solid $color-light-grey;
       font-weight: 800;
     }
   }

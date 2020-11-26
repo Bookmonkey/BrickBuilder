@@ -8,6 +8,10 @@
     display: block;
 
     font-family: $font-family;
+
+    &.full-size {
+      width: 100%;
+    }
   }
 
   &.inline {
@@ -15,6 +19,7 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 
     input {
       width: 34px;
