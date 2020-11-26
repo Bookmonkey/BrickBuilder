@@ -6,6 +6,7 @@ import Brick from "./Brick";
 import state from "../state";
 
 import SoundEffect from "./SoundEffect";
+import { Sound } from 'babylonjs';
 
 
 const Engine = {
@@ -17,18 +18,12 @@ const Engine = {
   mouse: new THREE.Vector2(),
   controls: null,
 
-<<<<<<< HEAD
-    this.debug = true;
-
-=======
   grid: null,
->>>>>>> 77e66c5474f0cbe2b29df9edf0e5e80fbcffebf8
 
   ground: null,
   directionalLight: null,
 
   selectedColour: null,
-
 
   brickGeometry: null,
   brickMaterial: null,
@@ -101,7 +96,7 @@ const Engine = {
     // // hover over brick
 
     this.hoverBrickGeometry = new THREE.BoxBufferGeometry(50, 50, 50);
-    this.hoverBrickMaterial = new THREE.MeshBasicMaterial({
+    this.hoverBrickMaterial = new THREE.MeshLambertMaterial({
       name: 'hoverBrickMesh',
       color: defaultColour,
       opacity: 0.5,
@@ -110,24 +105,7 @@ const Engine = {
 
     console.log(state.user.colour.hex_code);
 
-<<<<<<< HEAD
-  cursorEventUp() {
-    if (this.startingCursorPoint) {
-      this.camera.attachControl(this.canvas, true);
-      this.startingCursorPoint = null;
-
-
-      this.selectedBrick.position.y = Math.round(this.selectedBrick.position.y);
-      state.socket.emit('updateBrick', {
-        "studioId": state.studioId,
-        "type": "position",
-        "name": this.selectedBrick.name,
-        "value": this.selectedBrick.position
-      });
-      return;
-=======
     this.hoverBrickMesh = new THREE.Mesh(this.hoverBrickGeometry, this.hoverBrickMaterial);
->>>>>>> 77e66c5474f0cbe2b29df9edf0e5e80fbcffebf8
 
     this.hoverBrickMesh.visible = false;
 
@@ -173,6 +151,7 @@ const Engine = {
     material.name = "groundMaterial";
 
     this.ground = new THREE.Mesh(geometry, material);
+    this.ground.name = "ground";
     this.scene.add(this.ground);
 
     // add an object
@@ -217,10 +196,6 @@ const Engine = {
     this.render();
   },
 
-  updateGroundColour() {
-    this.ground.material.color = new THREE.Color('yellow');
-  },
-
 
   createLighting() {
     const light = new THREE.AmbientLight(0x606060);
@@ -261,6 +236,31 @@ const Engine = {
     state.ui.navigation = 'menu';
   },
 
+  settingToggleUpdate(settingToUpdate){
+    switch(settingToUpdate){
+      case "debugMode": 
+        this.debug = !this.debug;
+      break;
+
+      case "playSoundEffects":
+        SoundEffect.enabled = !SoundEffect.enabled;
+      break;
+    }
+  },
+  
+  interfaceSettingsUpdate(info){
+    let ground = this.scene.getObjectByName('ground');
+
+    // dispose of the original material
+    ground.material.dispose();
+
+    ground.material = new THREE.MeshLambertMaterial({
+      color: new THREE.Color(info.ground)
+    });
+
+
+    this.scene.background = new THREE.Color(info.skybox);
+  },
 
   initializeFromState(brickState) {
     brickState.map(brick => {
@@ -312,9 +312,18 @@ const Engine = {
   // this function must only be used on the move event.
   // it creates a new brick but will update the exsiting brick controller item
   updateBrick(intersect, brickName) {
+    
     var voxel = new THREE.Mesh(this.brickGeometry, ...[this.brickMaterial]);
     voxel.name = brickName;
     voxel = this.correctlyPositionBrick(voxel, intersect);
+
+    voxel.material.dispose();     
+    voxel.material = new THREE.MeshLambertMaterial({
+      name: 'brickMaterial',
+      color: new THREE.Color(this.selectedBrick.object.material.color)
+    });
+
+
     this.scene.add(voxel);
     this.objects.push(voxel);
 
@@ -387,7 +396,11 @@ const Engine = {
   },
 
   onMouseDown(event) {
-    event.preventDefault();
+    // event.preventDefault();
+
+    if(event.target.tagName.toLowerCase() === "canvas") {
+      event.preventDefault();
+    }
 
     // Break out if there is no brick selected
     if (!this.brickDefinition) return;
@@ -432,7 +445,14 @@ const Engine = {
         }
 
         if(state.ui.mode === 'paint') {
-          intersect.object.material.color = new THREE.Color(state.user.colour.hex_code);
+          if (intersect.object !== this.ground) {
+            intersect.object.material.dispose();
+            
+            intersect.object.material = new THREE.MeshLambertMaterial({
+              name: 'brickMaterial',
+              color: new THREE.Color(state.user.colour.hex_code)
+            });
+          }
         }
       }
     }
@@ -507,6 +527,24 @@ const Engine = {
         this.deselect();
       }
     }
+
+    // A = add
+    if(key === 65) {
+      console.log("Add not implemented yet");
+    }
+
+    if(key === 77) {
+      console.log("Move not implemented yet");
+    }
+
+    if(key === 82 || key === 68) {
+      console.log("Remove not implemented yet");
+    }
+    if(key === 80) {
+      console.log("Paint not implemented yet");
+    }
+
+
     this.render();
 
   },

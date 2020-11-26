@@ -3,3 +3,4 @@
 .cache
 
 /server/tmp/*.*
+config.js

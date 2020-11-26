@@ -20,6 +20,7 @@ const port = 3000;
 const server = app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
 var io = require('socket.io')(server);
 
+
 io.on('connection', (socket) => {
 
   // let exists = checkIfStudioExists(socket.handshake.query.studioId);

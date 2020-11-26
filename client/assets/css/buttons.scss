@@ -1,7 +1,7 @@
 .button {
   background: white;
   font-family: $font-family;
-  font-weight: 600;
+  // font-weight: 600;
   padding: 12px 24px;
   font-size: 16px;
   text-decoration: none;
@@ -23,7 +23,15 @@
     box-shadow: $box-shadow-lg;
   }
   
-  &.active,
+  &.active{
+    color: white;
+    background: lighten($color: $color-dark-blue, $amount: 30);
+
+    &:hover {
+      background: lighten($color: $color-dark-blue, $amount: 40);
+    }
+  }
+
   &:hover {
     background: lighten($color: $color-dark-blue, $amount: 60);
   }
@@ -53,6 +61,11 @@
   &.unstyled {
     box-shadow: none !important;
     background: transparent;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    background: $color-medium-grey;
   }
 }
 

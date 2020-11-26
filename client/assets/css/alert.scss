@@ -3,7 +3,7 @@
     box-sizing: border-box;
 
     top: 12px;
-    right: 12px;
+    left: 12px;
     padding: 12px;
     border-radius: 6px;
     box-shadow: $box-shadow-lg;
@@ -16,6 +16,6 @@
 
     &.green {
         background: $color-light-green;
-        color: white;;
+        color: white;
     }
 }

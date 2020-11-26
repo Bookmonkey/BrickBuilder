@@ -51,7 +51,6 @@ export default {
     },
     setColour(colour) {
       Engine.setBrickColour(colour);
-      // this.state.user.colour = colour;
       this.toggleOptions();
     }
   },
