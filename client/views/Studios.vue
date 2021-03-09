@@ -8,27 +8,37 @@
         <div>
           <div class="form-field">
             <label for="title">Studio title</label>
-            <input type="text" class="full-size" v-model="newStudio.title">
+            <input type="text" class="full-size" v-model="newStudio.title" name="title" id="title">
           </div>
 
           <div class="form-field">
             <label for="visibility">Visibility</label>
-            <select class="select" v-model="newStudio.public">
+            <select class="select full-size" name="visibility" id="visibility" v-model="newStudio.public">
               <option value="true">Public</option>
               <option value="false">Private</option>
             </select>
           </div>
 
-          <h4>Additional settings</h4>
-
-          <div class="form-field">
-            <label for="password">Password (optional)</label>
-            <input type="text" class="full-size" />
-          </div>
+          <!-- <h4>Additional settings</h4>
+          
+            <div class="form-field">
+              <label for="password_protect">Password protect studio? <input type="checkbox" v-model="newStudio.password_protected" id="password_protect" name="password_protect" /></label>
+            </div>
+          <div class="form-group" v-if="newStudio.password_protected">
+            <div class="form-field inline">
+              <label for="password">Password (optional)</label>
+              <input type="text" class="full-size" name="password" id="password" v-model="newStudio.password" />
+            </div>
+            <div class="form-field inline">
+              <label for="password_confirm">Password confirm (optional)</label>
+              <input type="text" class="full-size" name="password_confirm" id="password_confirm" v-model="newStudio.password_confirm" />
+            </div>
+          </div> -->
+          
 
           <div class="form-field">
             <label for="colour">Studio colour</label>
-            <select id="colour" name="colour" v-model="newStudio.colour">
+            <select class="select full-size" id="colour" name="colour" v-model="newStudio.colour">
               <option value="black">Black</option>
               <option value="blue">Blue</option>
               <option value="green">Green</option>
@@ -39,7 +49,7 @@
             </select>
           </div>
 
-          <button class="button green" @click="createNewStudio()">Lets go</button>
+          <button class="button green" @click="createNewStudio()">Create studio</button>
         </div>
       </div>
     </div>
@@ -66,7 +76,10 @@
 
         <div class="studio" v-for="studio in filteredStudios" :key="studio.studio_id" :class="studio.colour">
           <router-link class="link" :to="'/studio/' + studio.studio_id">
-            <div class="title">{{ studio.title }}</div>
+            <div class="title">
+              {{ studio.title }}
+              <Icon :icon="'lock'" v-if="studio.password_protected"></Icon>
+            </div>
             <div>
               created by: name
             </div>
@@ -76,8 +89,6 @@
             </div>
           </router-link>
 
-
-
         </div>
       </div>
     </div>
@@ -86,20 +97,25 @@
 </template>
 
 <script>
+import { log } from 'three';
 import Navigation from "../components/Navigation";
+import Icon from '../components/Icon.vue';
 export default {
   name: "Studios",
   components: {
-    Navigation
+    Navigation,
+    Icon
   },
   data() {
     return {
       colourDropdown: false, 
-
       showCreateUI: false,
       newStudio: {
         title: "",
         public: true,
+        password_protected: false,
+        password: null,
+        password_confirm: null,
         colour: "black"
       },
       search: '',
@@ -124,6 +140,12 @@ export default {
   },
   methods: {
     createNewStudio(){
+      let valid = this.validateForm();
+
+      console.log(valid);
+
+
+
       fetch("http://localhost:3000/api/studio/create", {
         method: 'POST',
         headers: {
@@ -133,10 +155,11 @@ export default {
       })
       .then(res => res.text())
       .then(studioId => {
+        console.log(studioId);
         this.showCreateUI = false;
         
         this.studios.push({
-          id: studioId,
+          studio_id: studioId,
           ...this.newStudio
         })
 
@@ -148,10 +171,28 @@ export default {
       })
       .catch(error => console.error(error));
     },
+
+    validateForm(){
+      let valid = true;
+      if(this.isEmpty(this.newStudio.title)) {
+        valid = false;
+      }
+
+      if(this.newStudio.password_protected) {
+        if(this.isEmpty(this.newStudio.password) && this.isEmpty(this.newStudio.password_confirm)) {
+          valid = false;
+        }
+
+        if(this.newStudio.password !== this.newStudio.password_confirm) {
+          valid = false;
+        }
+      }
+      return valid;
+    },
+
+    isEmpty(value){
+      if(value === undefined || value === null || value.length === 0) return true;
+    }
   },
 }
 </script>
-
-<style lang="scss">
-
-</style>

@@ -2,6 +2,7 @@ import BrickController from "../builder/BrickController";
 
 let state = {
   studioId: null,
+  password_protected: false,
 
   studioInfo: {
     title: "",

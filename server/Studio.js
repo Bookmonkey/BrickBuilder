@@ -9,12 +9,14 @@ class Studio {
         return this.brickState;
     }
 
+    // this is shared to the client
     constructor(info) {
         this.studio_id = info.studio_id;
         this.public = info.is_public;
         this.members = new Array();
         this.title = info.title;
         this.colour = info.colour;
+        this.password_protected = info.password_protected;
         this.direction_light = info.direction_light;
         this.skybox = info.skybox;
         this.ground = info.ground;

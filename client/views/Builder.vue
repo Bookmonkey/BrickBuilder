@@ -13,6 +13,16 @@
       <div v-show="modalState === 'loading'">
         <h2>Loading...</h2>
       </div>
+
+      <!-- <div v-show="modalState === 'password_protected'">
+        <h2 class="heading">Password required!</h2>
+
+        <div class="form-field">
+          <input class="full-size" type="text" v-model="password" autofocus />
+        </div>
+
+        <button class="button blue" @click="enterStudio(name)">Enter studio</button>
+      </div> -->
     </Modal>
 
     <canvas id="renderCanvas"></canvas>
@@ -264,7 +274,6 @@ import { MyBricks, ControlPanel, Catalogue, Icon, Modal } from "../components";
 import ColourPicker from "../components/ColourPicker";
 
 import state from "../state";
-import { log } from "three";
 
 let socket;
 
@@ -298,6 +307,11 @@ export default Vue.extend({
       query: "studioId=" + this.state.studioId,
     });
 
+   this.state.socket.emit("requirePassword", {
+      studioId: this.state.studioId
+    });
+
+
     let userId = localStorage.getItem("userId");
     let userName = localStorage.getItem("userName");
 
@@ -314,6 +328,12 @@ export default Vue.extend({
         }
       });
     }
+
+    this.state.socket.on("requirePasswordResponse", (requirePassword) => {
+      if(requirePassword) {
+        console.log("require password")
+      }
+    });
 
     this.state.socket.on("isDead", () => {
       this.$router.push("/studios");
@@ -409,6 +429,7 @@ export default Vue.extend({
           };
 
           this.state.socket.on("userJoined", (socketData) => {
+            console.log(socketData);
             localStorage.setItem("userName", name);
             localStorage.setItem("userId", socketData.member.userId);
 

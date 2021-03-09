@@ -1,5 +1,12 @@
-
 // Forms
+
+.form-group {
+  display: flex;
+
+  div:first-child {
+    margin-right: 12px;
+  }
+}
 .form-field {
   margin-bottom: 8px;
   label {
@@ -22,14 +29,13 @@
     flex-wrap: wrap;
 
     input {
-      width: 34px;
-      flex-grow: 1;
-      margin-right: 12px;
+      flex-grow: 1;      
     }
   }
 
   input,
   select {
+    width: 100%;
     border:none;
     width: 64px;
     padding: 12px;
@@ -52,6 +58,7 @@
     }
   }
 }
+
 
 
 .dropdown {

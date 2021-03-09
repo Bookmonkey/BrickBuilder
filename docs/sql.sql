@@ -5,6 +5,8 @@ create table studio (
   password text,
   title text,
   colour text,
+  password_protected text,
+  password text, 
   direction_light integer[],
   skybox text,
   ground text,

@@ -3,7 +3,7 @@ const app = express();
 
 const bodyParser = require('body-parser');
 const cors = require("cors");
-const crypto = require('crypto');
+const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
 
@@ -22,6 +22,7 @@ var io = require('socket.io')(server);
 
 
 io.on('connection', (socket) => {
+  console.log(socket.handshake.address);
 
   // let exists = checkIfStudioExists(socket.handshake.query.studioId);
   // if(!exists){
@@ -32,6 +33,11 @@ io.on('connection', (socket) => {
     console.log('user disconnected', socket.handshake.address);
     let studioId = socket.handshake.query.studioId;
   });
+
+  socket.on('requirePassword', async (data) => {
+    let currentStudio = await studioController.getStudioById(data.studioId);
+    socket.emit('requirePasswordResponse', Boolean(currentStudio.password_protected));
+  })
 
   socket.on('join', async (data) => {
     let currentStudio = await studioController.getStudioById(data.studioId);
@@ -97,15 +103,36 @@ io.on('connection', (socket) => {
   });
 });
 
+app.use('/', express.static(path.join(__dirname, '..', 'dist')))
+app.engine("html", require("ejs").renderFile);
+app.set("views", __dirname + "/");
+app.set("view engine", "ejs"); // set up templates
+
+
+app.get("/", function (req, res) {
+  res.render("../dist/index.html");
+});
 
 app.post("/api/studio/create", async function(req, res) {
   let body = req.body;
+  let hashedPassword = null;
+
+  console.log(body);
+
+  // double check passwords
+  if(body.password_protected) {
+    if(body.password === body.password_confirm) {
+      hashedPassword = await bcrypt.hash(body.password, 10);    
+    }
+  }
 
   let newStudio = {
     "is_public": body.public,
     "builders": 0,
     "title": body.title,
     "colour": body.colour,
+    "password_protected": body.password_protected,
+    "password": hashedPassword,
     "direction_light": [0, 1, 0],
     "skybox": "#87CEEB",
     "ground": "#009900",

@@ -13,11 +13,13 @@ const StudioController = {
     let studio = new Studio(info);
 
     try {      
-      const query = await db.query("INSERT INTO studio(studio_id, is_public, title, colour, direction_light, skybox, ground) values($1, $2, $3, $4, $5, $6, $7);", [
+      const query = await db.query("INSERT INTO studio(studio_id, is_public, title, colour, password_protected, password, direction_light, skybox, ground) values($1, $2, $3, $4, $5, $6, $7, $8, $9);", [
         studio.studio_id,
         studio.public,
         studio.title,
         studio.colour,
+        studio.password_protected,
+        studio.password,
         studio.direction_light,
         studio.skybox,
         studio.ground

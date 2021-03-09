@@ -6,7 +6,6 @@ import Brick from "./Brick";
 import state from "../state";
 
 import SoundEffect from "./SoundEffect";
-import { Sound } from 'babylonjs';
 
 
 const Engine = {
@@ -396,8 +395,6 @@ const Engine = {
   },
 
   onMouseDown(event) {
-    // event.preventDefault();
-
     if(event.target.tagName.toLowerCase() === "canvas") {
       event.preventDefault();
     }
