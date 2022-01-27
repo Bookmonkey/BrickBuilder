@@ -37,7 +37,7 @@
     "parcel": "^1.12.4",
     "pg": "^8.5.1",
     "socket.io": "^2.3.0",
-    "three": "^0.119.1",
+    "three": "^0.137.0",
     "vue": "^2.6.12",
     "vue-hot-reload-api": "^2.3.4",
     "vue-router": "^3.4.9"
