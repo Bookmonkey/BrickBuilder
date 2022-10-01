@@ -121,6 +121,7 @@ body {
     display: flex;
     justify-content: space-around;
     text-align: center;
+    margin-top: 2rem;
   }
 
   .showcase {
@@ -217,8 +218,15 @@ body {
   }
 }
 
-.footer{
-  background: white;
+.footer {
+  padding: 24px;
+  background: $color-dark-blue;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  a {
+    color: white;
+  }
 }
 
 // Modal
@@ -283,8 +291,8 @@ body {
 h1 {
   font-family: $font-family;
   font-size: 3rem;
-  // padding: 16px 0;
   margin: 0;
+  margin-bottom: 2rem;
   font-variation-settings: "CASL" 1;
   letter-spacing: 1px;
 }
@@ -303,6 +311,9 @@ h3 {
   font-family: $font-family;
   font-size: 2rem;
   letter-spacing: 1px;
+
+  margin: 0;
+  margin-bottom: 24px;
 }
 
 .h4, h4 {
@@ -313,9 +324,16 @@ h3 {
   font-size: 1rem;
 }
 
-.p {
+.p,
+p {
   font-family: $font-family;
   letter-spacing: 0.3px;
+  margin: 0;
+  line-height: 2;
+}
+
+.strikeout {
+  text-decoration: line-through;
 }
 
 .breadcrumb {
